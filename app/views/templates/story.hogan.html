@@ -1,0 +1,38 @@
+<div class="story {{ story_type }} {{current_state}}">
+  <div class="container">
+    <div class="points">{{estimate}}</div>
+    <div class="toggle-arrow" data-click-handler="TT.UI.toggleStory"></div>
+    <div class="icon"></div>
+    <div class="title">
+      <a href="#" data-project-id="{{project_id}}" data-click-handler="TT.UI.filterByProject" class="project-name project-{{project_classname}}">{{project_name}}</a>
+      {{{name}}}
+      {{#initials}}
+        <a href="#" data-username="{{owned_by}}" data-click-handler="TT.UI.filterByUser">{{initials}}</a>
+      {{/initials}}
+      {{#labels}}
+        <div class="tag" data-click-handler="TT.UI.filterByTag">{{.}}</div>
+      {{/labels}}
+    </div>
+    <div class="details">
+      <div class="detail-set">
+        <div class="detail"><label>ID</label> <a href="{{url}}" target="_blank">{{id}}</a></div>
+        <div class="detail"><label>Requester</label> {{requested_by}}</div>
+        <div class="detail"><label>Owner</label> {{owned_by}}</div>
+        <div class="detail"><label>Created</label> {{created_at}}</div>
+        <div class="detail last"><label>Updated</label> {{updated_at}}</div>
+      </div>
+      <h2>Description</h2>
+      <div class="description">{{{description}}}</div>
+      <h2>Notes</h2>
+      <div class="notes">
+        {{#notes}}
+          <div class="note">
+            <div class="text">{{text}}</div>
+            <div class="author">{{author}}</div>
+            <div class="date">{{noted_at}}</div>
+          </div>
+        {{/notes}}
+      </div>
+    </div>
+  </div>
+</div>
