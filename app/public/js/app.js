@@ -183,13 +183,15 @@ var TT = (function () {
     var $window = $(window);
     var $columns = $('#columns .column');
 
-    var padding = 20;
+    var padding = 26;
     var height = $window.height() - ($('.column-bucket').offset().top + padding);
     $('.column-bucket').height(height);
 
     var column_count = $columns.length;
-    var width = ($window.width() - 20 - (column_count * 8)) / column_count;
+    var width = Math.max(200, Math.round(($window.width() - 24 - (column_count * 8)) / column_count));
     $columns.width(width);
+
+    $('#columns').width((width + 8) * column_count);
   };
 
   pub.storyHasTag = function (story, tag) {

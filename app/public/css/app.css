@@ -193,6 +193,11 @@ body.ajaxRunning #logo h1 {
 
 /* Columns */
 
+#content {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
 #columns {
   padding: 6px;
 }
@@ -203,7 +208,8 @@ body.ajaxRunning #logo h1 {
   border-radius: 3px;
   float: left;
   margin: 4px;
-  width: 260px;
+  min-width: 200px;
+  width: 280px;
 }
 
 .column .column-title {
