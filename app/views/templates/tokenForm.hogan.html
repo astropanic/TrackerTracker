@@ -1,14 +1,14 @@
-<h3>Token Needed!</h3>
+<div id="account-settings">
+  <h3>Account Settings</h3>
 
-<div class="p">
-  I need your <strong>Pivotal Tracker API Token</strong>. That can be found by going to your <a href="https://www.pivotaltracker.com/profile" target="_blank">Pivotal Tracker profile page</a> and scrolling to the bottom. Copy and paste that into the textfield below.
-</div>
-
-<div class="form">
-  <div class="form-input">
-    <input id="token-input" type="input" name="token" value="" class="textfield" />
-  </div>
-  <div class="form-action">
-    <input type="submit" data-click-handler="TT.UI.submitToken" value="Submit Token" class="submit" />
+  <div class="form">
+    <div class="form-input">
+      <label><a href="https://www.pivotaltracker.com/profile" target="_blank">Pivotal Tracker</a> API Token<label>
+      <input id="token-input" type="input" name="token" value="" class="textfield" />
+    </div>
+    <div class="form-action">
+      <input type="submit" data-click-handler="TT.UI.submitToken" value="Submit Token" class="submit" />
+      <a href="#" data-click-handler="TT.Dialog.close">Cancel</a>
+    </div>
   </div>
 </div>

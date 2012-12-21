@@ -1,14 +1,16 @@
 var TWO_YEARS = 2 * 365 * 24 * 60 * 60 * 1000;
 var pivotal = require('pivotal');
 
+var PIVOTAL_TOKEN_COOKIE = 'pivotalToken';
+
 exports.index = function (req, res) {
   res.render('index');
 };
 
 exports.hasToken = function (req, res, next) {
-  if (req.cookies.token) {
-    pivotal.useToken(req.cookies.token);
-    res.cookie('token', req.cookies.token, { maxAge: TWO_YEARS });
+  if (req.cookies[PIVOTAL_TOKEN_COOKIE]) {
+    pivotal.useToken(req.cookies[PIVOTAL_TOKEN_COOKIE]);
+    res.cookie(PIVOTAL_TOKEN_COOKIE, req.cookies[PIVOTAL_TOKEN_COOKIE], { maxAge: TWO_YEARS });
     next();
   } else {
     res.set('Content-Type', 'text/javascript');
@@ -17,7 +19,7 @@ exports.hasToken = function (req, res, next) {
 };
 
 exports.useToken = function (req, res) {
-  res.cookie('token', req.body.token, { maxAge: TWO_YEARS });
+  res.cookie(PIVOTAL_TOKEN_COOKIE, req.body[PIVOTAL_TOKEN_COOKIE], { maxAge: TWO_YEARS });
   res.set('Content-Type', 'text/javascript');
   res.send('TT.Ajax.end();');
 };

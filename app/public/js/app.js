@@ -191,6 +191,10 @@ var TT = (function () {
     pub.attach(html, '#columns');
   };
 
+  pub.initAccountNav = function () {
+    pub.attach(pub.render('accountNav'), '#logo');
+  };
+
   pub.updateColumnDimensions = function () {
     var $window = $(window);
     var $columns = $('#columns .column');
@@ -206,10 +210,21 @@ var TT = (function () {
     $('#columns').width((width + 8) * column_count);
   };
 
+  pub.requestData = function () {
+    pub.request('/projects', {}, function () {
+      $.each(pub.Projects, function (index, project) {
+        pub.request('/iterations', { project: project.id });
+      });
+      pub.updateColumnDimensions();
+    });
+  };
+
   pub.onDomReady = function () {
     pub.initStorage();
     pub.initLayout();
     pub.initColumns();
+
+    pub.initAccountNav();
 
     pub.updateColumnDimensions();
     $(window).resize(pub.updateColumnDimensions);
@@ -217,12 +232,7 @@ var TT = (function () {
     TT.DragAndDrop.init();
     TT.Search.init();
 
-    pub.request('/projects', {}, function () {
-      $.each(pub.Projects, function (index, project) {
-        pub.request('/iterations', { project: project.id });
-      });
-      pub.updateColumnDimensions();
-    });
+    pub.requestData();
   };
 
   return pub;
@@ -488,15 +498,19 @@ TT.UI = (function () {
   pub.requestToken = function () {
     var formView = TT.render('tokenForm');
     TT.Dialog.open(formView);
+
+    var pivotalToken = $.cookie('pivotalToken');
+    if (pivotalToken) {
+      $('#token-input').val(pivotalToken)
+    }
   };
 
   pub.submitToken = function () {
-    var token = $('#token-input').val();
-    if (!token) {
+    var pivotalToken = $('#token-input').val();
+    if (!pivotalToken) {
       return false;
     }
-    $.post('/token', { token: token });
-    TT.Ajax.start();
+    $.post('/token', { pivotalToken: pivotalToken }, TT.requestData);
     TT.Dialog.close();
     return false;
   };
