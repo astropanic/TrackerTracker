@@ -365,7 +365,8 @@ body.ajaxRunning #logo h1 {
   margin: 8px 0 0;
 }
 
-.story .description, .story .note {
+.story .description,
+.story .note {
   background: rgba(255, 255, 255, 0.5);
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 3px;
@@ -383,12 +384,26 @@ body.ajaxRunning #logo h1 {
   font-size: 11px;
 }
 
-.story.started,
-.story.finished,
-.story.delivered {
+.column-started .story,
+.column-inqa .story,
+.column-passedqa .story,
+.column-delivered .story {
   background-color: #f3f3d1;
 }
 
-.story.accepted {
+.column-accepted .story {
   background-color: #daebcf;
+}
+
+.ui-sortable-helper {
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+  opacity: 0.9;
+  z-index: 9999;
+}
+
+.ui-sortable-placeholder {
+  background: none !important;
+  border: 2px dashed #fff;
+  margin-bottom: 1px;
+  visibility: visible !important;
 }

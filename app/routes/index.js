@@ -29,17 +29,22 @@ exports.getProjects = function (req, res) {
 };
 
 exports.getIterations = function (req, res) {
-  var project = req.query.project || 57746;
-  pivotal.getCurrentBacklogIterations(project, function (err, results) {
+  pivotal.getCurrentBacklogIterations(req.query.project, function (err, results) {
     res.set('Content-Type', 'text/javascript');
     res.send(results ? 'TT.API.addIterations(' + JSON.stringify(results) + ');' : '');
   });
 };
 
 exports.getStories = function (req, res) {
-  var project = req.query.project || 57746;
-  pivotal.getStories(project, { limit: 500 }, function (err, results) {
+  pivotal.getStories(req.query.project, { limit: 500 }, function (err, results) {
     res.set('Content-Type', 'text/javascript');
     res.send(results ? 'TT.API.addStories(' + JSON.stringify(results) + ');' : '');
+  });
+};
+
+exports.updateStory = function (req, res) {
+  pivotal.updateStory(req.query.project_id, req.query.story_id, req.query.data, function (err, results) {
+    res.set('Content-Type', 'text/javascript');
+    res.send('TT.ajaxEnd();');
   });
 };

@@ -92,8 +92,9 @@ var TT = (function () {
     return html;
   };
 
-  pub.attach = function (html, target) {
-    var element = $(target).append(html);
+  pub.attach = function (html, target, method) {
+    // Which object is returned is important here
+    var element = method ? $(html)[method](target) : $(target).append(html);
     if (html.indexOf('data-click-handler') !== -1) {
       pub.initClickHandlers(element);
     }
@@ -110,11 +111,13 @@ var TT = (function () {
 
   pub.request = function (url, data, callback) {
     var s = document.createElement('script');
+    s.onload = s.onerror = callback || pub.noop;
     s.src = url + (data ? '?' + $.param(data) : '');
-    s.onload = callback || pub.noop;
     document.getElementsByTagName('head')[0].appendChild(s);
     pub.ajaxStart();
   };
+
+  // helpers
 
   pub.getProjectNameFromID = function (id) {
     return pub.Projects[id].name;
@@ -149,7 +152,25 @@ var TT = (function () {
     return result;
   };
 
-  pub.updateStoryView = function () {
+  pub.hasTag = function (story, tag) {
+    if (story.labels && tag) {
+      return $.inArray(tag, story.labels) !== -1;
+    }
+    return false;
+  };
+
+  pub.addTag = function (tags, tag) {
+    if ($.inArray(tag, tags) === -1) {
+      tags[tags.length] = tag;
+    }
+    return tags;
+  };
+
+  pub.removeTag = function (tags, tag) {
+    return TT.Utils.removeFromArray(tags, tag);
+  };
+
+  pub.refreshStoryView = function () {
     pub.setProjectActiveState();
     pub.clearStoryView();
     $.each(pub.Stories, function (index, story) {
@@ -165,6 +186,13 @@ var TT = (function () {
 
   pub.clearStoryView = function () {
     $('.story').empty().remove();
+  };
+
+  pub.refreshStory = function (element) {
+    var id = $(element).data('story-id');
+    var html = TT.render('story', TT.Stories[id]);
+    TT.attach(html, element, 'insertAfter');
+    $(element).empty().remove();
   };
 
   pub.initLayout = function () {
@@ -194,13 +222,6 @@ var TT = (function () {
     $('#columns').width((width + 8) * column_count);
   };
 
-  pub.storyHasTag = function (story, tag) {
-    if (story.labels && tag) {
-      return $.inArray(tag, story.labels) !== -1;
-    }
-    return false;
-  };
-
   pub.onDomReady = function () {
     pub.initStorage();
     pub.initLayout();
@@ -209,11 +230,88 @@ var TT = (function () {
     pub.updateColumnDimensions();
     $(window).resize(pub.updateColumnDimensions);
 
+    TT.DragAndDrop.init();
+
     pub.request('/projects', {}, function () {
       $.each(pub.Projects, function (index, project) {
         pub.request('/iterations', { project: project.id });
       });
       pub.updateColumnDimensions();
+    });
+  };
+
+  return pub;
+
+}());
+
+TT.DragAndDrop = (function () {
+
+  var pub = {};
+  var dragOutFn, dragInFn, columnOut, columnIn;
+
+  pub.getDragFn = function (element, type) {
+    var fn;
+    element = $(element).closest('.column');
+
+    $.each(TT.Columns, function (index, column) {
+      if (element.hasClass(column.class_name)) {
+        if (type === 'in' && column.onDragIn) {
+          fn = column.onDragIn;
+        } else if (type === 'out' && column.onDragOut) {
+          fn = column.onDragOut;
+        }
+      }
+    });
+
+    return fn;
+  };
+
+  pub.onStart = function (event, ui) {
+    columnOut = $(ui.item).closest('.column')[0];
+    dragOutFn = pub.getDragFn(ui.item, 'out');
+  };
+
+  pub.onBeforeStop = function (event, ui) {
+    columnIn = $(ui.item).closest('.column')[0];
+    if (columnOut === columnIn) {
+      return true;
+    }
+
+    var story = TT.Stories[$(ui.item).data('story-id')];
+    var data = {};
+
+    dragInFn = pub.getDragFn(ui.item, 'in');
+
+    if (dragOutFn) {
+      $.extend(data, dragOutFn(story));
+    }
+    if (dragInFn) {
+      $.extend(data, dragInFn(story));
+    }
+
+    if (dragOutFn || dragInFn) {
+      // TODO: figure out why the server-side response doesn't fire
+      // TT.ajaxStart();
+      $.extend(TT.Stories[story.id], data);
+      setTimeout(TT.refreshStoryView, 100);
+
+      if (data.labels) {
+        data.labels = data.labels.join(',');
+      }
+      TT.request('/updateStory', { project_id: story.project_id, story_id: story.id, data: data });
+    }
+
+    dragOutFn = dragInFn = null;
+  };
+
+  pub.init = function () {
+    $('.sortable').sortable({
+      connectWith: '.sortable',
+      containment: '#content',
+      distance: 10,
+      tolerance: 'pointer',
+      start: pub.onStart,
+      beforeStop: pub.onBeforeStop
     });
   };
 
@@ -325,7 +423,7 @@ TT.UI = (function () {
   var pub = {};
 
   pub.selectProject = function () {
-    setTimeout(TT.updateStoryView, 10);
+    setTimeout(TT.refreshStoryView, 10);
     // intentionally not returning false here so the label click bubbles to the checkbox
   };
 
@@ -364,7 +462,7 @@ TT.UI = (function () {
     $('#projects .project input:checked').attr('checked', false);
     $('#project-' + id).click();
 
-    TT.updateStoryView();
+    TT.refreshStoryView();
     return false;
   };
 
@@ -378,7 +476,7 @@ TT.UI = (function () {
       }
     });
 
-    TT.updateStoryView();
+    TT.refreshStoryView();
     return false;
   };
 
@@ -388,11 +486,11 @@ TT.UI = (function () {
     TT.addFilter({
       name: 'Tag: ' + tag,
       fn: function (story) {
-        return TT.storyHasTag(story, tag);
+        return TT.hasTag(story, tag);
       }
     })
 
-    TT.updateStoryView();
+    TT.refreshStoryView();
     return false;
   };
 
@@ -401,7 +499,7 @@ TT.UI = (function () {
 
     TT.Filters[name].active = false;
     $(this).remove();
-    TT.updateStoryView();
+    TT.refreshStoryView();
     return false;
   };
 
@@ -447,7 +545,7 @@ TT.API = (function () {
       }
     });
 
-    TT.updateStoryView();
+    TT.refreshStoryView();
     TT.ajaxEnd();
   };
 
@@ -463,13 +561,9 @@ TT.addColumn({
   fn: function (story) {
     return story.current_state === 'unstarted';
   },
-  actions: [
-    {
-      name: 'Start',
-      target: '.column-started .column-bucket',
-      action: function (story) { return { current_state: 'started' }; }
-    }
-  ]
+  onDragIn: function (story) {
+    return { current_state: 'unstarted' };
+  }
 });
 
 TT.addColumn({
@@ -477,31 +571,34 @@ TT.addColumn({
   fn: function (story) {
     return story.current_state === 'started';
   },
-  actions: [
-    {
-      name: 'Ready for QA',
-      target: '.column-inqa .column-bucket',
-      action: function (story) { return { current_state: 'finished' }; }
-    },
-    {
-      name: 'Passed QA',
-      target: '.column-passedqa .column-bucket',
-      action: function (story) { return {}; }
-    }
-  ]
+  onDragIn: function (story) {
+    return { current_state: 'started' };
+  }
 });
 
 TT.addColumn({
   name: 'In QA',
   fn: function (story) {
-    return story.current_state === 'finished';
+    return story.current_state === 'finished' && !TT.hasTag(story, 'passedqa');
+  },
+  onDragIn: function (story) {
+    return { current_state: 'finished', labels: TT.addTag(story.labels, 'inqa') };
+  },
+  onDragOut: function (story) {
+    return { labels: TT.removeTag(story.labels, 'inqa') };
   }
 });
 
 TT.addColumn({
   name: 'Passed QA',
   fn: function (story) {
-    return story.current_state === 'finished' && TT.storyHasTag(story, 'passedqa');
+    return story.current_state === 'finished' && TT.hasTag(story, 'passedqa');
+  },
+  onDragIn: function (story) {
+    return { current_state: 'finished', labels: TT.addTag(story.labels, 'passedqa') };
+  },
+  onDragOut: function (story) {
+    return { labels: TT.removeTag(story.labels, 'passedqa') };
   }
 });
 
@@ -509,6 +606,9 @@ TT.addColumn({
   name: 'Delivered',
   fn: function (story) {
     return story.current_state === 'delivered';
+  },
+  onDragIn: function (story) {
+    return { current_state: 'delivered' };
   }
 });
 
@@ -516,6 +616,9 @@ TT.addColumn({
   name: 'Accepted',
   fn: function (story) {
     return story.current_state === 'accepted';
+  },
+  onDragIn: function (story) {
+    return { current_state: 'accepted' };
   }
 });
 
