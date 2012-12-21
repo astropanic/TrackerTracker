@@ -60,25 +60,28 @@ body.ajaxRunning #logo h1 {
 
 #account {
   position: absolute;
-  right: 12px;
-  top: 12px;
+  right: 22px;
+  top: 13px;
 }
 
 #account a {
   color: #fff;
   display: inline-block;
-  font-weight: bold;
-  margin: 0 0 0 8px;
+  font: bold 11px/11px Helvetica, sans-serif;
+  margin: 0 0 0 16px;
   text-decoration: none;
   text-transform: uppercase;
+}
+
+#account a:hover {
+  text-decoration: underline;
 }
 
 /* Search */
 
 #search {
-  position: absolute;
-  top: 50px;
-  right: 16px;
+  float: right;
+  padding: 10px 20px 0 0;
 }
 
 #search input {
@@ -125,7 +128,15 @@ body.ajaxRunning #logo h1 {
 /* Project List */
 
 #projects {
-  padding: 6px 12px;
+  left: 300px;
+  position: absolute;
+  top: 10px;
+}
+
+.projects {
+  height: 30px;
+  overflow-y: hidden;
+  padding-right: 40px;
 }
 
 .project {
@@ -133,28 +144,27 @@ body.ajaxRunning #logo h1 {
 }
 
 .project label {
-  background: #fff;
-  border: 1px solid #ddd;
+  background: #eee;
+  border: none;
+  color: #111;
   cursor: pointer;
   display: inline-block;
   font-weight: bold;
+  margin: 0 1px 0 0;
   padding: 8px 14px;
-  border-radius: 2px;
+  border-radius: 3px 3px 0 0;
 }
 
 .project label:hover {
-  border-color: #999;
 }
 
 .project.inactive label {
-  background: #eee;
-  color: #999;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .project.inactive label:hover {
-  background: #eee;
-  border-color: #aaa;
-  color: #666;
+  color: #fff;
 }
 
 .project input {
@@ -167,14 +177,14 @@ body.ajaxRunning #logo h1 {
   display: none;
   height: 16px;
   left: 6px;
-  opacity: 0.4;
+  opacity: 0.7;
   position: relative;
-  top: 3px;
+  top: 0;
   width: 16px;
 }
 
 #project-reset:hover {
-  opacity: 0.8;
+  opacity: 1;
 }
 
 /* Filters */
@@ -182,7 +192,7 @@ body.ajaxRunning #logo h1 {
 #filters {
   background: #eee;
   min-height: 30px;
-  padding: 0 12px;
+  padding: 10px 12px 4px;
 }
 
 .filter {
@@ -196,7 +206,7 @@ body.ajaxRunning #logo h1 {
   cursor: pointer;
   display: inline-block;
   font: bold 12px/12px Helvetica, sans-serif;
-  margin: 0 2px 0 0;
+  margin: 0 2px 5px 0;
   padding: 6px 24px 6px 8px;
   position: relative;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
@@ -218,6 +228,23 @@ body.ajaxRunning #logo h1 {
   top: 4px;
 }
 
+.filter.inactive {
+  background: #d3d3d3;
+  box-shadow: none;
+  color: #555;
+  padding-right: 8px;
+  text-shadow: none;
+}
+
+.filter.inactive:hover {
+  background: #999;
+  color: #333;
+}
+
+.filter.inactive span {
+  display: none;
+}
+
 /* Columns */
 
 #content {
@@ -234,7 +261,7 @@ body.ajaxRunning #logo h1 {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   border-radius: 3px;
   float: left;
-  margin: 4px;
+  margin: 4px 4px 10px;
   min-width: 200px;
   width: 280px;
 }
@@ -281,10 +308,10 @@ body.ajaxRunning #logo h1 {
   border-width: 1px 0;
   border-top-color: rgba(255, 255, 255, 0.3);
   border-bottom-color: rgba(0, 0, 0, 0.15);
-  /* cursor: move; */
+  cursor: move;
   padding: 6px 6px 6px 38px;
   position: relative;
-  -webkit-transition: background-color 100ms;
+  -webkit-transition: background-color 120ms;
 }
 
 .story:hover {
@@ -292,19 +319,19 @@ body.ajaxRunning #logo h1 {
 }
 
 .story.feature {
-  background-image: url(https://d3jgo56a5b0my0.cloudfront.net/images/v7/application/stories_view/icons/feature.png);
+  background-image: url(/images/story.feature.png);
 }
 
 .story.bug {
-  background-image: url(https://d3jgo56a5b0my0.cloudfront.net/images/v7/application/stories_view/icons/bug.png);
+  background-image: url(/images/story.bug.png);
 }
 
 .story.chore {
-  background-image: url(https://d3jgo56a5b0my0.cloudfront.net/images/v7/application/stories_view/icons/chore.png);
+  background-image: url(/images/story.chore.png);
 }
 
 .story.release {
-  background-image: url(https://d3jgo56a5b0my0.cloudfront.net/images/v7/application/stories_view/icons/release.png);
+  background-image: url(/images/story.release.png);
   background-color: #407aa5;
   border-top: 0;
   color: #fff;
@@ -315,13 +342,17 @@ body.ajaxRunning #logo h1 {
 }
 
 .story .toggle-arrow {
-  background: url(https://d3jgo56a5b0my0.cloudfront.net/images/v7/application/stories_view/icons/story_collapsed1.png) 0 0 no-repeat transparent;
+  background: url(/images/arrow.closed.png) 0 0 no-repeat transparent;
   cursor: pointer;
   height: 18px;
   left: 3px;
   position: absolute;
   top: 4px;
   width: 18px;
+}
+
+.expanded-story .toggle-arrow {
+  background: url(/images/arrow.open.png) -1px 0 no-repeat transparent;
 }
 
 .story .project-name {
@@ -420,6 +451,11 @@ body.ajaxRunning #logo h1 {
 
 .column-accepted .story {
   background-color: #daebcf;
+}
+
+.story.expanded-story {
+  background-color: #f3f3f3 !important;
+  cursor: default;
 }
 
 .ui-sortable-helper {

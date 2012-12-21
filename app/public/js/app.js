@@ -6,8 +6,9 @@ var TT = (function () {
   pub.Columns = {};
   pub.Filters = {};
   pub.Layout = {};
-
-  pub.activeServerRequests = 0;
+  pub.Projects = {};
+  pub.Stories = {};
+  pub.Users = {};
 
   pub.noop = function () {};
 
@@ -18,6 +19,8 @@ var TT = (function () {
   };
 
   // ajax UI state
+
+  pub.activeServerRequests = 0;
 
   pub.ajaxStart = function () {
     pub.activeServerRequests++;
@@ -66,9 +69,12 @@ var TT = (function () {
   };
 
   pub.addFilter = function (filter) {
-    if (!pub.Filters[filter.name] || !pub.Filters[filter.name].active) {
+    if (!pub.Filters[filter.name]) {
       var html = pub.render('filter', filter);
-      pub.attach(html, '#filters');
+      filter.element = pub.attach(html, '#columnList', 'insertAfter');
+    } else if (pub.Filters[filter.name].active === false) {
+      TT.UI.reactivateFilter(filter.name);
+      return false;
     }
 
     filter.active = true;
@@ -96,7 +102,7 @@ var TT = (function () {
     // Which object is returned is important here
     var element = method ? $(html)[method](target) : $(target).append(html);
     if (html.indexOf('data-click-handler') !== -1) {
-      pub.initClickHandlers(element);
+      pub.initClickHandlers(element.parent());
     }
     return element;
   };
@@ -273,7 +279,7 @@ TT.Search = (function () {
         }
 
         TT.addFilter({
-          name: 'Search: ' + term,
+          name: term,
           fn: function (story) {
             return JSON.stringify(story).toLowerCase().indexOf(term) !== -1;
           }
@@ -517,7 +523,7 @@ TT.UI = (function () {
     var name = $(this).data('username');
 
     TT.addFilter({
-      name: 'User: ' + name,
+      name: name,
       fn: function (story) {
         return story.owned_by === name || story.requested_by === name;
       }
@@ -531,7 +537,7 @@ TT.UI = (function () {
     var tag = $.trim($(this).text());
 
     TT.addFilter({
-      name: 'Tag: ' + tag,
+      name: tag,
       fn: function (story) {
         return TT.hasTag(story, tag);
       }
@@ -545,7 +551,17 @@ TT.UI = (function () {
     var name = $.trim($(this).text());
 
     TT.Filters[name].active = false;
-    $(this).remove();
+    $(this).addClass('inactive').unbind('click').click(function () {
+      pub.reactivateFilter(name);
+      return false;
+    });
+    TT.refreshStoryView();
+    return false;
+  };
+
+  pub.reactivateFilter = function (name) {
+    TT.Filters[name].active = true;
+    TT.Filters[name].element.removeClass('inactive').unbind('click').click(pub.removeFilter);
     TT.refreshStoryView();
     return false;
   };
