@@ -176,7 +176,7 @@ var TT = (function () {
     $.each(pub.Stories, function (index, story) {
       $.each(pub.Layout, function (index, name) {
         var column = pub.Columns[name];
-        if (column.fn(story) && pub.projectIsActive(story.project_id) && pub.storyIsNotFiltered(story)) {
+        if (column.filter(story) && pub.projectIsActive(story.project_id) && pub.storyIsNotFiltered(story)) {
           var html = pub.render('story', story);
           pub.attach(html, '.' + column.class_name + ' .column-bucket');
         }
@@ -558,7 +558,7 @@ TT.API = (function () {
 
 TT.addColumn({
   name: 'Backlog',
-  fn: function (story) {
+  filter: function (story) {
     return story.current_state === 'unstarted';
   },
   onDragIn: function (story) {
@@ -568,7 +568,7 @@ TT.addColumn({
 
 TT.addColumn({
   name: 'Started',
-  fn: function (story) {
+  filter: function (story) {
     return story.current_state === 'started';
   },
   onDragIn: function (story) {
@@ -578,7 +578,7 @@ TT.addColumn({
 
 TT.addColumn({
   name: 'In QA',
-  fn: function (story) {
+  filter: function (story) {
     return story.current_state === 'finished' && !TT.hasTag(story, 'passedqa');
   },
   onDragIn: function (story) {
@@ -591,7 +591,7 @@ TT.addColumn({
 
 TT.addColumn({
   name: 'Passed QA',
-  fn: function (story) {
+  filter: function (story) {
     return story.current_state === 'finished' && TT.hasTag(story, 'passedqa');
   },
   onDragIn: function (story) {
@@ -604,7 +604,7 @@ TT.addColumn({
 
 TT.addColumn({
   name: 'Delivered',
-  fn: function (story) {
+  filter: function (story) {
     return story.current_state === 'delivered';
   },
   onDragIn: function (story) {
@@ -614,7 +614,7 @@ TT.addColumn({
 
 TT.addColumn({
   name: 'Accepted',
-  fn: function (story) {
+  filter: function (story) {
     return story.current_state === 'accepted';
   },
   onDragIn: function (story) {
