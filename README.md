@@ -7,6 +7,7 @@ Multi-project scrum UI for Pivotal Tracker.
 1. Install latest [Node binary for OSX](http://nodejs.org/), then run...
 
 ```sh
+brew install redis
 git clone git@github.com:intentmedia/TrackerTracker.git
 cd TrackerTracker/app
 npm install
@@ -17,6 +18,12 @@ npm install
 ```sh
 cd TrackerTracker/app
 node app
+```
+
+## Run redis
+
+```sh
+redis-server
 ```
 
 ## Todo list
