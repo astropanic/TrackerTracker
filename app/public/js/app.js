@@ -513,12 +513,14 @@ TT.API = (function () {
 
   var pub = {};
 
+  // If only one item exists, Pivotal API sends that by itself, otherwise as an array of items
+  function normalizePivotalArray(items) {
+    return $.isPlainObject(items) ? [items] : items;
+  }
+
   function addEach(items, addFn) {
     if (items) {
-      // If only one item exists, Pivotal API sends that by itself, otherwise as an array of items
-      if ($.isPlainObject(items)) {
-        items = [items];
-      }
+      items = normalizePivotalArray(items);
       $.each(items, function (index, item) {
         addFn(item);
       });
@@ -539,7 +541,7 @@ TT.API = (function () {
   };
 
   pub.addIterations = function (iterations) {
-    $.each(iterations.iteration, function (index, iteration) {
+    $.each(normalizePivotalArray(iterations.iteration), function (index, iteration) {
       if (iteration.stories && iteration.stories.story) {
         addEach(iteration.stories.story, TT.addStory);
       }
