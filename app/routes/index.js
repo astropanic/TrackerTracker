@@ -1,4 +1,5 @@
 var TWO_YEARS = 2 * 365 * 24 * 60 * 60 * 1000;
+var ONE_MINUTE = 1000 * 60;
 var PIVOTAL_TOKEN_COOKIE = 'pivotalToken';
 
 var pivotal = require('pivotal');
@@ -55,11 +56,15 @@ exports.getIterations = function (req, res) {
   var callback = function (results) {
     res.set('Content-Type', 'text/javascript');
     res.send(results ? 'TT.API.addIterations(' + results + ');' : '');
-  }
+  };
 
   client.get(iterationsKey, function (err, results) {
-    if (_.isEmpty(results)) {
+    var parsed_results = JSON.parse(results);
+    var timestamp = _.isObject(parsed_results) ? parsed_results.timestamp : null;
+
+    if (_.isEmpty(results) || !timestamp || timestamp < (new Date().getTime() - ONE_MINUTE)) {
       pivotal.getCurrentBacklogIterations(req.query.project, function (err, results) {
+        results.timestamp = new Date().getTime();
         resultsAsJson = JSON.stringify(results);
 
         client.set(iterationsKey, resultsAsJson);
@@ -78,7 +83,7 @@ exports.getStories = function (req, res) {
   var callback = function (results) {
     res.set('Content-Type', 'text/javascript');
     res.send(results ? 'TT.API.addStories(' + results + ');' : '');
-  }
+  };
 
   client.get(storiesKey, function (err, results) {
     if (_.isEmpty(results)) {
