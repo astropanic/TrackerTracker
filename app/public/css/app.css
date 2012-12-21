@@ -120,9 +120,36 @@ body.ajaxRunning #logo h1 {
   padding: 28px 30px;
 }
 
-.modal-dialog .content h3 {
+#account-settings h3 {
   font: bold 20px/20px Helvetica, sans-serif;
-  margin: 0 0 10px;
+  margin: 0 0 16px;
+}
+
+#account-settings .form-input {
+  margin: 12px 0;
+}
+
+#account-settings label {
+  margin: 3px 0;
+}
+
+#account-settings input.textfield {
+  font: normal 18px/18px monospace;
+  margin: 3px 0;
+  padding: 4px 6px;
+  width: 380px;
+}
+
+#account-settings .cancel {
+  color: #999;
+  display: inline-block;
+  font-weight: normal;
+  margin-left: 10px;
+}
+
+#account-settings .cancel:hover {
+  color: #333;
+  text-decoration: underline;
 }
 
 /* Nav */
