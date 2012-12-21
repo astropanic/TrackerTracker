@@ -347,6 +347,7 @@ TT.DragAndDrop = (function () {
 
   pub.init = function () {
     $('.sortable').sortable({
+      cancel: '.expanded-story',
       connectWith: '.sortable',
       containment: '#content',
       distance: 10,
@@ -483,6 +484,7 @@ TT.UI = (function () {
 
   pub.toggleStory = function () {
     $(this).siblings('.details').slideToggle(100);
+    $(this).closest('.story').toggleClass('expanded-story');
     return false;
   };
 
