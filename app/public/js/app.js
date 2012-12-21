@@ -333,8 +333,6 @@ TT.DragAndDrop = (function () {
     }
 
     if (dragOutFn || dragInFn) {
-      // TODO: figure out why the server-side response doesn't fire
-      // TT.ajaxStart();
       $.extend(TT.Stories[story.id], data);
       setTimeout(TT.refreshStoryView, 100);
 
