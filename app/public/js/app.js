@@ -34,6 +34,39 @@ var TT = (function () {
     }
   };
 
+  // abstracted client-side templates
+  pub.render = function (name, data) {
+    if (!pub.Templates[name]) {
+      pub.Templates[name] = new Hogan.Template(HoganTemplates[name]);
+    }
+    return pub.Templates[name].render(data);
+  };
+
+  pub.attach = function (html, target, method) {
+    method = method || 'appendTo';
+    var element = $(html)[method](target);
+    if (html.indexOf('data-click-handler') !== -1) {
+      pub.initClickHandlers(element.parent());
+    }
+    return element;
+  };
+
+  pub.initClickHandlers = function (context) {
+    $(context || 'body').find('[data-click-handler]').each(function () {
+      // console.log('processing click handler', this);
+      var handler = pub.Utils.strToFunction($(this).data('click-handler'));
+      $(this).click(handler);
+    }).removeAttr('data-click-handler');
+  };
+
+  pub.request = function (url, data, callback) {
+    var s = document.createElement('script');
+    s.onload = s.onerror = callback || pub.noop;
+    s.src = url + (data ? '?' + $.param(data) : '');
+    document.getElementsByTagName('head')[0].appendChild(s);
+    pub.ajaxStart();
+  };
+
   // client-side data manipulation
 
   pub.addUser = function (user) {
@@ -79,39 +112,6 @@ var TT = (function () {
 
     filter.active = true;
     pub.Filters[filter.name] = filter;
-  };
-
-  // abstracted client-side templates
-  pub.render = function (name, data) {
-    if (!pub.Templates[name]) {
-      pub.Templates[name] = new Hogan.Template(HoganTemplates[name]);
-    }
-    return pub.Templates[name].render(data);
-  };
-
-  pub.attach = function (html, target, method) {
-    method = method || 'appendTo';
-    var element = $(html)[method](target);
-    if (html.indexOf('data-click-handler') !== -1) {
-      pub.initClickHandlers(element.parent());
-    }
-    return element;
-  };
-
-  pub.initClickHandlers = function (context) {
-    $(context || 'body').find('[data-click-handler]').each(function () {
-      // console.log('processing click handler', this);
-      var handler = pub.Utils.strToFunction($(this).data('click-handler'));
-      $(this).click(handler);
-    }).removeAttr('data-click-handler');
-  };
-
-  pub.request = function (url, data, callback) {
-    var s = document.createElement('script');
-    s.onload = s.onerror = callback || pub.noop;
-    s.src = url + (data ? '?' + $.param(data) : '');
-    document.getElementsByTagName('head')[0].appendChild(s);
-    pub.ajaxStart();
   };
 
   // helpers
