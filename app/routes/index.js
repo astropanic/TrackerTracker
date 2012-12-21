@@ -2,7 +2,6 @@ var TWO_YEARS = 2 * 365 * 24 * 60 * 60 * 1000;
 var pivotal = require('pivotal');
 
 exports.index = function (req, res) {
-  // res.cookie('token', '82b949ab6afd7a843eef59b2c31b5165', { maxAge: TWO_YEARS });
   res.render('index');
 };
 
