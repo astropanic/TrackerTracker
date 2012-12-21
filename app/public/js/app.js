@@ -46,6 +46,9 @@ var TT = (function () {
   pub.request = function (url, data, callback) {
     var s = document.createElement('script');
     s.onload = s.onerror = callback || pub.noop;
+    if (data) {
+      data.cache_buster = new Date().getTime();
+    }
     s.src = url + (data ? '?' + $.param(data) : '');
     document.getElementsByTagName('head')[0].appendChild(s);
     pub.Ajax.start();
