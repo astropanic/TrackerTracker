@@ -231,12 +231,45 @@ var TT = (function () {
     $(window).resize(pub.updateColumnDimensions);
 
     TT.DragAndDrop.init();
+    TT.Search.init();
 
     pub.request('/projects', {}, function () {
       $.each(pub.Projects, function (index, project) {
         pub.request('/iterations', { project: project.id });
       });
       pub.updateColumnDimensions();
+    });
+  };
+
+  return pub;
+
+}());
+
+TT.Search = (function () {
+
+  var pub = {};
+
+  pub.init = function () {
+    var timeout;
+    var search = $('#search input');
+    search.blur(function () {
+      search.val('');
+    }).keyup(function () {
+      clearTimeout(timeout);
+      timeout = setTimeout(function () {
+        var term = $.trim(search.val().toLowerCase());
+        if (!term) {
+          return false;
+        }
+
+        TT.addFilter({
+          name: 'Search: ' + term,
+          fn: function (story) {
+            return JSON.stringify(story).toLowerCase().indexOf(term) !== -1;
+          }
+        });
+        TT.refreshStoryView();
+      }, 500);
     });
   };
 

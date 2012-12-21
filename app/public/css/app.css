@@ -73,10 +73,17 @@ body.ajaxRunning #logo h1 {
   text-transform: uppercase;
 }
 
+/* Search */
+
 #search {
   position: absolute;
-  top: 48px;
-  right: 14px;
+  top: 50px;
+  right: 16px;
+}
+
+#search input {
+  font: normal 18px/18px Helvetica, sans-serif;
+  width: 200px;
 }
 
 /* Dialog */
