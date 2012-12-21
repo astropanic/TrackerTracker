@@ -89,13 +89,11 @@ var TT = (function () {
     if (!pub.Filters[filter.name]) {
       var html = pub.render('filter', filter);
       filter.element = pub.attach(html, '#filters', 'prependTo');
+      filter.active = true;
+      pub.Filters[filter.name] = filter;
     } else if (pub.Filters[filter.name].active === false) {
       TT.UI.reactivateFilter(filter.name);
-      return false;
     }
-
-    filter.active = true;
-    pub.Filters[filter.name] = filter;
   };
 
   // helpers
