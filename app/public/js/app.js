@@ -18,22 +18,6 @@ var TT = (function () {
     pub.Users = {};
   };
 
-  // ajax UI state
-
-  pub.activeServerRequests = 0;
-
-  pub.ajaxStart = function () {
-    pub.activeServerRequests++;
-    $('body').addClass('ajaxRunning');
-  };
-
-  pub.ajaxEnd = function () {
-    pub.activeServerRequests--;
-    if (!pub.activeServerRequests) {
-      $('body').removeClass('ajaxRunning');
-    }
-  };
-
   // abstracted client-side templates
   pub.render = function (name, data) {
     if (!pub.Templates[name]) {
@@ -64,7 +48,7 @@ var TT = (function () {
     s.onload = s.onerror = callback || pub.noop;
     s.src = url + (data ? '?' + $.param(data) : '');
     document.getElementsByTagName('head')[0].appendChild(s);
-    pub.ajaxStart();
+    pub.Ajax.start();
   };
 
   // client-side data manipulation
@@ -239,6 +223,29 @@ var TT = (function () {
       });
       pub.updateColumnDimensions();
     });
+  };
+
+  return pub;
+
+}());
+
+TT.Ajax = (function () {
+
+  var pub = {};
+  var activeServerRequests = 0;
+
+  // ajax UI state
+
+  pub.start = function () {
+    activeServerRequests++;
+    $('body').addClass('ajaxRunning');
+  };
+
+  pub.end = function () {
+    activeServerRequests--;
+    if (!activeServerRequests) {
+      $('body').removeClass('ajaxRunning');
+    }
   };
 
   return pub;
@@ -584,7 +591,7 @@ TT.API = (function () {
 
     var html = TT.render('projectList', { projects: projects.project });
     TT.attach(html, '#projects');
-    TT.ajaxEnd();
+    TT.Ajax.end();
   };
 
   pub.addIterations = function (iterations) {
@@ -595,7 +602,7 @@ TT.API = (function () {
     });
 
     TT.refreshStoryView();
-    TT.ajaxEnd();
+    TT.Ajax.end();
   };
 
   return pub;

@@ -44,6 +44,6 @@ exports.getStories = function (req, res) {
 exports.updateStory = function (req, res) {
   pivotal.updateStory(req.query.project_id, req.query.story_id, req.query.data, function (err, results) {
     res.set('Content-Type', 'text/javascript');
-    res.send('TT.ajaxEnd();');
+    res.send('TT.Ajax.end();');
   });
 };
