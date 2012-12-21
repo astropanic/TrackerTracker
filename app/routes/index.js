@@ -27,8 +27,8 @@ exports.useToken = function (req, res) {
 };
 
 exports.getProjects = function (req, res) {
-  projectsKey = pivotal.token + '_projects';
-  projects = null;
+  var projectsKey = pivotal.token + '_projects';
+  var projects = null;
 
   var callback = function (results) {
     res.set('Content-Type', 'text/javascript');
@@ -50,7 +50,7 @@ exports.getProjects = function (req, res) {
 };
 
 exports.getIterations = function (req, res) {
-  iterationsKey = pivotal.token + '_project_' + req.query.project + '_iterations';
+  var iterationsKey = pivotal.token + '_project_' + req.query.project + '_iterations';
 
   var callback = function (results) {
     res.set('Content-Type', 'text/javascript');
@@ -73,7 +73,7 @@ exports.getIterations = function (req, res) {
 };
 
 exports.getStories = function (req, res) {
-  storiesKey = pivotal.token + '_project_' + req.query.project + '_stories';
+  var storiesKey = pivotal.token + '_project_' + req.query.project + '_stories';
 
   var callback = function (results) {
     res.set('Content-Type', 'text/javascript');
