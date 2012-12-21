@@ -89,15 +89,6 @@ var TT = (function () {
     return pub.Templates[name].render(data);
   };
 
-  // render a collection
-  pub.renderAll = function (name, items) {
-    var html = '';
-    $.each(items, function (index, item) {
-      html += pub.render(name, item);
-    });
-    return html;
-  };
-
   pub.attach = function (html, target, method) {
     method = method || 'appendTo';
     var element = $(html)[method](target);
@@ -202,13 +193,6 @@ var TT = (function () {
 
   pub.clearStoryView = function () {
     $('.story').empty().remove();
-  };
-
-  pub.refreshStory = function (element) {
-    var id = $(element).data('story-id');
-    var html = TT.render('story', TT.Stories[id]);
-    TT.attach(html, element, 'insertAfter');
-    $(element).empty().remove();
   };
 
   pub.initLayout = function () {
