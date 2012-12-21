@@ -170,9 +170,19 @@ var TT = (function () {
     return TT.Utils.removeFromArray(tags, tag);
   };
 
+  pub.showProjectResetButton = function () {
+    if ($('#projects .project.inactive').length > 0) {
+      $('#project-reset').css('display', 'inline-block');
+    } else {
+      $('#project-reset').css('display', 'none');
+    }
+  };
+
   pub.refreshStoryView = function () {
     pub.setProjectActiveState();
     pub.clearStoryView();
+    pub.showProjectResetButton();
+
     $.each(pub.Stories, function (index, story) {
       $.each(pub.Layout, function (index, name) {
         var column = pub.Columns[name];
@@ -458,6 +468,10 @@ TT.UI = (function () {
   pub.selectProject = function () {
     setTimeout(TT.refreshStoryView, 10);
     // intentionally not returning false here so the label click bubbles to the checkbox
+  };
+
+  pub.resetProjectList = function () {
+    $('#projects .project.inactive label').click();
   };
 
   pub.hideColumn = function () {

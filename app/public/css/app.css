@@ -122,6 +122,8 @@ body.ajaxRunning #logo h1 {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
 }
 
+/* Project List */
+
 #projects {
   padding: 6px 12px;
 }
@@ -158,6 +160,24 @@ body.ajaxRunning #logo h1 {
 .project input {
   display: none;
 }
+
+#project-reset {
+  background: url(/images/refresh.png) no-repeat scroll top left transparent;
+  cursor: pointer;
+  display: none;
+  height: 16px;
+  left: 6px;
+  opacity: 0.4;
+  position: relative;
+  top: 3px;
+  width: 16px;
+}
+
+#project-reset:hover {
+  opacity: 0.8;
+}
+
+/* Filters */
 
 #filters {
   background: #eee;
