@@ -71,7 +71,7 @@ var TT = (function () {
   pub.addFilter = function (filter) {
     if (!pub.Filters[filter.name]) {
       var html = pub.render('filter', filter);
-      filter.element = pub.attach(html, '#columnList', 'insertAfter');
+      filter.element = pub.attach(html, '#filters', 'prependTo');
     } else if (pub.Filters[filter.name].active === false) {
       TT.UI.reactivateFilter(filter.name);
       return false;
@@ -99,8 +99,8 @@ var TT = (function () {
   };
 
   pub.attach = function (html, target, method) {
-    // Which object is returned is important here
-    var element = method ? $(html)[method](target) : $(target).append(html);
+    method = method || 'appendTo';
+    var element = $(html)[method](target);
     if (html.indexOf('data-click-handler') !== -1) {
       pub.initClickHandlers(element.parent());
     }

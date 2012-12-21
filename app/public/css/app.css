@@ -229,7 +229,7 @@ body.ajaxRunning #logo h1 {
 }
 
 .filter.inactive {
-  background: #d3d3d3;
+  background: #ddd;
   box-shadow: none;
   color: #555;
   padding-right: 8px;
@@ -238,7 +238,7 @@ body.ajaxRunning #logo h1 {
 
 .filter.inactive:hover {
   background: #999;
-  color: #333;
+  color: #fff;
 }
 
 .filter.inactive span {
@@ -440,6 +440,10 @@ body.ajaxRunning #logo h1 {
 .story .note .date {
   color: #666;
   font-size: 11px;
+}
+
+.story.blocked {
+  background-color: #f5cbd3;
 }
 
 .column-started .story,
