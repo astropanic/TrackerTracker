@@ -495,9 +495,9 @@ TT.UI = (function () {
     if (!token) {
       return false;
     }
-    $.post('/token', { token: token }, function() {
-      TT.Dialog.close();
-    });
+    $.post('/token', { token: token });
+    TT.Ajax.start();
+    TT.Dialog.close();
     return false;
   };
 

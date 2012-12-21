@@ -18,6 +18,8 @@ exports.hasToken = function (req, res, next) {
 
 exports.useToken = function (req, res) {
   res.cookie('token', req.body.token, { maxAge: TWO_YEARS });
+  res.set('Content-Type', 'text/javascript');
+  res.send('TT.Ajax.end();');
 };
 
 exports.getProjects = function (req, res) {
