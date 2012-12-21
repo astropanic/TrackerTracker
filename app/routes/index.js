@@ -1,7 +1,9 @@
 var TWO_YEARS = 2 * 365 * 24 * 60 * 60 * 1000;
-var pivotal = require('pivotal');
-
 var PIVOTAL_TOKEN_COOKIE = 'pivotalToken';
+
+var pivotal = require('pivotal');
+var redis = require("redis"), client = redis.createClient();
+var _ = require('underscore');
 
 exports.index = function (req, res) {
   res.render('index');
@@ -25,23 +27,71 @@ exports.useToken = function (req, res) {
 };
 
 exports.getProjects = function (req, res) {
-  pivotal.getProjects(function (err, results) {
+  projectsKey = pivotal.token + '_projects';
+  projects = null;
+
+  var callback = function (results) {
     res.set('Content-Type', 'text/javascript');
-    res.send('TT.API.setProjects(' + JSON.stringify(results) + ');');
+    res.send('TT.API.setProjects(' + results + ');');
+  };
+
+  client.get(projectsKey, function (err, results) {
+    if (_.isEmpty(results)) {
+      pivotal.getProjects(function (err, results) {
+        resultsAsJson = JSON.stringify(results);
+
+        client.set(projectsKey, resultsAsJson);
+        callback(resultsAsJson); 
+      });
+    } else {
+      callback(results);
+    };
   });
 };
 
 exports.getIterations = function (req, res) {
-  pivotal.getCurrentBacklogIterations(req.query.project, function (err, results) {
+  iterationsKey = pivotal.token + '_project_' + req.query.project + '_iterations';
+
+  var callback = function (results) {
     res.set('Content-Type', 'text/javascript');
-    res.send(results ? 'TT.API.addIterations(' + JSON.stringify(results) + ');' : '');
+    res.send(results ? 'TT.API.addIterations(' + results + ');' : '');
+  }
+
+  client.get(iterationsKey, function (err, results) {
+    if (_.isEmpty(results)) {
+      pivotal.getCurrentBacklogIterations(req.query.project, function (err, results) {
+        resultsAsJson = JSON.stringify(results);
+
+        client.set(iterationsKey, resultsAsJson);
+        callback(resultsAsJson); 
+      });
+    } else {
+      callback(results);
+    };
+
   });
 };
 
 exports.getStories = function (req, res) {
-  pivotal.getStories(req.query.project, { limit: 500 }, function (err, results) {
+  storiesKey = pivotal.token + '_project_' + req.query.project + '_stories';
+
+  var callback = function (results) {
     res.set('Content-Type', 'text/javascript');
-    res.send(results ? 'TT.API.addStories(' + JSON.stringify(results) + ');' : '');
+    res.send(results ? 'TT.API.addStories(' + results + ');' : '');
+  }
+
+  client.get(storiesKey, function (err, results) {
+    if (_.isEmpty(results)) {
+      pivotal.getStories(req.query.project, { limit: 500 }, function (err, results) {
+        resultsAsJson = JSON.stringify(results);
+
+        client.set(storiesKey, resultsAsJson);
+        callback(resultsAsJson); 
+      });
+    } else {
+      callback(results);
+    };
+
   });
 };
 
