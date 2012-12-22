@@ -1,7 +1,7 @@
 var express = require('express');
 var http = require('http');
-var routes = require('./routes');
-routes.hoganCompiler = require('./routes/hoganCompiler.js');
+var routes = require('./modules/routes.js');
+routes.hoganCompiler = require('./modules/hoganCompiler.js');
 
 var app = express();
 
