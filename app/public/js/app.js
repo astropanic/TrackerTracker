@@ -267,6 +267,16 @@ TT.Search = (function () {
 
   var pub = {};
 
+  pub.addSearchTag = function (term) {
+    TT.addFilter({
+      name: term,
+      fn: function (story) {
+        return JSON.stringify(story).toLowerCase().indexOf(term) !== -1;
+      }
+    });
+    TT.View.drawStories();
+  };
+
   pub.init = function () {
     var timeout;
     var search = $('#search input');
@@ -276,17 +286,9 @@ TT.Search = (function () {
       clearTimeout(timeout);
       timeout = setTimeout(function () {
         var term = $.trim(search.val().toLowerCase());
-        if (!term) {
-          return false;
+        if (term) {
+          pub.addSearchTag(term);
         }
-
-        TT.addFilter({
-          name: term,
-          fn: function (story) {
-            return JSON.stringify(story).toLowerCase().indexOf(term) !== -1;
-          }
-        });
-        TT.refreshStoryView();
       }, 500);
     });
   };
