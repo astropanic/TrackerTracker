@@ -43,18 +43,7 @@ var TT = (function () {
     }).removeAttr('data-click-handler');
   };
 
-  pub.request = function (url, data, callback) {
-    var s = document.createElement('script');
-    s.onload = s.onerror = callback || pub.noop;
-    if (data) {
-      data.cache_buster = new Date().getTime();
-    }
-    s.src = url + (data ? '?' + $.param(data) : '');
-    document.getElementsByTagName('head')[0].appendChild(s);
-    pub.Ajax.start();
-  };
-
-  // client-side data manipulation
+  // client-side data transformation
 
   pub.addUser = function (user) {
     pub.Users[user.id] = {
@@ -211,10 +200,19 @@ var TT = (function () {
     $('#columns').width((width + 8) * column_count);
   };
 
-  pub.requestData = function () {
-    pub.request('/projects', {}, function () {
-      $.each(pub.Projects, function (index, project) {
-        pub.request('/iterations', { project: project.id });
+  pub.requestProjectsAndIterations = function () {
+    TT.Ajax.start();
+    $.get('/projects', function(response) {
+      TT.API.setProjects(JSON.parse(response));
+      pub.requestAllIterations();
+    });
+  };
+
+  pub.requestAllIterations = function () {
+    $.each(pub.Projects, function (index, project) {
+      TT.Ajax.start();
+      $.get('/iterations', { project: project.id }, function (response) {
+        TT.API.addIterations(JSON.parse(response));
       });
       pub.updateColumnDimensions();
     });
@@ -233,7 +231,7 @@ var TT = (function () {
     TT.DragAndDrop.init();
     TT.Search.init();
 
-    pub.requestData();
+    pub.requestProjectsAndIterations();
   };
 
   return pub;
@@ -524,7 +522,7 @@ TT.UI = (function () {
     if (!pivotalToken) {
       return false;
     }
-    $.post('/token', { pivotalToken: pivotalToken }, TT.requestData);
+    $.post('/token', { pivotalToken: pivotalToken }, TT.requestProjectsAndIterations);
     TT.Dialog.close();
     return false;
   };

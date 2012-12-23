@@ -26,28 +26,25 @@ exports.useToken = function (req, res) {
 
 exports.getProjects = function (req, res) {
   pivotalCache.getProjects(function (results) {
-    res.set('Content-Type', 'text/javascript');
-    res.send('TT.API.setProjects(' + results + ');');
+    res.json(results);
   });
 };
 
 exports.getIterations = function (req, res) {
   pivotalCache.getCurrentBacklogIterations(req.query.project, function (results) {
-    res.set('Content-Type', 'text/javascript');
-    res.send('TT.API.addIterations(' + results + ');');
+    res.json(results);
   });
 };
 
 exports.getStories = function (req, res) {
   pivotalCache.getStories(req.query.project, { limit: 500 }, function (results) {
-    res.set('Content-Type', 'text/javascript');
-    res.send('TT.API.addStories(' + results + ');');
+    res.json(results);
   });
 };
 
 exports.updateStory = function (req, res) {
   pivotalCache.updateStory(req.query.project_id, req.query.story_id, req.query.data, function (results) {
     res.set('Content-Type', 'text/javascript');
-    res.send('TT.Ajax.end();');
+    res.send('{}');
   });
 };
