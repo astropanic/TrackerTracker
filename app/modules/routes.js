@@ -1,10 +1,7 @@
 var TWO_YEARS = 2 * 365 * 24 * 60 * 60 * 1000;
-var ONE_MINUTE = 1000 * 60;
 var PIVOTAL_TOKEN_COOKIE = 'pivotalToken';
 
-var pivotal = require('pivotal');
-var redis = require("redis"), client = redis.createClient();
-var _ = require('underscore');
+var pivotalCache = require('./pivotalCache.js');
 
 exports.index = function (req, res) {
   res.render('index');
@@ -12,7 +9,7 @@ exports.index = function (req, res) {
 
 exports.hasToken = function (req, res, next) {
   if (req.cookies[PIVOTAL_TOKEN_COOKIE]) {
-    pivotal.useToken(req.cookies[PIVOTAL_TOKEN_COOKIE]);
+    pivotalCache.useToken(req.cookies[PIVOTAL_TOKEN_COOKIE]);
     res.cookie(PIVOTAL_TOKEN_COOKIE, req.cookies[PIVOTAL_TOKEN_COOKIE], { maxAge: TWO_YEARS });
     next();
   } else {
@@ -28,80 +25,28 @@ exports.useToken = function (req, res) {
 };
 
 exports.getProjects = function (req, res) {
-  var projectsKey = pivotal.token + '_projects';
-  var projects = null;
-
-  var callback = function (results) {
+  pivotalCache.getProjects(function (results) {
     res.set('Content-Type', 'text/javascript');
     res.send('TT.API.setProjects(' + results + ');');
-  };
-
-  client.get(projectsKey, function (err, results) {
-    if (_.isEmpty(results)) {
-      pivotal.getProjects(function (err, results) {
-        resultsAsJson = JSON.stringify(results);
-
-        client.set(projectsKey, resultsAsJson);
-        callback(resultsAsJson); 
-      });
-    } else {
-      callback(results);
-    };
   });
 };
 
 exports.getIterations = function (req, res) {
-  var iterationsKey = pivotal.token + '_project_' + req.query.project + '_iterations';
-
-  var callback = function (results) {
+  pivotalCache.getCurrentBacklogIterations(req.query.project, function (results) {
     res.set('Content-Type', 'text/javascript');
-    res.send(results ? 'TT.API.addIterations(' + results + ');' : '');
-  };
-
-  client.get(iterationsKey, function (err, results) {
-    var parsed_results = JSON.parse(results);
-    var timestamp = _.isObject(parsed_results) ? parsed_results.timestamp : null;
-
-    if (_.isEmpty(results) || !timestamp || timestamp < (new Date().getTime() - ONE_MINUTE)) {
-      pivotal.getCurrentBacklogIterations(req.query.project, function (err, results) {
-        results.timestamp = new Date().getTime();
-        resultsAsJson = JSON.stringify(results);
-
-        client.set(iterationsKey, resultsAsJson);
-        callback(resultsAsJson); 
-      });
-    } else {
-      callback(results);
-    };
-
+    res.send('TT.API.addIterations(' + results + ');');
   });
 };
 
 exports.getStories = function (req, res) {
-  var storiesKey = pivotal.token + '_project_' + req.query.project + '_stories';
-
-  var callback = function (results) {
+  pivotalCache.getStories(req.query.project, { limit: 500 }, function (results) {
     res.set('Content-Type', 'text/javascript');
-    res.send(results ? 'TT.API.addStories(' + results + ');' : '');
-  };
-
-  client.get(storiesKey, function (err, results) {
-    if (_.isEmpty(results)) {
-      pivotal.getStories(req.query.project, { limit: 500 }, function (err, results) {
-        resultsAsJson = JSON.stringify(results);
-
-        client.set(storiesKey, resultsAsJson);
-        callback(resultsAsJson); 
-      });
-    } else {
-      callback(results);
-    };
-
+    res.send('TT.API.addStories(' + results + ');');
   });
 };
 
 exports.updateStory = function (req, res) {
-  pivotal.updateStory(req.query.project_id, req.query.story_id, req.query.data, function (err, results) {
+  pivotalCache.updateStory(req.query.project_id, req.query.story_id, req.query.data, function (results) {
     res.set('Content-Type', 'text/javascript');
     res.send('TT.Ajax.end();');
   });
