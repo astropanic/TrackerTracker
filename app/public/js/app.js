@@ -510,7 +510,7 @@ TT.UI = (function () {
   };
 
   pub.requestToken = function () {
-    var formView = TT.render('tokenForm');
+    var formView = TT.render('accountSettings');
     TT.Dialog.open(formView);
 
     var pivotalToken = $.cookie('pivotalToken');
