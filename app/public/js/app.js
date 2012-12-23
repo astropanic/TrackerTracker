@@ -342,26 +342,37 @@ TT.DragAndDrop = (function () {
 
     if (dragOutFn || dragInFn) {
       $.extend(TT.Stories[story.id], data);
-      setTimeout(TT.refreshStoryView, 100);
+      setTimeout(TT.View.drawStories, 100);
 
       if (data.labels) {
         data.labels = data.labels.join(',');
       }
-      TT.request('/updateStory', { project_id: story.project_id, story_id: story.id, data: data });
+
+      $.post('/updateStory', { project_id: story.project_id, story_id: story.id, data: data });
     }
 
     dragOutFn = dragInFn = null;
   };
 
   pub.init = function () {
-    $('.sortable').sortable({
+    $('.sortable-column').sortable({
       cancel: '.expanded-story',
-      connectWith: '.sortable',
+      connectWith: '.sortable-column',
       containment: '#content',
       distance: 10,
       tolerance: 'pointer',
       start: pub.onStart,
       beforeStop: pub.onBeforeStop
+    });
+
+    $('#columns').sortable({
+      containment: '#content',
+      distance: 10,
+      handle: '.column-title',
+      tolerance: 'pointer',
+      start: function (event, ui) {
+        ui.placeholder.width(ui.helper.outerWidth());
+      }
     });
   };
 
