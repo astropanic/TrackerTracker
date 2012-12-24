@@ -12,37 +12,6 @@ var TT = (function () {
 
   pub.noop = function () {};
 
-  pub.initStorage = function () {
-    pub.Projects = {};
-    pub.Stories = {};
-    pub.Users = {};
-  };
-
-  // abstracted client-side templates
-  pub.render = function (name, data) {
-    if (!pub.Templates[name]) {
-      pub.Templates[name] = new Hogan.Template(HoganTemplates[name]);
-    }
-    return pub.Templates[name].render(data);
-  };
-
-  pub.attach = function (html, target, method) {
-    method = method || 'appendTo';
-    var element = $(html)[method](target);
-    if (html.indexOf('data-click-handler') !== -1) {
-      pub.initClickHandlers(element.parent());
-    }
-    return element;
-  };
-
-  pub.initClickHandlers = function (context) {
-    $(context || 'body').find('[data-click-handler]').each(function () {
-      // console.log('processing click handler', this);
-      var handler = pub.Utils.strToFunction($(this).data('click-handler'));
-      $(this).click(handler);
-    }).removeAttr('data-click-handler');
-  };
-
   // client-side data transformation
 
   pub.addUser = function (user) {
@@ -79,8 +48,7 @@ var TT = (function () {
 
   pub.addFilter = function (filter) {
     if (!pub.Filters[filter.name]) {
-      var html = pub.render('filter', filter);
-      filter.element = pub.attach(html, '#filters', 'prependTo');
+      filter.element = TT.View.drawFilter(filter);
       filter.active = true;
       pub.Filters[filter.name] = filter;
     } else if (pub.Filters[filter.name].active === false) {
@@ -141,48 +109,8 @@ var TT = (function () {
     return TT.Utils.removeFromArray(tags, tag);
   };
 
-  pub.showProjectResetButton = function () {
-    if ($('#projects .project.inactive').length > 0) {
-      $('#project-reset').css('display', 'inline-block');
-    } else {
-      $('#project-reset').css('display', 'none');
-    }
-  };
-
-  pub.refreshStoryView = function () {
-    pub.setProjectActiveState();
-    pub.clearStoryView();
-    pub.showProjectResetButton();
-
-    $.each(pub.Stories, function (index, story) {
-      $.each(pub.Layout, function (index, name) {
-        var column = pub.Columns[name];
-        if (column.filter(story) && pub.projectIsActive(story.project_id) && pub.storyIsNotFiltered(story)) {
-          var html = pub.render('story', story);
-          pub.attach(html, '.' + column.class_name + ' .column-bucket');
-        }
-      });
-    });
-  };
-
-  pub.clearStoryView = function () {
-    $('.story').empty().remove();
-  };
-
   pub.initLayout = function () {
     pub.Layout = ['Backlog', 'Started', 'In QA', 'Passed QA', 'Delivered', 'Accepted'];
-  };
-
-  pub.initColumns = function () {
-    var html = '';
-    $.each(pub.Layout, function (index, name) {
-      html += pub.render('column', pub.Columns[name]);
-    });
-    pub.attach(html, '#columns');
-  };
-
-  pub.initAccountNav = function () {
-    pub.attach(pub.render('accountNav'), '#logo');
   };
 
   pub.updateColumnDimensions = function () {
@@ -202,8 +130,11 @@ var TT = (function () {
 
   pub.requestProjectsAndIterations = function () {
     TT.Ajax.start();
-    $.get('/projects', function(response) {
-      TT.API.setProjects(JSON.parse(response));
+    $.get('/projects', function (projects) {
+      projects = JSON.parse(projects).project;
+      TT.API.addProjects(projects);
+      TT.Ajax.end();
+      TT.View.drawProjectList(projects);
       pub.requestAllIterations();
     });
   };
@@ -211,19 +142,21 @@ var TT = (function () {
   pub.requestAllIterations = function () {
     $.each(pub.Projects, function (index, project) {
       TT.Ajax.start();
-      $.get('/iterations', { project: project.id }, function (response) {
-        TT.API.addIterations(JSON.parse(response));
+      $.get('/iterations', { project: project.id }, function (iterations) {
+        iterations = JSON.parse(iterations).iteration;
+        TT.API.addIterations(iterations);
+        TT.Ajax.end();
+        TT.View.drawStories();
       });
-      pub.updateColumnDimensions();
     });
+    pub.updateColumnDimensions();
   };
 
   pub.onDomReady = function () {
-    pub.initStorage();
     pub.initLayout();
-    pub.initColumns();
 
-    pub.initAccountNav();
+    pub.View.drawColumns();
+    pub.View.drawAccountNav();
 
     pub.updateColumnDimensions();
     $(window).resize(pub.updateColumnDimensions);
@@ -452,8 +385,7 @@ TT.Dialog = (function () {
 
   pub.open = function (content) {
     pub.close(function () {
-      var html = TT.render('modalDialog', { content: content });
-      pub.dialog = TT.attach(html, 'body');
+      TT.View.drawModalDialog(content);
     });
   };
 
@@ -475,6 +407,108 @@ TT.Dialog = (function () {
 
 }());
 
+// Functions related to rendering and attaching DOM elements
+
+TT.View = (function () {
+
+  var pub = {};
+
+  var initClickHandlers = function (context) {
+    $(context || 'body').find('[data-click-handler]').each(function () {
+      // console.log('processing click handler', this);
+      var handler = TT.Utils.strToFunction($(this).data('click-handler'));
+      $(this).click(handler);
+    }).removeAttr('data-click-handler');
+  };
+
+  // client-side templating is abstracted away
+  pub.render = function (name, data) {
+    if (!TT.Templates[name]) {
+      TT.Templates[name] = new Hogan.Template(HoganTemplates[name]);
+    }
+    return TT.Templates[name].render(data);
+  };
+
+  pub.attach = function (html, target, method) {
+    method = method || 'appendTo';
+    var element = $(html)[method](target);
+    if (html.indexOf('data-click-handler') !== -1) {
+      initClickHandlers(element.parent());
+    }
+    return element;
+  };
+
+  pub.drawAccountNav = function () {
+    return pub.attach(pub.render('accountNav'), '#logo');
+  };
+
+  pub.drawColumns = function () {
+    var html = '';
+    $.each(TT.Layout, function (index, name) {
+      html += pub.render('column', TT.Columns[name]);
+    });
+    return pub.attach(html, '#columns');
+  };
+
+  pub.drawProjectList = function (projects) {
+    var html = pub.render('projectList', { projects: projects });
+    pub.attach(html, '#projects');
+  };
+
+  pub.clearStories = function () {
+    $('.story').empty().remove();
+  };
+
+  pub.drawStories = function () {
+    TT.setProjectActiveState();
+    pub.clearStories();
+    pub.showProjectResetButton();
+
+    $.each(TT.Stories, function (index, story) {
+      $.each(TT.Layout, function (index, name) {
+        var column = TT.Columns[name];
+        if (column.filter(story) && TT.projectIsActive(story.project_id) && TT.storyIsNotFiltered(story)) {
+          var html = pub.render('story', story);
+          pub.attach(html, '.' + column.class_name + ' .column-bucket');
+        }
+      });
+    });
+  };
+
+  pub.drawStory = function (story) {
+  };
+
+  pub.drawFilter = function (filter) {
+    var html = pub.render('filter', filter);
+    return pub.attach(html, '#filters', 'prependTo');
+  };
+
+  pub.drawModalDialog = function (content) {
+    var html = pub.render('modalDialog', { content: content });
+    pub.dialog = pub.attach(html, 'body');
+  };
+
+  pub.drawAccountSettingsForm = function () {
+    TT.Dialog.open(pub.render('accountSettings'));
+
+    var pivotalToken = $.cookie('pivotalToken');
+    if (pivotalToken) {
+      $('#token-input').val(pivotalToken)
+    }
+  };
+
+  pub.showProjectResetButton = function () {
+    if ($('#projects .project.inactive').length > 0) {
+      $('#project-reset').css('display', 'inline-block');
+    } else {
+      $('#project-reset').css('display', 'none');
+    }
+  };
+
+  return pub;
+
+}());
+
 // Controller functions called by UI elements
 // These are bound with data-click-handler attributes in the view.
 // "this" is the clicked element
@@ -484,7 +518,7 @@ TT.UI = (function () {
   var pub = {};
 
   pub.selectProject = function () {
-    setTimeout(TT.refreshStoryView, 10);
+    setTimeout(TT.View.drawStories, 10);
     // intentionally not returning false here so the label click bubbles to the checkbox
   };
 
@@ -508,13 +542,7 @@ TT.UI = (function () {
   };
 
   pub.requestToken = function () {
-    var formView = TT.render('accountSettings');
-    TT.Dialog.open(formView);
-
-    var pivotalToken = $.cookie('pivotalToken');
-    if (pivotalToken) {
-      $('#token-input').val(pivotalToken)
-    }
+    TT.View.drawRequestTokenForm();
   };
 
   pub.submitToken = function () {
@@ -532,7 +560,7 @@ TT.UI = (function () {
     $('#projects .project input:checked').attr('checked', false);
     $('#project-' + id).click();
 
-    TT.refreshStoryView();
+    TT.View.drawStories();
     return false;
   };
 
@@ -546,7 +574,7 @@ TT.UI = (function () {
       }
     });
 
-    TT.refreshStoryView();
+    TT.View.drawStories();
     return false;
   };
 
@@ -558,9 +586,9 @@ TT.UI = (function () {
       fn: function (story) {
         return TT.hasTag(story, tag);
       }
-    })
+    });
 
-    TT.refreshStoryView();
+    TT.View.drawStories();
     return false;
   };
 
@@ -572,14 +600,14 @@ TT.UI = (function () {
       pub.reactivateFilter(name);
       return false;
     });
-    TT.refreshStoryView();
+    TT.View.drawStories();
     return false;
   };
 
   pub.reactivateFilter = function (name) {
     TT.Filters[name].active = true;
     TT.Filters[name].element.removeClass('inactive').unbind('click').click(pub.removeFilter);
-    TT.refreshStoryView();
+    TT.View.drawStories();
     return false;
   };
 
@@ -587,7 +615,7 @@ TT.UI = (function () {
 
 }());
 
-// Controller functions called by server-side response
+// Controller functions called after server-side response
 
 TT.API = (function () {
 
@@ -607,28 +635,21 @@ TT.API = (function () {
     }
   }
 
-  pub.setProjects = function (projects) {
-    $.each(projects.project, function (index, project) {
+  pub.addProjects = function (projects) {
+    $.each(normalizePivotalArray(projects), function (index, project) {
       TT.addProject(project);
       if (project.memberships && project.memberships.membership) {
         addEach(project.memberships.membership, TT.addUser);
       }
     });
-
-    var html = TT.render('projectList', { projects: projects.project });
-    TT.attach(html, '#projects');
-    TT.Ajax.end();
   };
 
   pub.addIterations = function (iterations) {
-    $.each(normalizePivotalArray(iterations.iteration), function (index, iteration) {
+    $.each(normalizePivotalArray(iterations), function (index, iteration) {
       if (iteration.stories && iteration.stories.story) {
         addEach(iteration.stories.story, TT.addStory);
       }
     });
-
-    TT.refreshStoryView();
-    TT.Ajax.end();
   };
 
   return pub;
