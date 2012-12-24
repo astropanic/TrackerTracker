@@ -4,8 +4,6 @@ var client = redis.createClient();
 
 var CACHE_THRESHOLD = 1000 * 60; // 1 minute
 
-pivotal.debug = true;
-
 var isExpired = function (timestamp) {
   return timestamp < (new Date().getTime() - CACHE_THRESHOLD);
 };
