@@ -1,7 +1,7 @@
 var express = require('express');
 var http = require('http');
 var routes = require('./modules/routes.js');
-routes.hoganCompiler = require('./modules/hoganCompiler.js');
+var hoganCompiler = require('./modules/hoganCompiler.js');
 
 var app = express();
 
@@ -29,7 +29,7 @@ app.configure('production', function () {
 
 app.get('/', routes.index);
 
-app.get('/js/hogan.templates.js', routes.hoganCompiler.getAll);
+app.get('/js/hogan.templates.js', hoganCompiler.getAll);
 
 app.get('/projects', routes.hasToken, routes.getProjects);
 app.get('/iterations', routes.hasToken, routes.getIterations);
