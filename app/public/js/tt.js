@@ -26,9 +26,9 @@ var TT = (function () {
     story.name = TT.Utils.showdownLite(story.name);
     story.description = story.description.length ? TT.Utils.showdownLite(story.description) : '';
     story.estimate = story.estimate >= 0 ? story.estimate : '';
-    story.initials = pub.Utils.usernameToInitials(story.owned_by);
-    story.project_name = pub.Utils.generateInitials(pub.getProjectNameFromID(story.project_id));
-    story.project_classname = pub.Utils.cssify(pub.getProjectNameFromID(story.project_id));
+    story.initials = TT.Utils.usernameToInitials(story.owned_by);
+    story.project_name = TT.Utils.generateInitials(pub.getProjectNameFromID(story.project_id));
+    story.project_classname = TT.Utils.cssify(pub.getProjectNameFromID(story.project_id));
     story.labels = story.labels ? story.labels.indexOf(',') !== -1 ? story.labels.split(',') : [story.labels] : [];
     if (story.notes && story.notes.note) {
       story.notes = story.notes.note;
