@@ -42,7 +42,7 @@ var TT = (function () {
   };
 
   pub.addColumn = function (column) {
-    column.class_name = 'column-' + pub.Utils.cssify(column.name);
+    column.class_name = 'column-' + TT.Utils.cssify(column.name);
     pub.Columns[column.name] = column;
   };
 
