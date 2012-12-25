@@ -75,7 +75,8 @@ TT.DragAndDrop = (function () {
       tolerance: 'pointer',
       start: function (event, ui) {
         ui.placeholder.width(ui.helper.width() - 4);
-      }
+      },
+      stop: TT.updateLayout
     });
   };
 

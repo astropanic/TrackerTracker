@@ -110,7 +110,20 @@ var TT = (function () {
   };
 
   pub.initLayout = function () {
-    pub.Layout = ['Backlog', 'Started', 'In QA', 'Passed QA', 'Delivered', 'Accepted'];
+    var defaultLayout = ['Backlog', 'Started', 'In QA', 'Passed QA', 'Delivered', 'Accepted'];
+    var savedLayout = TT.Utils.localStorage('layout');
+
+    pub.Layout = savedLayout ? JSON.parse(savedLayout) : defaultLayout;
+  };
+
+  pub.updateLayout = function () {
+    var layout = [];
+    $('#columns .column-title').each(function () {
+      layout[layout.length] = $.trim($(this).text());
+    });
+
+    pub.Layout = layout;
+    TT.Utils.localStorage('layout', JSON.stringify(layout));
   };
 
   pub.updateColumnDimensions = function () {

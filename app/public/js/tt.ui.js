@@ -15,11 +15,12 @@ TT.UI = (function () {
     $('#projects .project.inactive label').click();
   };
 
-  pub.hideColumn = function () {
+  pub.removeColumn = function () {
     var name = $.trim($(this).closest('.column-title').text());
     TT.Utils.removeFromArray(TT.Layout, name);
     $(this).closest('.column').empty().remove();
     TT.updateColumnDimensions();
+    TT.updateLayout();
 
     return false;
   };
