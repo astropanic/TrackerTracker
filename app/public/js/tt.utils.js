@@ -2,6 +2,38 @@ TT.Utils = (function () {
 
   var pub = {};
 
+  pub.exists = function (obj) {
+    return typeof obj !== 'undefined' && obj !== null;
+  };
+
+  // from underscore
+  pub.isObject = function (obj) {
+    return obj === Object(obj);
+  };
+
+  pub.localStorage = function (key, value) {
+    try {
+      if (window.localStorage) {
+        key = 'TT.' + key;
+
+        if (pub.exists(value)) {
+          if (pub.isObject(value)) {
+            value = JSON.stringify(value);
+          }
+          window.localStorage[key] = value;
+        }
+
+        if (value === null) {
+          window.localStorage.removeItem(key);
+        }
+
+        return window.localStorage[key];
+      }
+    } catch (e) {
+      TT.View.message('This browser does not support localStorage. You should use the latest version of Chrome, Firefox, or Safari.');
+    }
+  };
+
   pub.strToFunction = function (functionName, context) {
     context = context || window;
     var namespaces = functionName.split(".");

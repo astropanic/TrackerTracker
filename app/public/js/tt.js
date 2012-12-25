@@ -129,14 +129,26 @@ var TT = (function () {
   };
 
   pub.requestProjectsAndIterations = function () {
-    TT.Ajax.start();
-    $.get('/projects', function (projects) {
+    function useProjectData(projects) {
       projects = JSON.parse(projects).project;
-      TT.API.addProjects(projects);
       TT.Ajax.end();
+      TT.API.addProjects(projects);
       TT.View.drawProjectList(projects);
       pub.requestAllIterations();
-    });
+    }
+
+    TT.Ajax.start();
+    var projects = TT.Utils.localStorage('projects');
+
+    if (projects) {
+      useProjectData(projects);
+    } else {
+      $.get('/projects', function (projects) {
+        console.log(projects);
+        TT.Utils.localStorage('projects', projects);
+        useProjectData(projects);
+      });
+    }
   };
 
   pub.requestAllIterations = function () {

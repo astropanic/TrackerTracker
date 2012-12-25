@@ -1,5 +1,46 @@
 describe "TT.Utils", ->
 
+  describe "#exists", ->
+    subject = TT.Utils.exists
+
+    it "should return true when object is not null and not undefined", ->
+      expect(subject('')).toBe true
+      expect(subject(0)).toBe true
+      expect(subject(1)).toBe true
+      expect(subject('abc')).toBe true
+      expect(subject({})).toBe true
+
+    it "should return false if object is null or undefined", ->
+      expect(subject()).toBe false
+      expect(subject(undefined)).toBe false
+      expect(subject(null)).toBe false
+
+  describe "#localStorage", ->
+    subject = TT.Utils.localStorage
+    key = 'myKey'
+    val = null
+
+    afterEach ->
+      subject(key, null)
+
+    say "an object is passed in", ->
+      beforeEach ->
+        val = { a: 1, b: 2, c: 3 }
+
+      it "should store the stringified version of that object in localStorage", ->
+        expect(subject(key)).toBe undefined
+        expect(subject(key, val)).toBe '{"a":1,"b":2,"c":3}'
+
+    say "null is passed in", ->
+      beforeEach ->
+        val = null
+
+      it "should delete the key", ->
+        expect(subject(key)).toBe undefined
+        expect(subject(key, 'abc')).toBe 'abc'
+        expect(subject(key, null)).toBe undefined
+        expect(subject(key)).toBe undefined
+
   describe "#strToFunction", ->
     subject = TT.Utils.strToFunction
 
