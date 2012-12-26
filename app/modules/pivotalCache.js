@@ -2,7 +2,7 @@ var pivotal = require('pivotal');
 var redis = require('redis');
 var client = redis.createClient();
 
-var CACHE_THRESHOLD = 1000 * 60; // 1 minute
+var CACHE_THRESHOLD = 1000 * 60 * 60; // 1 hour
 
 var isExpired = function (timestamp) {
   return timestamp < (new Date().getTime() - CACHE_THRESHOLD);
