@@ -11,13 +11,17 @@ TT.Utils = (function () {
     return obj === Object(obj);
   };
 
+  pub.isString = function (obj) {
+    return typeof obj === 'string';
+  };
+
   pub.localStorage = function (key, value) {
     try {
       if (window.localStorage) {
         key = 'TT.' + key;
 
         if (pub.exists(value)) {
-          if (pub.isObject(value)) {
+          if (!pub.isString(value)) {
             value = JSON.stringify(value);
           }
           window.localStorage[key] = value;

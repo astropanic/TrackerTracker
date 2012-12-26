@@ -67,10 +67,16 @@ TT.View = (function () {
   };
 
   pub.setProjectActiveState = function () {
+    var projectList = [];
     $('#projects .project').each(function () {
       var id = $(this).data('project-id');
       TT.Projects[id].active = !$(this).hasClass('inactive');
+      if (TT.Projects[id].active) {
+        projectList.push(id);
+      }
     });
+
+    TT.Utils.localStorage('projectList', projectList);
   };
 
   pub.drawStory = function (story) {

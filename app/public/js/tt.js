@@ -127,12 +127,24 @@ var TT = (function () {
     $('#columns').width((width + 8) * column_count);
   };
 
+  pub.setInactiveProjects = function () {
+    var projectList = TT.Utils.localStorage('projectList');
+
+    if (projectList) {
+      $('#projects .project').addClass('inactive');
+      $.each(JSON.parse(projectList), function (index, id) {
+        $('#project-' + id).removeClass('inactive');
+      });
+    }
+  };
+
   pub.requestProjectsAndIterations = function () {
     function useProjectData(projects) {
       projects = JSON.parse(projects).project;
       TT.Ajax.end();
       TT.API.addProjects(projects);
       TT.View.drawProjectList(projects);
+      pub.setInactiveProjects();
       pub.requestAllIterations();
     }
 
@@ -143,7 +155,6 @@ var TT = (function () {
       useProjectData(projects);
     } else {
       $.get('/projects', function (projects) {
-        console.log(projects);
         TT.Utils.localStorage('projects', projects);
         useProjectData(projects);
       });
