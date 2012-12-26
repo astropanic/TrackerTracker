@@ -36,6 +36,14 @@ TT.Model = (function () {
 
     self.name = name;
 
+    self.save = function () {
+      return TT.Utils.localStorage(self.name, JSON.stringify(TT[self.name]));
+    };
+
+    self.load = function () {
+      return TT.Utils.localStorage(self.name);
+    };
+
     self.search = function (query, returnIndex) {
       return pub.search(TT[self.name], query, returnIndex);
     };

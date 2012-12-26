@@ -111,7 +111,7 @@ var TT = (function () {
         active: column.active
       };
     });
-    var savedLayout = TT.Utils.localStorage('layout');
+    var savedLayout = TT.Model.Layout.load();
 
     pub.Layout = savedLayout ? JSON.parse(savedLayout) : defaultLayout;
   };
@@ -120,7 +120,7 @@ var TT = (function () {
     $('.column-list-nav').empty().remove();
     TT.View.drawColumnListNav();
 
-    TT.Utils.localStorage('layout', JSON.stringify(TT.Layout));
+    TT.Model.Layout.save();
     TT.View.refreshColumns();
   };
 
