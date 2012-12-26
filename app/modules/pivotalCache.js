@@ -17,8 +17,10 @@ exports.getProjects = function (callback) {
 
   client.get(key, function (err, results) {
     if (results) {
+      console.log('[getProjects] using cached results');
       callback(results);
     } else {
+      console.log('[getProjects] hitting API');
       pivotal.getProjects(function (err, results) {
         results = JSON.stringify(results);
 
@@ -37,6 +39,7 @@ exports.getCurrentBacklogIterations = function (projectID, callback) {
     var timestamp = parsed_results ? parsed_results.timestamp : null;
 
     if (!results || !timestamp || isExpired(timestamp)) {
+      console.log('[getCurrentBacklogIterations: ' + projectID + '] hitting API');
       pivotal.getCurrentBacklogIterations(projectID, function (err, results) {
         results.timestamp = new Date().getTime();
         results = JSON.stringify(results);
@@ -45,6 +48,7 @@ exports.getCurrentBacklogIterations = function (projectID, callback) {
         callback(results); 
       });
     } else {
+      console.log('[getCurrentBacklogIterations: ' + projectID + '] using cached results');
       callback(results);
     }
   });
@@ -55,8 +59,10 @@ exports.getStories = function (projectID, callback) {
 
   client.get(key, function (err, results) {
     if (results) {
+      console.log('[getStories: ' + projectID + '] using cached results');
       callback(results);
     } else {
+      console.log('[getStories: ' + projectID + '] hitting API');
       pivotal.getStories(projectID, { limit: 500 }, function (err, results) {
         results = JSON.stringify(results);
 
