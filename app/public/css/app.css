@@ -210,6 +210,40 @@ body.ajaxRunning #logo h1 {
   opacity: 1;
 }
 
+/* columnList */
+
+#columnList {
+  float: left;
+  height: 27px;
+  padding: 0 10px 0 12px;
+  position: relative;
+  top: 8px;
+}
+
+#columnList .column-list-nav {
+  border: 1px solid #ddd;
+}
+
+#columnList .column-selector {
+  background: #ddd;
+  color: #888;
+  cursor: pointer;
+  display: inline-block;
+  font: bold 11px/26px Helvetica, sans-serif;
+  height: 26px;
+  padding: 0 10px;
+  text-transform: uppercase;
+}
+
+#columnList .column-selector:hover {
+  color: #333;
+}
+
+#columnList .column-selector.active {
+  background: #fff;
+  color: #333;
+}
+
 /* Filters */
 
 #filters {

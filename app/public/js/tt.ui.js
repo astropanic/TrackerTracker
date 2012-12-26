@@ -20,12 +20,26 @@ TT.UI = (function () {
     return false;
   };
 
+  pub.toggleColumnSelector = function () {
+    var name = $.trim($(this).text());
+
+    if ($(this).hasClass('active')) {
+      TT.Model.Layout.deactivate(name);
+    } else {
+      TT.Model.Layout.activate(name);
+    }
+
+    TT.refreshLayout();
+
+    return false;
+  };
+
   pub.removeColumn = function () {
     var name = $.trim($(this).closest('.column-title').text());
-    TT.Utils.removeFromArray(TT.Layout, name);
     $(this).closest('.column').empty().remove();
     TT.updateColumnDimensions();
-    TT.updateLayout();
+    TT.Model.Layout.deactivate(name);
+    TT.refreshLayout();
 
     return false;
   };
@@ -37,7 +51,7 @@ TT.UI = (function () {
   };
 
   pub.requestToken = function () {
-    TT.View.drawRequestTokenForm();
+    TT.View.drawAccountSettingsForm();
   };
 
   pub.submitToken = function () {

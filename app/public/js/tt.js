@@ -3,7 +3,7 @@ var TT = (function () {
   var pub = {};
 
   pub.Templates = {};
-  pub.Columns = {};
+  pub.Columns = [];
   pub.Filters = {};
   pub.Layout = {};
   pub.Projects = {};
@@ -11,6 +11,8 @@ var TT = (function () {
   pub.Users = {};
 
   pub.noop = function () {};
+
+  // TODO: move all of this to tt.model.js / standardized model structure
 
   // client-side data transformation
 
@@ -43,7 +45,11 @@ var TT = (function () {
 
   pub.addColumn = function (column) {
     column.class_name = 'column-' + TT.Utils.cssify(column.name);
-    pub.Columns[column.name] = column;
+    pub.Columns[pub.Columns.length] = column;
+  };
+
+  pub.getColumn = function (properties) {
+    return TT.Model.search(pub.Columns, properties)[0];
   };
 
   pub.addFilter = function (filter) {
@@ -95,33 +101,57 @@ var TT = (function () {
     return TT.Utils.removeFromArray(tags, tag);
   };
 
+  // bootstrap functions
+
   pub.initLayout = function () {
-    var defaultLayout = ['Backlog', 'Started', 'In QA', 'Passed QA', 'Delivered', 'Accepted'];
+    var defaultLayout = [];
+    $.each(TT.Columns, function (index, column) {
+      defaultLayout[defaultLayout.length] = {
+        name: column.name,
+        active: column.active
+      };
+    });
     var savedLayout = TT.Utils.localStorage('layout');
 
     pub.Layout = savedLayout ? JSON.parse(savedLayout) : defaultLayout;
   };
 
-  pub.updateLayout = function () {
-    var layout = [];
-    $('#columns .column-title').each(function () {
-      layout[layout.length] = $.trim($(this).text());
-    });
+  pub.refreshLayout = function () {
+    $('.column-list-nav').empty().remove();
+    TT.View.drawColumnListNav();
 
-    pub.Layout = layout;
-    TT.Utils.localStorage('layout', JSON.stringify(layout));
+    TT.Utils.localStorage('layout', JSON.stringify(TT.Layout));
+    TT.View.refreshColumns();
+  };
+
+  pub.layoutSortUpdate = function (element) {
+    var name = element.data('column-name');
+
+    var oldIndex = TT.Model.Layout.index({ name: name });
+    var column = TT.Model.Layout.first({ name: name });
+    var offset = column.indexStop - column.indexStart;
+    var newIndex = oldIndex + offset;
+
+    TT.Layout = TT.Utils.arrayMove(TT.Layout, oldIndex, newIndex);
   };
 
   pub.updateColumnDimensions = function () {
     var $window = $(window);
     var $columns = $('#columns .column');
 
-    var padding = 26;
-    var height = $window.height() - ($('.column-bucket').offset().top + padding);
+    if ($columns.length === 0) {
+      $('#columns').width('90%');
+
+      return false;
+    }
+
+    var height_offset = 26;
+    var height = $window.height() - ($('.column-bucket').offset().top + height_offset);
     $('.column-bucket').height(height);
 
     var column_count = $columns.length;
-    var width = Math.max(200, Math.round(($window.width() - 24 - (column_count * 8)) / column_count));
+    var width_offset = 14;
+    var width = Math.max(200, Math.round(($window.width() - width_offset - (column_count * 8)) / column_count));
     $columns.width(width);
 
     $('#columns').width((width + 8) * column_count);
@@ -179,6 +209,7 @@ var TT = (function () {
 
     pub.View.drawColumns();
     pub.View.drawAccountNav();
+    pub.View.drawColumnListNav();
 
     pub.updateColumnDimensions();
     $(window).resize(pub.updateColumnDimensions);

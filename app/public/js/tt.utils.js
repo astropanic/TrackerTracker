@@ -15,6 +15,17 @@ TT.Utils = (function () {
     return typeof obj === 'string';
   };
 
+  pub.arrayMove = function (arr, oldIndex, newIndex) {
+    if (newIndex >= arr.length) {
+        var k = newIndex - arr.length;
+        while ((k--) + 1) {
+            arr.push(undefined);
+        }
+    }
+    arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
+    return arr;
+  };
+
   pub.localStorage = function (key, value) {
     try {
       if (window.localStorage) {

@@ -75,8 +75,21 @@ TT.DragAndDrop = (function () {
       tolerance: 'pointer',
       start: function (event, ui) {
         ui.placeholder.width(ui.helper.width() - 4);
+        var name = ui.item.data('column-name');
+        TT.Model.Layout.update(name, function (obj) {
+          obj.indexStart = ui.item.index();
+          return obj;
+        });
       },
-      stop: TT.updateLayout
+      stop: function (event, ui) {
+        var name = ui.item.data('column-name');
+        TT.Model.Layout.update(name, function (obj) {
+          obj.indexStop = ui.item.index();
+          return obj;
+        });
+        TT.layoutSortUpdate(ui.item);
+        TT.refreshLayout();
+      }
     });
   };
 

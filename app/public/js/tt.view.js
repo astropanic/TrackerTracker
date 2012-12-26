@@ -33,12 +33,26 @@ TT.View = (function () {
     return pub.attach(pub.render('accountNav'), '#logo');
   };
 
+  pub.drawColumnListNav = function () {
+    var html = pub.render('columnListNav', { columns: TT.Layout });
+    pub.attach(html, '#columnList');
+  };
+
   pub.drawColumns = function () {
     var html = '';
-    $.each(TT.Layout, function (index, name) {
-      html += pub.render('column', TT.Columns[name]);
+    TT.Model.Layout.each(function (index, column) {
+      if (column.active) {
+        html += pub.render('column', TT.getColumn({ name: column.name }));
+      }
     });
     return pub.attach(html, '#columns');
+  };
+
+  pub.refreshColumns = function () {
+    $('#columns .column').empty().remove();
+    pub.drawColumns();
+    TT.updateColumnDimensions();
+    pub.drawStories();
   };
 
   pub.drawProjectList = function (projects) {
@@ -56,8 +70,8 @@ TT.View = (function () {
     pub.showProjectResetButton();
 
     $.each(TT.Stories, function (index, story) {
-      $.each(TT.Layout, function (index, name) {
-        var column = TT.Columns[name];
+      TT.Model.Layout.each(function (index, column) {
+        var column = TT.getColumn({ name: column.name });
         if (column.filter(story) && TT.projectIsActive(story.project_id) && TT.storyIsNotFiltered(story)) {
           var html = pub.render('story', story);
           pub.attach(html, '.' + column.class_name + ' .column-bucket');

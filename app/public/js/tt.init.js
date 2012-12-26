@@ -4,6 +4,7 @@
 
 TT.addColumn({
   name: 'Backlog',
+  active: true,
   filter: function (story) {
     return story.current_state === 'unstarted';
   },
@@ -14,6 +15,7 @@ TT.addColumn({
 
 TT.addColumn({
   name: 'Started',
+  active: true,
   filter: function (story) {
     return story.current_state === 'started';
   },
@@ -24,6 +26,7 @@ TT.addColumn({
 
 TT.addColumn({
   name: 'In QA',
+  active: true,
   filter: function (story) {
     return story.current_state === 'finished' && !TT.hasTag(story, 'passedqa');
   },
@@ -37,6 +40,7 @@ TT.addColumn({
 
 TT.addColumn({
   name: 'Passed QA',
+  active: true,
   filter: function (story) {
     return story.current_state === 'finished' && TT.hasTag(story, 'passedqa');
   },
@@ -50,6 +54,7 @@ TT.addColumn({
 
 TT.addColumn({
   name: 'Delivered',
+  active: true,
   filter: function (story) {
     return story.current_state === 'delivered';
   },
@@ -60,6 +65,7 @@ TT.addColumn({
 
 TT.addColumn({
   name: 'Accepted',
+  active: true,
   filter: function (story) {
     return story.current_state === 'accepted';
   },

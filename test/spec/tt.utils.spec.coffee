@@ -15,6 +15,22 @@ describe "TT.Utils", ->
       expect(subject(undefined)).toBe false
       expect(subject(null)).toBe false
 
+  describe "#arrayMove", ->
+    subject = TT.Utils.arrayMove
+    arr = null
+
+    beforeEach ->
+      arr = [1, 2, 3, 4, 5, 6]
+
+    it "should move a key from one index to another", ->
+      expect(subject(arr, 2, 5)).toEqual [1, 2, 4, 5, 6, 3]
+      expect(subject(arr, 5, 2)).toEqual [1, 2, 3, 4, 5, 6]
+      expect(subject(arr, 0, 5)).toEqual [2, 3, 4, 5, 6, 1]
+
+    say "the new index is beyond the end of the array", ->
+      it "should pad the array with undefined values until it gets to the requested index", ->
+        expect(subject(arr, 2, 6)).toEqual [1, 2, 4, 5, 6, undefined, 3]
+
   describe "#localStorage", ->
     subject = TT.Utils.localStorage
     key = 'myKey'
