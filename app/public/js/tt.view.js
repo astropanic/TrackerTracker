@@ -109,6 +109,14 @@ TT.View = (function () {
     }
   };
 
+  pub.message = function (str, type) {
+    var html = pub.render('message', { type: type || 'info', str: str });
+    return pub.attach(html, '#messages').click(function () {
+      $(this).fadeOut(250).delay(300).remove();
+      return false;
+    }).hide().fadeIn(250).delay(10000).fadeOut(250).delay(300).remove();
+  };
+
   return pub;
 
 }());
