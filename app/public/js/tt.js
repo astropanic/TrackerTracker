@@ -62,20 +62,6 @@ var TT = (function () {
     return pub.Projects[id].name;
   };
 
-  pub.setProjectActiveState = function () {
-    $('#projects input').each(function () {
-      var id = $(this).val();
-      var active = $(this).is(':checked');
-
-      pub.Projects[id].active = active;
-      if (active) {
-        $(this).closest('.project').removeClass('inactive');
-      } else {
-        $(this).closest('.project').addClass('inactive');
-      }
-    });
-  };
-
   pub.projectIsActive = function (project_id) {
     return !!pub.Projects[project_id].active;
   };

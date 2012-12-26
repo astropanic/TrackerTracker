@@ -7,12 +7,17 @@ TT.UI = (function () {
   var pub = {};
 
   pub.selectProject = function () {
-    setTimeout(TT.View.drawStories, 10);
-    // intentionally not returning false here so the label click bubbles to the checkbox
+    $(this).toggleClass('inactive');
+    TT.View.drawStories();
+
+    return false;
   };
 
   pub.resetProjectList = function () {
-    $('#projects .project.inactive label').click();
+    $('#projects .project.inactive').removeClass('inactive');
+    TT.View.drawStories();
+
+    return false;
   };
 
   pub.removeColumn = function () {

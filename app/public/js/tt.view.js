@@ -51,7 +51,7 @@ TT.View = (function () {
   };
 
   pub.drawStories = function () {
-    TT.setProjectActiveState();
+    pub.setProjectActiveState();
     pub.clearStories();
     pub.showProjectResetButton();
 
@@ -63,6 +63,13 @@ TT.View = (function () {
           pub.attach(html, '.' + column.class_name + ' .column-bucket');
         }
       });
+    });
+  };
+
+  pub.setProjectActiveState = function () {
+    $('#projects .project').each(function () {
+      var id = $(this).data('project-id');
+      TT.Projects[id].active = !$(this).hasClass('inactive');
     });
   };
 

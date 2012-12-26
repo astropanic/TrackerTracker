@@ -1,8 +1,6 @@
 <div class="projects">
   {{#projects}}
-    <div class="project">
-      <input type="checkbox" name="project" value="{{id}}" id="project-{{id}}" checked="checked" /> <label for="project-{{id}}" data-click-handler="TT.UI.selectProject">{{name}}</label>
-    </div>
+    <div class="project" id="project-{{id}}" data-project-id="{{id}}" data-click-handler="TT.UI.selectProject">{{name}}</div>
   {{/projects}}
   <div id="project-reset" data-click-handler="TT.UI.resetProjectList"></div>
 </div>
