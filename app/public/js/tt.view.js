@@ -53,6 +53,7 @@ TT.View = (function () {
     pub.drawColumns();
     TT.updateColumnDimensions();
     pub.drawStories();
+    TT.DragAndDrop.initStorySorting();
   };
 
   pub.drawProjectList = function (projects) {

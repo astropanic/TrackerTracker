@@ -20,12 +20,12 @@ TT.DragAndDrop = (function () {
     return fn;
   };
 
-  pub.onStart = function (event, ui) {
+  pub.onStoryStart = function (event, ui) {
     columnOut = $(ui.item).closest('.column')[0];
     dragOutFn = pub.getDragFn(ui.item, 'out');
   };
 
-  pub.onBeforeStop = function (event, ui) {
+  pub.onStoryBeforeStop = function (event, ui) {
     columnIn = $(ui.item).closest('.column')[0];
     if (columnOut === columnIn) {
       return true;
@@ -46,28 +46,37 @@ TT.DragAndDrop = (function () {
     if (dragOutFn || dragInFn) {
       TT.Model.Story.extend({ id: story.id }, data);
 
-      setTimeout(TT.View.drawStories, 100);
-
       if (data.labels) {
         data.labels = data.labels.join(',');
       }
 
       $.post('/updateStory', { project_id: story.project_id, story_id: story.id, data: data });
     }
+  };
 
+  pub.onStoryStop = function () {
+    if (dragOutFn || dragInFn) {
+      // wait for jQuery sortable to finish up
+      setTimeout(TT.View.drawStories, 0);
+    }
     dragOutFn = dragInFn = null;
   };
 
-  pub.init = function () {
+  pub.initStorySorting = function () {
     $('.sortable-column').sortable({
       cancel: '.expanded-story',
       connectWith: '.sortable-column',
       containment: '#content',
       distance: 10,
       tolerance: 'pointer',
-      start: pub.onStart,
-      beforeStop: pub.onBeforeStop
+      start: pub.onStoryStart,
+      beforeStop: pub.onStoryBeforeStop,
+      stop: pub.onStoryStop
     });
+  };
+
+  pub.init = function () {
+    pub.initStorySorting();
 
     $('#columns').sortable({
       distance: 10,
