@@ -11,7 +11,7 @@ TT.Dialog = (function () {
   };
 
   pub.close = function (callback) {
-    callback = callback || TT.noop;
+    callback = TT.Utils.isFunction(callback) ? callback : TT.noop;
     if (pub.dialog) {
       pub.dialog.find('.modal-dialog, .modal-dialog-overlay').fadeOut(180);
       setTimeout(function () {

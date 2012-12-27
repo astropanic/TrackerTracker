@@ -57,6 +57,7 @@ TT.View = (function () {
   };
 
   pub.drawProjectList = function (projects) {
+    $('#projects .projects').empty().remove();
     var html = pub.render('projectList', { projects: projects });
     pub.attach(html, '#projects');
   };
@@ -104,7 +105,7 @@ TT.View = (function () {
 
   pub.drawModalDialog = function (content) {
     var html = pub.render('modalDialog', { content: content });
-    pub.dialog = pub.attach(html, 'body');
+    TT.Dialog.dialog = pub.attach(html, 'body');
   };
 
   pub.drawAccountSettingsForm = function () {
