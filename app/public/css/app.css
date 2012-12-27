@@ -525,6 +525,11 @@ body.ajaxRunning #logo h1 {
   z-index: 9999;
 }
 
+.story.ui-sortable-helper {
+  -moz-transform: rotate(2deg);
+  -webkit-transform: rotate(2deg);
+}
+
 .ui-sortable-placeholder {
   background: none !important;
   border: 2px dashed #fff;
