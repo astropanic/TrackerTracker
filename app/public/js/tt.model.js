@@ -14,7 +14,7 @@ TT.Model = (function () {
     };
   }
 
-  function search(collection, query, returnIndex) {
+  function find(collection, query, returnIndex) {
     if (TT.Utils.isObject(query)) {
       query = matcherObjectToFunction(query);
     }
@@ -57,16 +57,16 @@ TT.Model = (function () {
       return TT.Utils.localStorage(self.name);
     };
 
-    self.search = function (query, returnIndex) {
-      return search(self.DB, query, returnIndex);
+    self.find = function (query, returnIndex) {
+      return find(self.DB, query, returnIndex);
     };
 
     self.get = function (query) {
-      return query ? search(self.DB, query)[0] : self.DB;
+      return query ? find(self.DB, query)[0] : self.DB;
     };
 
     self.index = function (query) {
-      return search(self.DB, query, true)[0];
+      return find(self.DB, query, true)[0];
     };
 
     self.each = function (fn) {
@@ -113,14 +113,14 @@ TT.Model = (function () {
     return self;
   }
 
-  pub.Column = new Model('Column');
+  pub.Column = Model('Column');
 
   pub.Column.onBeforeAdd = function (column) {
     column.class_name = 'column-' + TT.Utils.cssify(column.name);
     return column;
   };
 
-  pub.Layout = new Model('Layout');
+  pub.Layout = Model('Layout');
 
   pub.Layout.activate = function (name) {
     pub.Layout.update({ name: name }, function (obj) {
@@ -136,7 +136,7 @@ TT.Model = (function () {
     });
   };
 
-  pub.Story = new Model('Story');
+  pub.Story = Model('Story');
 
   pub.Story.onBeforeAdd = function (story) {
     story.id = parseInt(story.id);
@@ -150,6 +150,7 @@ TT.Model = (function () {
     if (story.notes && story.notes.note) {
       story.notes = story.notes.note;
     }
+
     return story;
   };
 
@@ -168,18 +169,24 @@ TT.Model = (function () {
     if (story.labels && tag) {
       return $.inArray(tag, story.labels) !== -1;
     }
+
     return false;
   };
 
-  pub.Story.addTag = function (tags, tag) {
-    if ($.inArray(tag, tags) === -1) {
-      tags[tags.length] = tag;
+  pub.Story.addTag = function (story, tag) {
+    if (!pub.Story.hasTag(story, tag)) {
+      story.labels[story.labels.length] = tag;
     }
-    return tags;
+
+    return story;
   };
 
-  pub.Story.removeTag = function (tags, tag) {
-    return TT.Utils.removeFromArray(tags, tag);
+  pub.Story.removeTag = function (story, tag) {
+    if (story.labels) {
+      story.labels = TT.Utils.removeFromArray(story.labels, tag);
+    }
+
+    return story;
   };
 
   return pub;

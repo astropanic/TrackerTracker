@@ -31,10 +31,10 @@ TT.Model.Column.add({
     return story.current_state === 'finished' && !TT.Model.Story.hasTag(story, 'passedqa');
   },
   onDragIn: function (story) {
-    return { current_state: 'finished', labels: TT.Model.Story.addTag(story.labels, 'inqa') };
+    return { current_state: 'finished', labels: TT.Model.Story.addTag(story, 'inqa').labels };
   },
   onDragOut: function (story) {
-    return { labels: TT.Model.Story.removeTag(story.labels, 'inqa') };
+    return { labels: TT.Model.Story.removeTag(story, 'inqa').labels };
   }
 });
 
@@ -45,10 +45,10 @@ TT.Model.Column.add({
     return story.current_state === 'finished' && TT.Model.Story.hasTag(story, 'passedqa');
   },
   onDragIn: function (story) {
-    return { current_state: 'finished', labels: TT.Model.Story.addTag(story.labels, 'passedqa') };
+    return { current_state: 'finished', labels: TT.Model.Story.addTag(story, 'passedqa').labels };
   },
   onDragOut: function (story) {
-    return { labels: TT.Model.Story.removeTag(story.labels, 'passedqa') };
+    return { labels: TT.Model.Story.removeTag(story, 'passedqa').labels };
   }
 });
 
