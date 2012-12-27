@@ -30,7 +30,7 @@ TT.API = (function () {
   pub.addIterations = function (iterations) {
     $.each(normalizePivotalArray(iterations), function (index, iteration) {
       if (iteration.stories && iteration.stories.story) {
-        addEach(iteration.stories.story, TT.addStory);
+        addEach(iteration.stories.story, TT.Model.Story.add);
       }
     });
   };

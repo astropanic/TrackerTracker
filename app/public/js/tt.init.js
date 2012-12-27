@@ -2,7 +2,7 @@
 // Readymade columns
 // TODO: Allow creating & saving custom columns and layouts
 
-TT.addColumn({
+TT.Model.Column.add({
   name: 'Backlog',
   active: true,
   filter: function (story) {
@@ -13,7 +13,7 @@ TT.addColumn({
   }
 });
 
-TT.addColumn({
+TT.Model.Column.add({
   name: 'Started',
   active: true,
   filter: function (story) {
@@ -24,35 +24,35 @@ TT.addColumn({
   }
 });
 
-TT.addColumn({
+TT.Model.Column.add({
   name: 'In QA',
   active: true,
   filter: function (story) {
-    return story.current_state === 'finished' && !TT.hasTag(story, 'passedqa');
+    return story.current_state === 'finished' && !TT.Model.Story.hasTag(story, 'passedqa');
   },
   onDragIn: function (story) {
-    return { current_state: 'finished', labels: TT.addTag(story.labels, 'inqa') };
+    return { current_state: 'finished', labels: TT.Model.Story.addTag(story.labels, 'inqa') };
   },
   onDragOut: function (story) {
-    return { labels: TT.removeTag(story.labels, 'inqa') };
+    return { labels: TT.Model.Story.removeTag(story.labels, 'inqa') };
   }
 });
 
-TT.addColumn({
+TT.Model.Column.add({
   name: 'Passed QA',
   active: true,
   filter: function (story) {
-    return story.current_state === 'finished' && TT.hasTag(story, 'passedqa');
+    return story.current_state === 'finished' && TT.Model.Story.hasTag(story, 'passedqa');
   },
   onDragIn: function (story) {
-    return { current_state: 'finished', labels: TT.addTag(story.labels, 'passedqa') };
+    return { current_state: 'finished', labels: TT.Model.Story.addTag(story.labels, 'passedqa') };
   },
   onDragOut: function (story) {
-    return { labels: TT.removeTag(story.labels, 'passedqa') };
+    return { labels: TT.Model.Story.removeTag(story.labels, 'passedqa') };
   }
 });
 
-TT.addColumn({
+TT.Model.Column.add({
   name: 'Delivered',
   active: true,
   filter: function (story) {
@@ -63,7 +63,7 @@ TT.addColumn({
   }
 });
 
-TT.addColumn({
+TT.Model.Column.add({
   name: 'Accepted',
   active: true,
   filter: function (story) {

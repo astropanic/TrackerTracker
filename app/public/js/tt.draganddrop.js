@@ -7,7 +7,7 @@ TT.DragAndDrop = (function () {
     var fn;
     element = $(element).closest('.column');
 
-    $.each(TT.Columns, function (index, column) {
+    TT.Model.Column.each(function (index, column) {
       if (element.hasClass(column.class_name)) {
         if (type === 'in' && column.onDragIn) {
           fn = column.onDragIn;
@@ -31,7 +31,7 @@ TT.DragAndDrop = (function () {
       return true;
     }
 
-    var story = TT.Stories[$(ui.item).data('story-id')];
+    var story = TT.Model.Story.get({ id: $(ui.item).data('story-id') });
     var data = {};
 
     dragInFn = pub.getDragFn(ui.item, 'in');
@@ -44,7 +44,8 @@ TT.DragAndDrop = (function () {
     }
 
     if (dragOutFn || dragInFn) {
-      $.extend(TT.Stories[story.id], data);
+      TT.Model.Story.extend({ id: story.id }, data);
+
       setTimeout(TT.View.drawStories, 100);
 
       if (data.labels) {
@@ -69,21 +70,20 @@ TT.DragAndDrop = (function () {
     });
 
     $('#columns').sortable({
-      containment: '#content',
       distance: 10,
       handle: '.column-title',
       tolerance: 'pointer',
       start: function (event, ui) {
         ui.placeholder.width(ui.helper.width() - 4);
         var name = ui.item.data('column-name');
-        TT.Model.Layout.update(name, function (obj) {
+        TT.Model.Layout.update({ name: name }, function (obj) {
           obj.indexStart = ui.item.index();
           return obj;
         });
       },
       stop: function (event, ui) {
         var name = ui.item.data('column-name');
-        TT.Model.Layout.update(name, function (obj) {
+        TT.Model.Layout.update({ name: name }, function (obj) {
           obj.indexStop = ui.item.index();
           return obj;
         });
