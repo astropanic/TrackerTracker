@@ -11,9 +11,11 @@ TT.Utils = (function () {
     return obj === Object(obj);
   };
 
-  pub.isString = function (obj) {
-    return typeof obj === 'string';
-  };
+  $.each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp'], function (index, type) {
+    pub['is' + type] = function (obj) {
+      return Object.prototype.toString.call(obj) === '[object ' + type + ']';
+    };
+  });
 
   pub.arrayMove = function (arr, oldIndex, newIndex) {
     if (newIndex >= arr.length) {
