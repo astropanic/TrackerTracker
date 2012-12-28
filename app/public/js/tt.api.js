@@ -20,7 +20,7 @@ TT.API = (function () {
 
   pub.addProjects = function (projects) {
     $.each(normalizePivotalArray(projects), function (index, project) {
-      TT.addProject(project);
+      TT.Model.Project.add(project);
       if (project.memberships && project.memberships.membership) {
         addEach(project.memberships.membership, TT.Model.User.add);
       }

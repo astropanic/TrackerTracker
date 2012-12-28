@@ -74,7 +74,7 @@ TT.View = (function () {
     TT.Model.Story.each(function (index, story) {
       TT.Model.Layout.each(function (index, column) {
         column = TT.Model.Column.get({ name: column.name });
-        if (column.filter(story) && TT.projectIsActive(story.project_id) && TT.Model.Story.isNotFiltered(story)) {
+        if (column.filter(story) && TT.Model.Project.isActive({ id: story.project_id }) && TT.Model.Story.isNotFiltered(story)) {
           var html = pub.render('story', story);
           pub.attach(html, '.' + column.class_name + ' .column-bucket');
         }
@@ -86,8 +86,9 @@ TT.View = (function () {
     var projectList = [];
     $('#projects .project').each(function () {
       var id = $(this).data('project-id');
-      TT.Projects[id].active = !$(this).hasClass('inactive');
-      if (TT.Projects[id].active) {
+      var isActive = !$(this).hasClass('inactive');
+      TT.Model.Project.extend({ id: id }, { active: isActive });
+      if (isActive) {
         projectList.push(id);
       }
     });

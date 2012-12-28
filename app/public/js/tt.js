@@ -4,18 +4,12 @@ var TT = (function () {
 
   pub.Templates = {};
   pub.Filters = {};
-  pub.Projects = {};
 
   pub.noop = function () {};
 
   // TODO: move all of this to tt.model.js / standardized model structure
 
   // client-side data transformation
-
-  pub.addProject = function (project) {
-    project.active = true;
-    pub.Projects[project.id] = project;
-  };
 
   pub.addFilter = function (filter) {
     if (!pub.Filters[filter.name]) {
@@ -25,16 +19,6 @@ var TT = (function () {
     } else if (pub.Filters[filter.name].active === false) {
       TT.UI.reactivateFilter(filter.name);
     }
-  };
-
-  // helpers
-
-  pub.getProjectNameFromID = function (id) {
-    return pub.Projects[id].name;
-  };
-
-  pub.projectIsActive = function (project_id) {
-    return !!pub.Projects[project_id].active;
   };
 
   // bootstrap functions
@@ -125,7 +109,7 @@ var TT = (function () {
   };
 
   pub.requestAllIterations = function () {
-    $.each(pub.Projects, function (index, project) {
+    TT.Model.Project.each(function (index, project) {
       TT.Ajax.start();
       $.get('/iterations', { project: project.id }, function (iterations) {
         iterations = JSON.parse(iterations).iteration;

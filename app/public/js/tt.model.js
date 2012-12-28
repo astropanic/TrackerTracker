@@ -113,6 +113,19 @@ TT.Model = (function () {
     return self;
   }
 
+  pub.Project = Model('Project');
+
+  pub.Project.onBeforeAdd = function (project) {
+    project.id = parseInt(project.id);
+    project.active = true;
+
+    return project;
+  };
+
+  pub.Project.isActive = function (query) {
+    return !!pub.Project.get(query).active;
+  };
+
   pub.User = Model('User');
 
   pub.User.onBeforeAdd = function (user) {
@@ -150,16 +163,21 @@ TT.Model = (function () {
 
   pub.Story.onBeforeAdd = function (story) {
     story.id = parseInt(story.id);
+    story.project_id = parseInt(story.project_id);
     story.name = TT.Utils.showdownLite(story.name);
     story.description = story.description.length ? TT.Utils.showdownLite(story.description) : '';
     story.estimate = story.estimate >= 0 ? story.estimate : '';
-    story.initials = (TT.Model.User.get({ name: story.owned_by }) || {}).initials;
-    story.project_name = TT.Utils.generateInitials(TT.getProjectNameFromID(story.project_id));
-    story.project_classname = TT.Utils.cssify(TT.getProjectNameFromID(story.project_id));
     story.labels = story.labels ? story.labels.indexOf(',') !== -1 ? story.labels.split(',') : [story.labels] : [];
     if (story.notes && story.notes.note) {
       story.notes = story.notes.note;
     }
+
+    var project = TT.Model.Project.get({ id: story.project_id }) || {};
+    var user = TT.Model.User.get({ name: story.owned_by }) || {};
+
+    story.initials = user.initials;
+    story.project_name = TT.Utils.generateInitials(project.name);
+    story.project_classname = TT.Utils.cssify(project.name);
 
     return story;
   };
