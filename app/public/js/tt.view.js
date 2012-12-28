@@ -4,6 +4,8 @@ TT.View = (function () {
 
   var pub = {};
 
+  pub.Templates = {};
+
   var initClickHandlers = function (context) {
     $(context || 'body').find('[data-click-handler]').each(function () {
       // console.log('processing click handler', this);
@@ -14,10 +16,10 @@ TT.View = (function () {
 
   // client-side templating is abstracted away
   pub.render = function (name, data) {
-    if (!TT.Templates[name]) {
-      TT.Templates[name] = new Hogan.Template(HoganTemplates[name]);
+    if (!pub.Templates[name]) {
+      pub.Templates[name] = new Hogan.Template(HoganTemplates[name]);
     }
-    return TT.Templates[name].render(data);
+    return pub.Templates[name].render(data);
   };
 
   pub.attach = function (html, target, method) {

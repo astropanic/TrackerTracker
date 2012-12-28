@@ -2,10 +2,6 @@ var TT = (function () {
 
   var pub = {};
 
-  pub.Templates = {};
-
-  pub.noop = function () {};
-
   // bootstrap functions
 
   pub.initLayout = function () {
