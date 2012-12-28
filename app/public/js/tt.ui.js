@@ -22,11 +22,7 @@ TT.UI = (function () {
 
   pub.toggleColumnSelector = function () {
     var name = $.trim($(this).text());
-    if ($(this).hasClass('active')) {
-      TT.Model.Layout.deactivate(name);
-    } else {
-      TT.Model.Layout.activate(name);
-    }
+    TT.Model.Layout.update({ name: name }, { active: !$(this).hasClass('active') });
     TT.refreshLayout();
 
     return false;
@@ -36,7 +32,7 @@ TT.UI = (function () {
     var name = $.trim($(this).closest('.column-title').text());
     $(this).closest('.column').empty().remove();
     TT.updateColumnDimensions();
-    TT.Model.Layout.deactivate(name);
+    TT.Model.Layout.update({ name: name }, { active: false });
     TT.refreshLayout();
 
     return false;

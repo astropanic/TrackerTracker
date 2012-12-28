@@ -157,20 +157,6 @@ TT.Model = (function () {
 
   pub.Layout = Model('Layout');
 
-  pub.Layout.activate = function (name) {
-    pub.Layout.update({ name: name }, function (obj) {
-      obj.active = true;
-      return obj;
-    });
-  };
-
-  pub.Layout.deactivate = function (name) {
-    pub.Layout.update({ name: name }, function (obj) {
-      obj.active = false;
-      return obj;
-    });
-  };
-
   pub.Story = Model('Story');
 
   pub.Story.onBeforeAdd = function (story) {

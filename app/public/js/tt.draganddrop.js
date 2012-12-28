@@ -85,17 +85,11 @@ TT.DragAndDrop = (function () {
       start: function (event, ui) {
         ui.placeholder.width(ui.helper.width() - 4);
         var name = ui.item.data('column-name');
-        TT.Model.Layout.update({ name: name }, function (obj) {
-          obj.indexStart = ui.item.index();
-          return obj;
-        });
+        TT.Model.Layout.update({ name: name }, { indexStart: ui.item.index() });
       },
       stop: function (event, ui) {
         var name = ui.item.data('column-name');
-        TT.Model.Layout.update({ name: name }, function (obj) {
-          obj.indexStop = ui.item.index();
-          return obj;
-        });
+        TT.Model.Layout.update({ name: name }, { indexStop: ui.item.index() });
         TT.layoutSortUpdate(ui.item);
         TT.refreshLayout();
       }
