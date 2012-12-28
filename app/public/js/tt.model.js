@@ -14,6 +14,15 @@ TT.Model = (function () {
     };
   }
 
+  function updateObjectToFunction(updates) {
+    return function (obj) {
+      $.each(updates, function (key, val) {
+        obj[key] = val;
+      });
+      return obj;
+    };
+  }
+
   function find(collection, query, returnIndex) {
     if (TT.Utils.isObject(query)) {
       query = matcherObjectToFunction(query);
@@ -32,6 +41,9 @@ TT.Model = (function () {
   function update(collection, matcherFn, updateFn) {
     if (TT.Utils.isObject(matcherFn)) {
       matcherFn = matcherObjectToFunction(matcherFn);
+    }
+    if (TT.Utils.isObject(updateFn)) {
+      updateFn = updateObjectToFunction(updateFn);
     }
 
     $.each(collection, function (index, obj) {
