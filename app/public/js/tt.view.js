@@ -116,7 +116,7 @@ TT.View = (function () {
 
     var pivotalToken = $.cookie('pivotalToken');
     if (pivotalToken) {
-      $('#token-input').val(pivotalToken)
+      $('#token-input').val(pivotalToken);
     }
   };
 

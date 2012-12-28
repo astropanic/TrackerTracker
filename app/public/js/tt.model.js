@@ -118,7 +118,7 @@ TT.Model = (function () {
       self.DB = [];
     };
 
-    self.import = function (DB) {
+    self.replace = function (DB) {
       self.DB = DB;
     };
 
@@ -128,7 +128,7 @@ TT.Model = (function () {
   pub.Project = Model('Project');
 
   pub.Project.onBeforeAdd = function (project) {
-    project.id = parseInt(project.id);
+    project.id = parseInt(project.id, 10);
     project.active = true;
 
     return project;
@@ -160,8 +160,8 @@ TT.Model = (function () {
   pub.Story = Model('Story');
 
   pub.Story.onBeforeAdd = function (story) {
-    story.id = parseInt(story.id);
-    story.project_id = parseInt(story.project_id);
+    story.id = parseInt(story.id, 10);
+    story.project_id = parseInt(story.project_id, 10);
     story.name = TT.Utils.showdownLite(story.name);
     story.description = story.description.length ? TT.Utils.showdownLite(story.description) : '';
     story.estimate = story.estimate >= 0 ? story.estimate : '';

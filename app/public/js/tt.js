@@ -93,7 +93,7 @@ var TT = (function () {
     });
     var savedLayout = TT.Model.Layout.load();
 
-    TT.Model.Layout.import(savedLayout ? JSON.parse(savedLayout) : defaultLayout);
+    TT.Model.Layout.replace(savedLayout ? JSON.parse(savedLayout) : defaultLayout);
   };
 
   pub.refreshLayout = function () {

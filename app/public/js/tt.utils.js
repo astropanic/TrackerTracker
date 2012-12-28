@@ -19,10 +19,10 @@ TT.Utils = (function () {
 
   pub.arrayMove = function (arr, oldIndex, newIndex) {
     if (newIndex >= arr.length) {
-        var k = newIndex - arr.length;
-        while ((k--) + 1) {
-            arr.push(undefined);
-        }
+      var k = newIndex - arr.length;
+      while ((k--) + 1) {
+        arr.push(undefined);
+      }
     }
     arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
     return arr;
@@ -53,7 +53,7 @@ TT.Utils = (function () {
 
   pub.strToFunction = function (functionName, context) {
     context = context || window;
-    var namespaces = functionName.split(".");
+    var namespaces = functionName.split('.');
     var func = namespaces.pop();
     for (var i = 0; i < namespaces.length; i++) {
       if (!context[namespaces[i]]) {
@@ -68,7 +68,7 @@ TT.Utils = (function () {
     return str.toLowerCase().replace(/[^a-z0-9\-\_]/g, '');
   };
 
-  pub.generateInitials = function(text) {
+  pub.generateInitials = function (text) {
     var initials = '';
     var words = text.replace(/[^a-zA-Z0-9 ]/g, '').split(' ');
     $.each(words, function (index, word) {
@@ -78,20 +78,20 @@ TT.Utils = (function () {
     return initials;
   };
 
-  pub.showdownLite = function(text) {
+  pub.showdownLite = function (text) {
     // <br />
-    text = text.replace(/\n/g, "<br />\n");
+    text = text.replace(/\n/g, '<br />\n');
     // <strong> must go first
-    text = text.replace(/(\*)(?=\S)([^\r]*?\S[*]*)\1/g, "<strong>$2</strong>");
+    text = text.replace(/(\*)(?=\S)([^\r]*?\S[*]*)\1/g, '<strong>$2</strong>');
     // <em>
-    text = text.replace(/(\w)_(\w)/g, "$1[[underscore]]$2"); // ** GFM **  "~E95E" == escaped "_"
-    text = text.replace(/(_)(?=\S)([^\r]*?\S)\1/g, "<em>$2</em>");
+    text = text.replace(/(\w)_(\w)/g, '$1[[underscore]]$2'); // ** GFM **  "~E95E" == escaped "_"
+    text = text.replace(/(_)(?=\S)([^\r]*?\S)\1/g, '<em>$2</em>');
     text = text.replace(/\[\[underscore\]\]/g, '_');
 
     return text;
   };
 
-  pub.removeFromArray = function(arr, val) {
+  pub.removeFromArray = function (arr, val) {
     $.each(arr, function (index, item) {
       if (val === item) {
         arr.splice(index, 1);
