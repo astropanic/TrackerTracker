@@ -87,7 +87,7 @@ TT.View = (function () {
     $('#projects .project').each(function () {
       var id = $(this).data('project-id');
       var isActive = !$(this).hasClass('inactive');
-      TT.Model.Project.extend({ id: id }, { active: isActive });
+      TT.Model.Project.update({ id: id }, { active: isActive });
       if (isActive) {
         projectList.push(id);
       }

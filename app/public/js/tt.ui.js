@@ -75,7 +75,7 @@ TT.UI = (function () {
 
   pub.filterByUser = function () {
     var name = $(this).data('username');
-    TT.addFilter({
+    TT.Model.Filter.add({
       name: name,
       fn: function (story) {
         return story.owned_by === name || story.requested_by === name;
@@ -88,7 +88,7 @@ TT.UI = (function () {
 
   pub.filterByTag = function () {
     var tag = $.trim($(this).text());
-    TT.addFilter({
+    TT.Model.Filter.add({
       name: tag,
       fn: function (story) {
         return TT.Model.Story.hasTag(story, tag);
@@ -99,9 +99,9 @@ TT.UI = (function () {
     return false;
   };
 
-  pub.removeFilter = function () {
+  pub.deactivateFilter = function () {
     var name = $.trim($(this).text());
-    TT.Filters[name].active = false;
+    TT.Model.Filter.update({ name: name }, { active: false });
     $(this).addClass('inactive').unbind('click').click(function () {
       pub.reactivateFilter(name);
       return false;
@@ -112,8 +112,19 @@ TT.UI = (function () {
   };
 
   pub.reactivateFilter = function (name) {
-    TT.Filters[name].active = true;
-    TT.Filters[name].element.removeClass('inactive').unbind('click').click(pub.removeFilter);
+    TT.Model.Filter.update({ name: name }, { active: true });
+    TT.Model.Filter.get({ name: name }).element.removeClass('inactive')
+      .unbind('click').click(pub.deactivateFilter);
+    TT.View.drawStories();
+
+    return false;
+  };
+
+  pub.removeFilter = function () {
+    var $filter = $(this).closest('.filter');
+    var name = $.trim($filter.text());
+    TT.Model.Filter.remove({ name: name });
+    $filter.empty().remove();
     TT.View.drawStories();
 
     return false;

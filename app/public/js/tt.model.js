@@ -196,7 +196,7 @@ TT.Model = (function () {
 
   pub.Story.isNotFiltered = function (story) {
     var result = true;
-    $.each(TT.Filters, function (index, filter) {
+    TT.Model.Filter.each(function (index, filter) {
       if (result && filter.active && !filter.fn(story)) {
         result = false;
       }
@@ -227,6 +227,20 @@ TT.Model = (function () {
     }
 
     return story;
+  };
+
+  pub.Filter = Model('Filter');
+
+  pub.Filter.add = function (filter) {
+    var foundFilter = pub.Filter.get({ name: filter.name });
+
+    if (!foundFilter) {
+      filter.active = true;
+      filter.element = TT.View.drawFilter(filter);
+      pub.Filter.DB[pub.Filter.DB.length] = filter;
+    } else if (foundFilter.active === false) {
+      TT.UI.reactivateFilter(foundFilter.name);
+    }
   };
 
   return pub;

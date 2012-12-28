@@ -7,7 +7,7 @@ TT.Search = (function () {
   }
 
   pub.addSearchTag = function (term) {
-    TT.addFilter({
+    TT.Model.Filter.add({
       name: term,
       fn: function (story) {
         return JSON.stringify(story).toLowerCase().indexOf(term) !== -1;

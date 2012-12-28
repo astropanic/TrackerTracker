@@ -3,23 +3,8 @@ var TT = (function () {
   var pub = {};
 
   pub.Templates = {};
-  pub.Filters = {};
 
   pub.noop = function () {};
-
-  // TODO: move all of this to tt.model.js / standardized model structure
-
-  // client-side data transformation
-
-  pub.addFilter = function (filter) {
-    if (!pub.Filters[filter.name]) {
-      filter.element = TT.View.drawFilter(filter);
-      filter.active = true;
-      pub.Filters[filter.name] = filter;
-    } else if (pub.Filters[filter.name].active === false) {
-      TT.UI.reactivateFilter(filter.name);
-    }
-  };
 
   // bootstrap functions
 
