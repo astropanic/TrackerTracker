@@ -5,21 +5,12 @@ var TT = (function () {
   pub.Templates = {};
   pub.Filters = {};
   pub.Projects = {};
-  pub.Users = {};
 
   pub.noop = function () {};
 
   // TODO: move all of this to tt.model.js / standardized model structure
 
   // client-side data transformation
-
-  pub.addUser = function (user) {
-    pub.Users[user.id] = {
-      id: user.id,
-      initials: user.person.initials,
-      name: user.person.name
-    };
-  };
 
   pub.addProject = function (project) {
     project.active = true;

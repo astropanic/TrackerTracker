@@ -22,7 +22,7 @@ TT.API = (function () {
     $.each(normalizePivotalArray(projects), function (index, project) {
       TT.addProject(project);
       if (project.memberships && project.memberships.membership) {
-        addEach(project.memberships.membership, TT.addUser);
+        addEach(project.memberships.membership, TT.Model.User.add);
       }
     });
   };

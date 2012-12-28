@@ -78,16 +78,6 @@ TT.Utils = (function () {
     return initials;
   };
 
-  pub.usernameToInitials = function (name) {
-    var initials = '';
-    $.each(TT.Users, function (index, user) {
-      if (user.name === name) {
-        initials = user.initials;
-      }
-    });
-    return initials;
-  };
-
   pub.showdownLite = function(text) {
     // <br />
     text = text.replace(/\n/g, "<br />\n");

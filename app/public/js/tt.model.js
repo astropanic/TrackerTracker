@@ -113,6 +113,16 @@ TT.Model = (function () {
     return self;
   }
 
+  pub.User = Model('User');
+
+  pub.User.onBeforeAdd = function (user) {
+    return {
+      id: user.id,
+      initials: user.person.initials,
+      name: user.person.name
+    };
+  };
+
   pub.Column = Model('Column');
 
   pub.Column.onBeforeAdd = function (column) {
@@ -143,7 +153,7 @@ TT.Model = (function () {
     story.name = TT.Utils.showdownLite(story.name);
     story.description = story.description.length ? TT.Utils.showdownLite(story.description) : '';
     story.estimate = story.estimate >= 0 ? story.estimate : '';
-    story.initials = TT.Utils.usernameToInitials(story.owned_by);
+    story.initials = (TT.Model.User.get({ name: story.owned_by }) || {}).initials;
     story.project_name = TT.Utils.generateInitials(TT.getProjectNameFromID(story.project_id));
     story.project_classname = TT.Utils.cssify(TT.getProjectNameFromID(story.project_id));
     story.labels = story.labels ? story.labels.indexOf(',') !== -1 ? story.labels.split(',') : [story.labels] : [];
