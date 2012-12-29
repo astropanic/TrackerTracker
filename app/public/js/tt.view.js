@@ -1,5 +1,6 @@
 // Functions related to rendering and attaching DOM elements
 
+var TT = TT || {};
 TT.View = (function () {
 
   var pub = {};
@@ -31,6 +32,28 @@ TT.View = (function () {
     return element;
   };
 
+  pub.updateColumnDimensions = function () {
+    var $window = $(window);
+    var $columns = $('#columns .column');
+
+    if ($columns.length === 0) {
+      $('#columns').width('90%');
+
+      return false;
+    }
+
+    var height_offset = 26;
+    var height = $window.height() - ($('.column-bucket').offset().top + height_offset);
+    $('.column-bucket').height(height);
+
+    var column_count = $columns.length;
+    var width_offset = 14;
+    var width = Math.max(200, Math.round(($window.width() - width_offset - (column_count * 8)) / column_count));
+    $columns.width(width);
+
+    $('#columns').width((width + 8) * column_count);
+  };
+
   pub.drawAccountNav = function () {
     return pub.attach(pub.render('accountNav'), '#logo');
   };
@@ -53,9 +76,16 @@ TT.View = (function () {
   pub.refreshColumns = function () {
     $('#columns .column').empty().remove();
     pub.drawColumns();
-    TT.updateColumnDimensions();
+    pub.updateColumnDimensions();
     pub.drawStories();
     TT.DragAndDrop.initStorySorting();
+  };
+
+  pub.refreshLayout = function () {
+    $('.column-list-nav').empty().remove();
+    pub.drawColumnListNav();
+    TT.Model.Layout.save();
+    pub.refreshColumns();
   };
 
   pub.drawProjectList = function (projects) {

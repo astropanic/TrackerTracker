@@ -1,3 +1,4 @@
+var TT = TT || {};
 TT.Utils = (function () {
 
   var pub = {};

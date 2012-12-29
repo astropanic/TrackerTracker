@@ -2,6 +2,7 @@
 // These are bound with data-click-handler attributes in the view.
 // "this" is the clicked element
 
+var TT = TT || {};
 TT.UI = (function () {
 
   var pub = {};
@@ -23,7 +24,7 @@ TT.UI = (function () {
   pub.toggleColumnSelector = function () {
     var name = $.trim($(this).text());
     TT.Model.Layout.update({ name: name }, { active: !$(this).hasClass('active') });
-    TT.refreshLayout();
+    TT.View.refreshLayout();
 
     return false;
   };
@@ -31,9 +32,9 @@ TT.UI = (function () {
   pub.removeColumn = function () {
     var name = $.trim($(this).closest('.column-title').text());
     $(this).closest('.column').empty().remove();
-    TT.updateColumnDimensions();
+    TT.View.updateColumnDimensions();
     TT.Model.Layout.update({ name: name }, { active: false });
-    TT.refreshLayout();
+    TT.View.refreshLayout();
 
     return false;
   };
@@ -54,7 +55,7 @@ TT.UI = (function () {
     if (!pivotalToken) {
       return false;
     }
-    $.post('/token', { pivotalToken: pivotalToken }, TT.requestProjectsAndIterations);
+    $.post('/token', { pivotalToken: pivotalToken }, TT.Init.requestProjectsAndIterations);
     TT.Dialog.close();
 
     return false;

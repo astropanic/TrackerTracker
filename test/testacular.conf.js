@@ -15,7 +15,6 @@ files = [
   'app/public/js/lib/jquery-ui-1.9.2.custom.min.js',
   'app/public/js/lib/jquery.cookie.js',
   'app/public/js/lib/hogan.js',
-  'app/public/js/tt.js',
   'app/public/js/tt.*.js',
   'test/**/*.spec.coffee'
 ];
@@ -23,7 +22,6 @@ files = [
 
 // list of files to exclude
 exclude = [
-  'app/public/js/tt.init.js'
 ];
 
 

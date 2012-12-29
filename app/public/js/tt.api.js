@@ -1,5 +1,6 @@
 // Controller functions called after server-side response
 
+var TT = TT || {};
 TT.API = (function () {
 
   var pub = {};

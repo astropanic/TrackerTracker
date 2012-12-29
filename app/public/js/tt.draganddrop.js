@@ -1,3 +1,4 @@
+var TT = TT || {};
 TT.DragAndDrop = (function () {
 
   var pub = {};
@@ -75,6 +76,15 @@ TT.DragAndDrop = (function () {
     });
   };
 
+  pub.layoutSortUpdate = function (element) {
+    var name = element.data('column-name');
+    var column = TT.Model.Layout.get({ name: name });
+    var oldIndex = TT.Model.Layout.index({ name: name });
+    var newIndex = oldIndex + (column.indexStop - column.indexStart);
+
+    TT.Model.Layout.move(oldIndex, newIndex);
+  };
+
   pub.init = function () {
     pub.initStorySorting();
 
@@ -90,8 +100,8 @@ TT.DragAndDrop = (function () {
       stop: function (event, ui) {
         var name = ui.item.data('column-name');
         TT.Model.Layout.update({ name: name }, { indexStop: ui.item.index() });
-        TT.layoutSortUpdate(ui.item);
-        TT.refreshLayout();
+        pub.layoutSortUpdate(ui.item);
+        TT.View.refreshLayout();
       }
     });
   };

@@ -1,5 +1,6 @@
 // Modal dialog
 
+var TT = TT || {};
 TT.Dialog = (function () {
 
   var pub = {};

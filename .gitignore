@@ -1,3 +1,3 @@
 .DS_Store
-app/public/js/tt.bundle.js
-app/public/js/tt.bundle.min.js
+app/public/css/bundle/*
+app/public/js/bundle/*

@@ -3,24 +3,24 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     concat: {
-      'app/public/js/tt.bundle.js': [
-        'app/public/js/tt.js',
-        'app/public/js/tt.ajax.js',
-        'app/public/js/tt.api.js',
-        'app/public/js/tt.dialog.js',
-        'app/public/js/tt.draganddrop.js',
-        'app/public/js/tt.model.js',
-        'app/public/js/tt.search.js',
-        'app/public/js/tt.ui.js',
-        'app/public/js/tt.utils.js',
-        'app/public/js/tt.view.js',
-        'app/public/js/tt.init.js',
+      'app/public/css/bundle/tt.css': [
+        'app/public/css/yui-reset.css',
+        'app/public/css/app.css'
+      ],
+      'app/public/js/bundle/tt.js': [
+        'app/public/js/*.js'
+      ],
+      'app/public/js/bundle/lib.js': [
+        'app/public/js/lib/jquery-1.8.3.min.js',
+        'app/public/js/lib/jquery-ui-1.9.2.custom.min.js',
+        'app/public/js/lib/jquery.cookie.js',
+        'app/public/js/lib/hogan.js'
       ]
     },
     min: {
       dist: {
-        src: ['app/public/js/tt.bundle.js'],
-        dest: 'app/public/js/tt.bundle.min.js'
+        src: ['app/public/js/bundle/tt.js'],
+        dest: 'app/public/js/bundle/tt.min.js'
       }
     },
     lint: {

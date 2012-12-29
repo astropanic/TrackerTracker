@@ -1,3 +1,4 @@
+var TT = TT || {};
 TT.Model = (function () {
 
   var pub = {};

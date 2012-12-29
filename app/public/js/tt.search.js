@@ -1,3 +1,4 @@
+var TT = TT || {};
 TT.Search = (function () {
 
   var pub = {};

@@ -1,3 +1,4 @@
+var TT = TT || {};
 TT.Ajax = (function () {
 
   var pub = {};
