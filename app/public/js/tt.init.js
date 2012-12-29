@@ -143,9 +143,14 @@ TT.Init = (function () {
         data: { project: project.id },
         success: function (iterations) {
           iterations = JSON.parse(iterations).iteration;
-          TT.API.addIterations(iterations);
+          if (iterations) {
+            TT.API.addIterations(iterations);
+            TT.View.drawStories();
+          } else {
+            var note = 'Invalid response from the server. Did you enter the right token?';
+            TT.View.message(note, 'error');
+          }
           TT.Ajax.end();
-          TT.View.drawStories();
         }
       });
     });

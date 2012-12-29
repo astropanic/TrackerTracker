@@ -104,8 +104,8 @@ body.ajaxRunning #logo h1 {
 
 .modal-dialog {
   position: absolute;
-  top: 0;
-  width: 100%;
+  left: 50%;
+  top: 160px;
   z-index: 1001;
 }
 
@@ -113,7 +113,7 @@ body.ajaxRunning #logo h1 {
   box-shadow: 0 18px 30px rgba(0, 0, 0, 0.3);
   border-radius: 6px;
   background: #fff;
-  margin: 200px auto 0;
+  margin: 0 0 0 -230px;
   width: 460px;
 }
 
@@ -157,6 +157,41 @@ body.ajaxRunning #logo h1 {
 
 #nav {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Messages */
+
+#messages {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+#messages .message {
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  color: #fff;
+  cursor: pointer;
+  font: bold 12px/14px Helvetica, sans-serif;
+  margin: 5px 0 0;
+  padding: 12px 30px 12px 15px;
+  position: relative;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.8);
+  width: 190px;
+}
+
+#messages .message span.close {
+  background: url(/images/close.png) no-repeat scroll center right transparent;
+  height: 16px;
+  width: 16px;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
+
+#messages .message:hover span.close {
+  background: url(/images/close_hover.png) no-repeat scroll center right transparent;
 }
 
 /* Project List */

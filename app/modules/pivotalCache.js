@@ -41,6 +41,9 @@ exports.getCurrentBacklogIterations = function (projectID, callback) {
     if (!results || !timestamp || isExpired(timestamp)) {
       console.log('[getCurrentBacklogIterations: ' + projectID + '] hitting API');
       pivotal.getCurrentBacklogIterations(projectID, function (err, results) {
+        if (!results) {
+          results = {}
+        }
         results.timestamp = new Date().getTime();
         results = JSON.stringify(results);
 
@@ -64,8 +67,10 @@ exports.getStories = function (projectID, callback) {
     } else {
       console.log('[getStories: ' + projectID + '] hitting API');
       pivotal.getStories(projectID, { limit: 500 }, function (err, results) {
+        if (!results) {
+          results = {}
+        }
         results = JSON.stringify(results);
-
         client.set(key, results);
         callback(results);
       });

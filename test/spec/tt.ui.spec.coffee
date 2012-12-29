@@ -3,6 +3,34 @@ describe "UI interactions", ->
   beforeEach ->
     TT.Init.onDomReady()
 
+  describe "Settings", ->
+
+    say "I open the settings dialog", ->
+      beforeEach ->
+        $('#account-settings-link').click()
+
+      it "should have an empty token field", ->
+        expect($('#token-input').val()).toBe ''
+        expect($.cookie('pivotalToken')).toBe null
+
+      also "I update the token", ->
+        beforeEach ->
+          $('#token-input').val('abc123')
+          $('#account-settings .form-action input').click()
+
+        it "should save the token", ->
+          expect($.cookie('pivotalToken')).toBe 'abc123'
+
+        it "should close the dialog", ->
+          expect($('#account-settings').length).toBe 0
+
+        also "I re-open the settings dialog", ->
+          beforeEach ->
+            $('#account-settings-link').click()
+
+          it "should display the saved token", ->
+            expect($('#token-input').val()).toBe 'abc123'
+
   describe "Tags", ->
     tagName = 'blocked'
 

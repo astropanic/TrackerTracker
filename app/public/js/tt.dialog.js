@@ -16,15 +16,10 @@ TT.Dialog = (function () {
   pub.close = function (callback) {
     callback = TT.Utils.isFunction(callback) ? callback : noop;
     if (pub.dialog) {
-      pub.dialog.find('.modal-dialog, .modal-dialog-overlay').fadeOut(180);
-      setTimeout(function () {
-        pub.dialog.empty().remove();
-        pub.dialog = null;
-        callback();
-      }, 200);
-    } else {
-      callback();
+      pub.dialog.find('.modal-dialog, .modal-dialog-overlay').empty().remove();
+      pub.dialog = null;
     }
+    callback();
   };
 
   return pub;

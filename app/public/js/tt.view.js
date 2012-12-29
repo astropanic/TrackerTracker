@@ -174,11 +174,15 @@ TT.View = (function () {
   };
 
   pub.message = function (str, type) {
-    var html = pub.render('message', { type: type || 'info', str: str });
-    return pub.attach(html, '#messages').click(function () {
-      $(this).fadeOut(250).delay(300).remove();
+    var html = pub.render('message', { str: str, type: type || 'info' });
+    var element = pub.attach(html, '#messages').click(function () {
+      $(this).fadeOut(250, function () { $(this).remove(); });
       return false;
-    }).hide().fadeIn(250).delay(10000).fadeOut(250).delay(300).remove();
+    });
+
+    setTimeout(function () {
+      element.fadeOut(250, function () { element.remove(); });
+    }, 10000);
   };
 
   return pub;

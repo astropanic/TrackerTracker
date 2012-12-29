@@ -59,7 +59,12 @@ TT.UI = (function () {
     if (!pivotalToken) {
       return false;
     }
-    $.post('/token', { pivotalToken: pivotalToken }, TT.Init.requestProjectsAndIterations);
+    $.ajax({
+      url: '/token',
+      type: 'POST',
+      data: { pivotalToken: pivotalToken },
+      success: TT.Init.onDomReady
+    });
     TT.Dialog.close();
 
     return false;
