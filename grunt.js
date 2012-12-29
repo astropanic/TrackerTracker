@@ -17,6 +17,13 @@ module.exports = function(grunt) {
         'app/public/js/lib/hogan.js'
       ]
     },
+    hogan: {
+      compile: {
+        namespace: 'HoganTemplates',
+        src: ['app/views/templates/*.html'],
+        dest: 'app/public/js/bundle/hoganTemplates.js'
+      }
+    },
     min: {
       dist: {
         src: ['app/public/js/bundle/tt.js'],
@@ -44,10 +51,35 @@ module.exports = function(grunt) {
         Hogan: true,
         HoganTemplates: true
       }
+    },
+    watch: {
+      files: '<config:lint.all>',
+      tasks: 'default'
     }
   });
 
+  grunt.registerMultiTask('hogan', 'Pre-compile hogan.js templates', function () {
+    var Hogan = require('hogan.js');
+    var path = require('path');
+    var data = this.data;
+
+    var namespace = data.namespace || 'HoganTemplates';
+    var output = 'var ' + namespace + ' = {};';
+
+    grunt.file.expand(data.src).forEach(function (template) {
+      var name = path.basename(template, path.extname(template));
+      try {
+        output += "\n" + namespace + "['" + name + "'] = " +
+          Hogan.compile(grunt.file.read(template).toString(), { asString: true }) + ';';
+      } catch (error) {
+        grunt.log.writeln('Error compiling template ' + name + ' in ' + template);
+        throw error;
+      }
+    });
+    grunt.file.write(data.dest, output);
+  });
+
   // Default task.
-  grunt.registerTask('default', 'lint concat min');
+  grunt.registerTask('default', 'lint hogan concat min');
 
 };
