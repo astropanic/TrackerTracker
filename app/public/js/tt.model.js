@@ -90,12 +90,6 @@ TT.Model = (function () {
       return update(self.DB, query, updateFn);
     };
 
-    self.extend = function (query, data) {
-      return update(self.DB, query, function (obj) {
-        return $.extend(obj, data);
-      });
-    };
-
     self.move = function (oldIndex, newIndex) {
       self.DB = TT.Utils.arrayMove(self.DB, oldIndex, newIndex);
     };

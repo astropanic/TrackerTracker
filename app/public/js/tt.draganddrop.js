@@ -45,7 +45,7 @@ TT.DragAndDrop = (function () {
     }
 
     if (dragOutFn || dragInFn) {
-      TT.Model.Story.extend({ id: story.id }, data);
+      TT.Model.Story.update({ id: story.id }, data);
 
       if (data.labels) {
         data.labels = data.labels.join(',');
