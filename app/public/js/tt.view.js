@@ -59,15 +59,18 @@ TT.View = (function () {
   };
 
   pub.drawAccountNav = function () {
+    $('#account').empty().remove();
     return pub.attach(pub.render('accountNav'), '#logo');
   };
 
   pub.drawColumnListNav = function () {
+    $('#columnList .column-list-nav').empty().remove();
     var html = pub.render('columnListNav', { columns: TT.Model.Layout.get() });
     pub.attach(html, '#columnList');
   };
 
   pub.drawColumns = function () {
+    $('#columns .column').empty().remove();
     var html = '';
     TT.Model.Layout.each(function (index, column) {
       if (column.active) {

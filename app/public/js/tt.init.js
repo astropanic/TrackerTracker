@@ -3,6 +3,8 @@ TT.Init = (function () {
 
   var pub = {};
 
+  pub.firstRun = true;
+
   // bootstrap functions
 
   pub.initColumns = function () {
@@ -123,9 +125,12 @@ TT.Init = (function () {
     if (projects) {
       useProjectData(projects);
     } else {
-      $.get('/projects', function (projects) {
-        TT.Utils.localStorage('projects', projects);
-        useProjectData(projects);
+      $.ajax({
+        url: '/projects',
+        success: function (projects) {
+          TT.Utils.localStorage('projects', projects);
+          useProjectData(projects);
+        }
       });
     }
   };
@@ -133,18 +138,29 @@ TT.Init = (function () {
   pub.requestAllIterations = function () {
     TT.Model.Project.each(function (index, project) {
       TT.Ajax.start();
-      $.get('/iterations', { project: project.id }, function (iterations) {
-        iterations = JSON.parse(iterations).iteration;
-        TT.API.addIterations(iterations);
-        TT.Ajax.end();
-        TT.View.drawStories();
+      $.ajax({
+        url: '/iterations',
+        data: { project: project.id },
+        success: function (iterations) {
+          iterations = JSON.parse(iterations).iteration;
+          TT.API.addIterations(iterations);
+          TT.Ajax.end();
+          TT.View.drawStories();
+        }
       });
     });
     TT.View.updateColumnDimensions();
   };
 
   pub.onDomReady = function () {
-    TT.View.drawPageLayout();
+    if (pub.firstRun) {
+      TT.View.drawPageLayout();
+    } else {
+      $.each(TT.Model, function (index, model) {
+        model.flush();
+      });
+      $('#filters .filter').empty().remove();
+    }
 
     pub.initColumns();
     pub.setLayout();
@@ -154,12 +170,16 @@ TT.Init = (function () {
     TT.View.drawColumnListNav();
 
     TT.View.updateColumnDimensions();
-    $(window).resize(TT.View.updateColumnDimensions);
 
-    TT.DragAndDrop.init();
-    TT.Search.init();
+    if (pub.firstRun) {
+      $(window).resize(TT.View.updateColumnDimensions);
+      TT.DragAndDrop.init();
+      TT.Search.init();
+    }
 
     pub.requestProjectsAndIterations();
+
+    pub.firstRun = false;
   };
 
   return pub;

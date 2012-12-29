@@ -40,8 +40,20 @@ TT.UI = (function () {
   };
 
   pub.toggleStory = function () {
-    $(this).siblings('.details').slideToggle(100);
-    $(this).closest('.story').toggleClass('expanded-story');
+    var story = $(this).closest('.story');
+    var details = $(this).siblings('.details');
+
+    story.toggleClass('expanded-story');
+
+    if (TT.disableStorySlideToggle) {
+      if (story.hasClass('expanded-story')) {
+        details.show();
+      } else {
+        details.hide();
+      }
+    } else {
+      details.slideToggle(100);
+    }
 
     return false;
   };

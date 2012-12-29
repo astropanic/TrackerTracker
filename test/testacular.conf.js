@@ -10,12 +10,10 @@ basePath = '../';
 files = [
   JASMINE,
   JASMINE_ADAPTER,
-  'test/beforeEach.js',
-  'app/public/js/lib/jquery-1.8.3.min.js',
-  'app/public/js/lib/jquery-ui-1.9.2.custom.min.js',
-  'app/public/js/lib/jquery.cookie.js',
-  'app/public/js/lib/hogan.js',
+  'app/public/js/bundle/lib.js',
+  'app/public/js/bundle/hoganTemplates.js',
   'app/public/js/tt.*.js',
+  'test/beforeEach.js',
   'test/**/*.spec.coffee'
 ];
 
