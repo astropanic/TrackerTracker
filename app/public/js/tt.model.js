@@ -145,7 +145,8 @@ TT.Model = (function () {
     return {
       id: user.id,
       initials: user.person.initials,
-      name: user.person.name
+      name: user.person.name,
+      email: user.person.email
     };
   };
 

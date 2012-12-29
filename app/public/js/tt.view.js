@@ -114,11 +114,19 @@ TT.View = (function () {
       TT.Model.Layout.each(function (index, column) {
         column = TT.Model.Column.get({ name: column.name });
         if (column.filter(story) && TT.Model.Project.isActive({ id: story.project_id }) && TT.Model.Story.isNotFiltered(story)) {
-          var html = pub.render('story', story);
-          pub.attach(html, '.' + column.class_name + ' .column-bucket');
+          pub.drawStory(story, column);
         }
       });
     });
+  };
+
+  pub.drawStory = function (story, column) {
+    var html = pub.render('story', story);
+    var element = pub.attach(html, '.' + column.class_name + ' .column-bucket');
+    var email = (TT.Model.User.get({ name: story.owned_by }) || {}).email;
+    var gravatar = pub.getGravatarImageURL(email);
+
+    pub.attach('<img class="gravatar" src="' + gravatar + '" alt="' + story.initials + '" />', element.find('.story-owner'));
   };
 
   pub.setProjectActiveState = function () {
@@ -133,9 +141,6 @@ TT.View = (function () {
     });
 
     TT.Utils.localStorage('projectList', projectList);
-  };
-
-  pub.drawStory = function (story) {
   };
 
   pub.drawFilter = function (filter) {
@@ -171,6 +176,13 @@ TT.View = (function () {
       $(this).fadeOut(250).delay(300).remove();
       return false;
     }).hide().fadeIn(250).delay(10000).fadeOut(250).delay(300).remove();
+  };
+
+  pub.getGravatarImageURL = function (email, size) {
+    size = size || 16;
+    var hash = SparkMD5.hash($.trim(email).toLowerCase());
+
+    return 'http://www.gravatar.com/avatar/' + hash + '?s=' + size;
   };
 
   return pub;
