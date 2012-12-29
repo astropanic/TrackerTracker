@@ -53,7 +53,11 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      files: '<config:lint.all>',
+      files: [
+        'app/public/css/*',
+        'app/public/js/*',
+        'app/views/templates/*'
+      ],
       tasks: 'default'
     }
   });
