@@ -12,19 +12,6 @@ var it = function(description, func) {
     return jasmine.getEnv().it('it ' + description, func);
 };
 
-/*
-var fakeLocalStorage = {};
-var fakeLocalStorageFn = function (key, value) {
-  console.log('localStorage called', arguments);
-  if (value) {
-    fakeLocalStorage[key] = value;
-  } else if (value === null) {
-    delete fakeLocalStorage[key];
-  }
-  return fakeLocalStorage[key];
-};
-*/
-
 var TT = TT || {};
 
 TT.autoStart = false;
