@@ -8,7 +8,7 @@ body, html {
 
 body {
   -webkit-font-smoothing: antialiased;
-  font: normal 12px/13px Helvetica, Arial, sans-serif;
+  font: normal 12px/15px Helvetica, Arial, sans-serif;
   overflow: hidden;
 }
 
@@ -399,7 +399,7 @@ body.ajaxRunning #logo h1 {
   border: 1px solid #fff;
   border-width: 1px 0;
   border-top-color: rgba(255, 255, 255, 0.3);
-  border-bottom-color: rgba(0, 0, 0, 0.15);
+  border-bottom-color: rgba(0, 0, 0, 0.10);
   cursor: move;
   padding: 6px 6px 6px 38px;
   position: relative;
@@ -459,9 +459,16 @@ body.ajaxRunning #logo h1 {
 }
 
 .story .points {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  color: #666;
+  font: normal 10px/13px Helvetica, sans-serif;
   float: right;
-  color: #999;
-  padding: 0 0 0 8px;
+  height: 13px;
+  margin-left: 8px;
+  padding: 0;
+  text-align: center;
+  width: 12px;
 }
 
 .story .details {
@@ -521,6 +528,15 @@ body.ajaxRunning #logo h1 {
   border-radius: 3px;
   margin: 4px 0 5px;
   padding: 10px 12px;
+}
+
+.story .dates {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  color: #999;
+  font: bold 11px/15px Helvetica, sans-serif;
+  margin: 10px 0 0;
+  padding: 6px 2px 0;
+  text-align: left;
 }
 
 .story .note .author {
