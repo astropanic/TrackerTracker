@@ -40,19 +40,14 @@ TT.UI = (function () {
   };
 
   pub.toggleStory = function () {
-    var story = $(this).closest('.story');
-    var details = $(this).siblings('.details');
-
-    story.toggleClass('expanded-story');
-
-    if (TT.disableStorySlideToggle) {
-      if (story.hasClass('expanded-story')) {
-        details.show();
-      } else {
-        details.hide();
-      }
+    var story = $(this).closest('.story').toggleClass('expanded-story');
+    if (story.hasClass('expanded-story')) {
+      var data = TT.Model.Story.get({ id: story.data('story-id') });
+      var html = TT.View.render('storyDetails', data);
+      var target = story.find('.container');
+      TT.View.attach(html, target);
     } else {
-      details.slideToggle(100);
+      story.find('.details').empty().remove();
     }
 
     return false;

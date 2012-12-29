@@ -15,7 +15,6 @@ var it = function(description, func) {
 var TT = TT || {};
 
 TT.autoStart = false;
-TT.disableStorySlideToggle = true;
 
 TT.Mock = (function () {
 

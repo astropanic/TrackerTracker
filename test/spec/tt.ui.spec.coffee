@@ -87,17 +87,17 @@ describe "UI interactions", ->
 
     say "I open a story", ->
       beforeEach ->
-        $('#story-103 .toggle-arrow').click()
+        $('.story').eq(0).find('.toggle-arrow').click()
 
       it "should display the story details", ->
-        expect($('#story-103 .description').is(':visible')).toBe true
+        expect($('.story').eq(0).find('.description').is(':visible')).toBe true
 
       also "I close the same story", ->
         beforeEach ->
-          $('#story-103 .toggle-arrow').click()
+          $('.story').eq(0).find('.toggle-arrow').click()
 
         it "should hide the story details", ->
-          expect($('#story-103 .description').is(':visible')).toBe false
+          expect($('.story').eq(0).find('.description').is(':visible')).toBe false
 
   xdescribe "Projects", ->
 
