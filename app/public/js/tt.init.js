@@ -81,10 +81,9 @@ TT.Init = (function () {
         return { current_state: 'accepted' };
       }
     });
-
   };
 
-  pub.initLayout = function () {
+  pub.setLayout = function () {
     var defaultLayout = [];
     TT.Model.Column.each(function (index, column) {
       defaultLayout[defaultLayout.length] = {
@@ -145,8 +144,10 @@ TT.Init = (function () {
   };
 
   pub.onDomReady = function () {
+    TT.View.drawPageLayout();
+
     pub.initColumns();
-    pub.initLayout();
+    pub.setLayout();
 
     TT.View.drawColumns();
     TT.View.drawAccountNav();

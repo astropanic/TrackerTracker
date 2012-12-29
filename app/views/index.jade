@@ -1,20 +1,12 @@
-extends layout
+doctype 5
+html
+  head
+    meta(charset='utf-8')
+    title TrackerTracker
 
-block content
+    link(href='/css/bundle/tt.css', rel='stylesheet', type='text/css')
+    script(src='/js/bundle/lib.js')
+    script(src='/js/bundle/hoganTemplates.js')
+    script(src='/js/bundle/tt.js')
 
-  #header
-    #logo
-      h1 <strong>Tracker</strong>Tracker
-
-    #projects
-
-    #nav
-      #search
-        input(type='search')
-      #columnList
-      #filters
-
-  #content
-    #columns
-
-  #messages
+  body

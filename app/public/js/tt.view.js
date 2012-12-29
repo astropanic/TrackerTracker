@@ -32,6 +32,10 @@ TT.View = (function () {
     return element;
   };
 
+  pub.drawPageLayout = function () {
+    pub.attach(pub.render('layout'), 'body');
+  };
+
   pub.updateColumnDimensions = function () {
     var $window = $(window);
     var $columns = $('#columns .column');
