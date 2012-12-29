@@ -42,10 +42,7 @@ TT.UI = (function () {
   pub.toggleStory = function () {
     var story = $(this).closest('.story').toggleClass('expanded-story');
     if (story.hasClass('expanded-story')) {
-      var data = TT.Model.Story.get({ id: story.data('story-id') });
-      var html = TT.View.render('storyDetails', data);
-      var target = story.find('.container');
-      TT.View.attach(html, target);
+      TT.View.drawStoryDetails(story);
     } else {
       story.find('.details').empty().remove();
     }

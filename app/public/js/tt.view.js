@@ -114,8 +114,7 @@ TT.View = (function () {
       TT.Model.Layout.each(function (index, column) {
         column = TT.Model.Column.get({ name: column.name });
         if (column.filter(story) && TT.Model.Project.isActive({ id: story.project_id }) && TT.Model.Story.isNotFiltered(story)) {
-          var html = pub.render('story', story);
-          pub.attach(html, '.' + column.class_name + ' .column-bucket');
+          pub.drawStory(story, column);
         }
       });
     });
@@ -135,7 +134,16 @@ TT.View = (function () {
     TT.Utils.localStorage('projectList', projectList);
   };
 
-  pub.drawStory = function (story) {
+  pub.drawStory = function (story, column) {
+    var html = pub.render('story', story);
+    pub.attach(html, '.' + column.class_name + ' .column-bucket');
+  };
+
+  pub.drawStoryDetails = function (story) {
+    var data = TT.Model.Story.get({ id: story.data('story-id') });
+    var html = TT.View.render('storyDetails', data);
+    var target = story.find('.container');
+    TT.View.attach(html, target);
   };
 
   pub.drawFilter = function (filter) {
