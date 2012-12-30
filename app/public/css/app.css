@@ -9,7 +9,7 @@ body, html {
 body {
   -webkit-font-smoothing: antialiased;
   color: #111;
-  font: normal 12px/15px Helvetica, Arial, sans-serif;
+  font: normal 12px/14px Helvetica, Arial, sans-serif;
   overflow: hidden;
 }
 
@@ -214,7 +214,7 @@ body.ajaxRunning #logo h1 {
 #projects {
   left: 300px;
   position: absolute;
-  top: 10px;
+  top: 11px;
 }
 
 .projects {
@@ -231,7 +231,7 @@ body.ajaxRunning #logo h1 {
   display: inline-block;
   font-weight: bold;
   margin: 0 1px 0 0;
-  padding: 8px 14px;
+  padding: 7px 14px;
   border-radius: 3px 3px 0 0;
 }
 
@@ -449,7 +449,7 @@ body.ajaxRunning #logo h1 {
 
 .story.release {
   background-image: url(/images/story.release.png);
-  background-color: #407aa5;
+  background-color: #407aa5 !important;
   border-top: 0;
   color: #fff;
 }
@@ -459,7 +459,11 @@ body.ajaxRunning #logo h1 {
 }
 
 .story.release:hover {
-  background-color: #306494;
+  background-color: #306494 !important;
+}
+
+.story.release.expanded-story:hover {
+  background-color: #f3f3f3 !important;
 }
 
 .story .toggle-arrow {
@@ -538,6 +542,7 @@ body.ajaxRunning #logo h1 {
   background: #e9dda1;
   border-radius: 2px;
   box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+  color: #201604;
   cursor: pointer;
   display: inline-block;
   font: 11px/11px Helvetica, Arial, sans-serif;
@@ -590,22 +595,34 @@ body.ajaxRunning #logo h1 {
 .column-started .story,
 .column-inqa .story,
 .column-passedqa .story,
-.column-delivered .story {
+.column-delivered .story,
+.story.started,
+.story.inqa,
+.story.passedqa,
+.story.finished,
+.story.delivered {
   background-color: #f3f3d1;
 }
 
 .column-started .story:hover,
 .column-inqa .story:hover,
 .column-passedqa .story:hover,
-.column-delivered .story:hover {
+.column-delivered .story:hover,
+.story.started:hover,
+.story.inqa:hover,
+.story.passedqa:hover,
+.story.finished:hover,
+.story.delivered:hover {
   background-color: #fafaec;
 }
 
-.column-accepted .story {
+.column-accepted .story,
+.story.accepted {
   background-color: #daebcf;
 }
 
-.column-accepted .story:hover {
+.column-accepted .story:hover,
+.story.accepted:hover {
   background-color: #edf7e7;
 }
 
