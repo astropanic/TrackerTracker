@@ -13,18 +13,7 @@ TT.Init = (function () {
     // TODO: Allow creating & saving custom columns and layouts
 
     TT.Model.Column.add({
-      name: 'Icebox',
-      active: false,
-      filter: function (story) {
-        return story.current_state === 'unscheduled';
-      },
-      onDragIn: function (story) {
-        return { current_state: 'unscheduled' };
-      }
-    });
-
-    TT.Model.Column.add({
-      name: 'Backlog',
+      name: 'Unstarted',
       active: true,
       filter: function (story) {
         return story.current_state === 'unstarted';
@@ -42,6 +31,17 @@ TT.Init = (function () {
       },
       onDragIn: function (story) {
         return { current_state: 'started' };
+      }
+    });
+
+    TT.Model.Column.add({
+      name: 'Finished',
+      active: false,
+      filter: function (story) {
+        return story.current_state === 'finished';
+      },
+      onDragIn: function (story) {
+        return { current_state: 'finished' };
       }
     });
 
@@ -98,9 +98,30 @@ TT.Init = (function () {
     TT.Model.Column.add({
       name: 'Current',
       active: false,
-      sortable: false,
       filter: function (story) {
         return story.current_iteration === true;
+      }
+    });
+
+    TT.Model.Column.add({
+      name: 'Backlog',
+      active: false,
+      filter: function (story) {
+        return story.current_iteration === false;
+      }
+    });
+
+    TT.Model.Column.add({
+      name: 'Icebox',
+      active: false,
+      filter: function (story) {
+        return story.current_state === 'unscheduled';
+      },
+      onDragIn: function (story) {
+        return { current_state: 'unscheduled' };
+      },
+      onDragOut: function (story) {
+        return { current_state: 'unstarted' };
       }
     });
   };
@@ -115,7 +136,16 @@ TT.Init = (function () {
     });
     var savedLayout = TT.Model.Layout.load();
 
-    TT.Model.Layout.replace(savedLayout ? JSON.parse(savedLayout) : defaultLayout);
+    if (savedLayout) {
+      savedLayout = JSON.parse(savedLayout);
+    }
+
+    // reset when columns are updated
+    if (savedLayout && savedLayout.length !== defaultLayout.length) {
+      savedLayout = defaultLayout;
+    }
+
+    TT.Model.Layout.replace(savedLayout ? savedLayout : defaultLayout);
   };
 
   pub.setInactiveProjects = function () {
