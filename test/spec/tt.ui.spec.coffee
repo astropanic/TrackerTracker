@@ -140,9 +140,3 @@ describe "UI interactions", ->
       it "should look enabled in the project list", ->
 
       it "should make the project stories visible in the main content area", ->
-
-  xdescribe "Search", ->
-
-    say "I perform a search", ->
-
-      it "should display stories that contain the search term", ->

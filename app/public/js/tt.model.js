@@ -101,6 +101,23 @@ TT.Model = (function () {
       self.DB[self.DB.length] = obj;
     };
 
+    self.overwrite = function (obj, key) {
+      var default_key = obj.id ? 'id' : obj.name ? 'name' : 'title';
+      key = key || default_key;
+
+      var query = {};
+      query[key] = obj[key];
+
+      if (self.get(query)) {
+        if (self.onBeforeAdd) {
+          obj = self.onBeforeAdd(obj);
+        }
+        self.update(query, obj);
+      } else {
+        self.add(obj);
+      }
+    };
+
     self.remove = function (query) {
       self.each(function (index, obj) {
         if (query(obj)) {
@@ -175,6 +192,14 @@ TT.Model = (function () {
     return story;
   };
 
+  pub.Story.onBeforeSave = function (data) {
+    if (data.labels) {
+      data.labels = data.labels.join(',');
+    }
+
+    return data;
+  };
+
   pub.Story.isNotFiltered = function (story) {
     var result = true;
     TT.Model.Filter.each(function (index, filter) {
@@ -208,6 +233,22 @@ TT.Model = (function () {
     }
 
     return story;
+  };
+
+  pub.Story.serverSave = function (story, data) {
+    TT.Ajax.start();
+    $.ajax({
+      url: '/updateStory',
+      type: 'POST',
+      data: {
+        projectID: story.project_id,
+        storyID: story.id,
+        data: pub.Story.onBeforeSave(data)
+      },
+      success: function () {
+        TT.Ajax.end();
+      }
+    });
   };
 
   pub.Filter = Model('Filter');

@@ -46,12 +46,7 @@ TT.DragAndDrop = (function () {
 
     if (dragOutFn || dragInFn) {
       TT.Model.Story.update({ id: story.id }, data);
-
-      if (data.labels) {
-        data.labels = data.labels.join(',');
-      }
-
-      $.post('/updateStory', { project_id: story.project_id, story_id: story.id, data: data });
+      TT.Model.Story.serverSave(story, data);
     }
   };
 

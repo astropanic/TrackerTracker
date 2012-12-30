@@ -31,19 +31,19 @@ exports.getProjects = function (req, res) {
 };
 
 exports.getIterations = function (req, res) {
-  pivotalCache.getCurrentBacklogIterations(req.query.project, function (results) {
+  pivotalCache.getCurrentBacklogIterations(req.query.projectID, function (results) {
     res.json(results);
   });
 };
 
 exports.getStories = function (req, res) {
-  pivotalCache.getStories(req.query.project, { limit: 500 }, function (results) {
+  pivotalCache.getStories(req.query.projectID, req.query.filter, function (results) {
     res.json(results);
   });
 };
 
 exports.updateStory = function (req, res) {
-  pivotalCache.updateStory(req.body.project_id, req.body.story_id, req.body.data, function (results) {
+  pivotalCache.updateStory(req.body.projectID, req.body.storyID, req.body.data, function (results) {
     res.set('Content-Type', 'text/javascript');
     res.send('{}');
   });

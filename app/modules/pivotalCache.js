@@ -57,28 +57,15 @@ exports.getCurrentBacklogIterations = function (projectID, callback) {
   });
 };
 
-exports.getStories = function (projectID, callback) {
-  var key = pivotal.token + '_project_' + projectID + '_stories';
-
-  client.get(key, function (err, results) {
-    if (results) {
-      console.log('[getStories: ' + projectID + '] using cached results');
-      callback(results);
-    } else {
-      console.log('[getStories: ' + projectID + '] hitting API');
-      pivotal.getStories(projectID, { limit: 500 }, function (err, results) {
-        if (!results) {
-          results = {}
-        }
-        results = JSON.stringify(results);
-        client.set(key, results);
-        callback(results);
-      });
-    }
+exports.getStories = function (projectID, filter, callback) {
+  console.log('[getStories: ' + projectID + '] hitting API');
+  pivotal.getStories(projectID, { limit: 500, filter: filter }, function (err, results) {
+    callback(results || {});
   });
 };
 
 exports.updateStory = function (projectID, storyID, data, callback) {
+  console.log('[updateStory: ' + projectID + '] hitting API');
   pivotal.updateStory(projectID, storyID, data, function (err, results) {
     if (results) {
       callback(results);

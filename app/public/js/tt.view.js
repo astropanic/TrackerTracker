@@ -5,11 +5,13 @@ TT.View = (function () {
 
   var pub = {};
 
+  pub.MIN_COLUMN_WIDTH = 240;
+
   pub.Templates = {};
 
   var initClickHandlers = function (context) {
     $(context || 'body').find('[data-click-handler]').each(function () {
-      // console.log('processing click handler', this);
+      // window.console.log('processing click handler', this);
       var handler = TT.Utils.strToFunction($(this).data('click-handler'));
       $(this).click(handler);
     }).removeAttr('data-click-handler');
@@ -52,7 +54,7 @@ TT.View = (function () {
 
     var column_count = $columns.length;
     var width_offset = 14;
-    var width = Math.max(200, Math.round(($window.width() - width_offset - (column_count * 8)) / column_count));
+    var width = Math.max(pub.MIN_COLUMN_WIDTH, Math.round(($window.width() - width_offset - (column_count * 8)) / column_count));
     $columns.width(width);
 
     $('#columns').width((width + 8) * column_count);

@@ -32,9 +32,9 @@ TT.UI = (function () {
   pub.removeColumn = function () {
     var name = $.trim($(this).closest('.column-title').text());
     $(this).closest('.column').empty().remove();
-    TT.View.updateColumnDimensions();
     TT.Model.Layout.update({ name: name }, { active: false });
-    TT.View.refreshLayout();
+    TT.View.updateColumnDimensions();
+    TT.View.drawColumnListNav();
 
     return false;
   };
@@ -83,6 +83,7 @@ TT.UI = (function () {
     var name = $(this).data('username');
     TT.Model.Filter.add({
       name: name,
+      type: 'user',
       fn: function (story) {
         return story.owned_by === name || story.requested_by === name;
       }
@@ -96,6 +97,7 @@ TT.UI = (function () {
     var tag = $.trim($(this).text());
     TT.Model.Filter.add({
       name: tag,
+      type: 'tag',
       fn: function (story) {
         return TT.Model.Story.hasTag(story, tag);
       }

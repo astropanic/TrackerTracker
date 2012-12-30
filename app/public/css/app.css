@@ -264,7 +264,7 @@ body.ajaxRunning #logo h1 {
   color: #888;
   cursor: pointer;
   display: inline-block;
-  font: bold 11px/26px Helvetica, sans-serif;
+  font: bold 11px/28px Helvetica, sans-serif;
   height: 26px;
   padding: 0 10px;
   text-transform: uppercase;
@@ -304,6 +304,17 @@ body.ajaxRunning #logo h1 {
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
 }
 
+.filter-search span.name,
+.filter-search.inactive:hover span.name {
+  background: url(/images/filter-search-active.png) no-repeat scroll -1px -1px;
+  display: inline-block;
+  padding-left: 16px;
+}
+
+.filter-search.inactive span.name {
+  background: url(/images/filter-search-inactive.png) no-repeat scroll -1px -1px;
+}
+
 .filter:hover {
   background: #8a6bb8;
   background: -webkit-linear-gradient(#8a6bb8, #674797);
@@ -311,7 +322,7 @@ body.ajaxRunning #logo h1 {
   background: linear-gradient(#8a6bb8, #674797);
 }
 
-.filter span {
+.filter span.close {
   background: url(/images/close_hover.png) no-repeat scroll center right transparent;
   height: 16px;
   width: 16px;
@@ -333,7 +344,7 @@ body.ajaxRunning #logo h1 {
   color: #fff;
 }
 
-.filter.inactive span {
+.filter.inactive span.close {
   display: none;
 }
 
@@ -459,6 +470,7 @@ body.ajaxRunning #logo h1 {
 }
 
 .story .points {
+  background: rgba(255, 255, 255, 0.5);
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 2px;
   color: #666;

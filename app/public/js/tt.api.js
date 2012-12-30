@@ -5,22 +5,22 @@ TT.API = (function () {
 
   var pub = {};
 
-  // If only one item exists, Pivotal API sends that by itself, otherwise as an array of items
-  function normalizePivotalArray(items) {
-    return $.isPlainObject(items) ? [items] : items;
-  }
-
   function addEach(items, addFn) {
     if (items) {
-      items = normalizePivotalArray(items);
+      items = pub.normalizePivotalArray(items);
       $.each(items, function (index, item) {
         addFn(item);
       });
     }
   }
 
+  // If only one item exists, Pivotal API sends that by itself, otherwise as an array of items
+  pub.normalizePivotalArray = function (items) {
+    return $.isPlainObject(items) ? [items] : items;
+  };
+
   pub.addProjects = function (projects) {
-    $.each(normalizePivotalArray(projects), function (index, project) {
+    $.each(pub.normalizePivotalArray(projects), function (index, project) {
       TT.Model.Project.add(project);
       if (project.memberships && project.memberships.membership) {
         addEach(project.memberships.membership, TT.Model.User.add);
@@ -29,7 +29,7 @@ TT.API = (function () {
   };
 
   pub.addIterations = function (iterations) {
-    $.each(normalizePivotalArray(iterations), function (index, iteration) {
+    $.each(pub.normalizePivotalArray(iterations), function (index, iteration) {
       if (iteration.stories && iteration.stories.story) {
         addEach(iteration.stories.story, TT.Model.Story.add);
       }
