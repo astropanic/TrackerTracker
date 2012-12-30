@@ -175,11 +175,16 @@ TT.Model = (function () {
     story.id = parseInt(story.id, 10);
     story.project_id = parseInt(story.project_id, 10);
     story.name = TT.Utils.showdownLite(story.name);
-    story.description = story.description.length ? TT.Utils.showdownLite(story.description) : '';
+    story.description = TT.Utils.isString(story.description) ? TT.Utils.showdownLite(story.description) : '';
     story.estimate = story.estimate >= 0 ? story.estimate : '';
     story.labels = story.labels ? story.labels.indexOf(',') !== -1 ? story.labels.split(',') : [story.labels] : [];
     if (story.notes && story.notes.note) {
-      story.notes = story.notes.note;
+      story.notes = $.map(TT.API.normalizePivotalArray(story.notes.note), function (note, index) {
+        if (note.text) {
+          note.text = TT.Utils.showdownLite(note.text);
+        }
+        return note;
+      });
     }
 
     var project = TT.Model.Project.get({ id: story.project_id }) || {};

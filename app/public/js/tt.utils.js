@@ -80,14 +80,16 @@ TT.Utils = (function () {
   };
 
   pub.showdownLite = function (text) {
-    // <br />
-    text = text.replace(/\n/g, '<br />\n');
-    // <strong> must go first
-    text = text.replace(/(\*)(?=\S)([^\r]*?\S[*]*)\1/g, '<strong>$2</strong>');
-    // <em>
-    text = text.replace(/(\w)_(\w)/g, '$1[[underscore]]$2'); // ** GFM **  "~E95E" == escaped "_"
-    text = text.replace(/(_)(?=\S)([^\r]*?\S)\1/g, '<em>$2</em>');
-    text = text.replace(/\[\[underscore\]\]/g, '_');
+    if (TT.Utils.isString(text)) {
+      // <br />
+      text = text.replace(/\n/g, '<br />');
+      // <strong> must go first
+      text = text.replace(/(\*)(?=\S)([^\r]*?\S[*]*)\1/g, '<strong>$2</strong>');
+      // <em>
+      text = text.replace(/(\w)_(\w)/g, '$1[[underscore]]$2'); // ** GFM **  "~E95E" == escaped "_"
+      text = text.replace(/(_)(?=\S)([^\r]*?\S)\1/g, '<em>$2</em>');
+      text = text.replace(/\[\[underscore\]\]/g, '_');
+    }
 
     return text;
   };

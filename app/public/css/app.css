@@ -184,7 +184,7 @@ body.ajaxRunning #logo h1 {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   color: #fff;
   cursor: pointer;
-  font: bold 12px/14px Helvetica, sans-serif;
+  font: normal 12px/14px Helvetica, sans-serif;
   margin: 5px 0 0;
   padding: 12px 30px 12px 15px;
   position: relative;
@@ -566,8 +566,8 @@ body.ajaxRunning #logo h1 {
 
 .story .dates {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
-  color: #999;
-  font: bold 11px/15px Helvetica, sans-serif;
+  color: #777;
+  font: normal 11px/15px Helvetica, sans-serif;
   margin: 10px 0 0;
   padding: 6px 2px 0;
   text-align: left;
