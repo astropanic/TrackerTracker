@@ -36,7 +36,7 @@ describe "UI interactions", ->
 
     say "I click on a tag", ->
       beforeEach ->
-        $('.story .tag:contains("' + tagName + '")').click()
+        $('.story .tag:contains("' + tagName + '")').eq(0).click()
 
       it "should show up in the filter list", ->
         expect($('#filters .filter').text()).toContain tagName
@@ -47,14 +47,14 @@ describe "UI interactions", ->
 
       also "I click on an active tag in a story", ->
         beforeEach ->
-          $('.story .tag:contains("' + tagName + '")').click()
+          $('.story .tag:contains("' + tagName + '")').eq(0).click()
 
         it "should do nothing", ->
           expect($('#filters .filter:contains("' + tagName + '")').hasClass('inactive')).toBe false
 
       also "I click on an active tag in the tag list", ->
         beforeEach ->
-          $('#filters .filter:contains("' + tagName + '")').click()
+          $('#filters .filter:contains("' + tagName + '")').eq(0).click()
 
         it "should disable that filter", ->
           expect($('#filters .filter:contains("' + tagName + '")').hasClass('inactive')).toBe true
@@ -80,7 +80,7 @@ describe "UI interactions", ->
 
       also "I click on an active user in the filter list", ->
         beforeEach ->
-          $('#filters .filter:contains("' + owner + '")').click()
+          $('#filters .filter:contains("' + owner + '")').eq(0).click()
 
         it "should disable that filter", ->
           expect($('#filters .filter:contains("' + owner + '")').hasClass('inactive')).toBe true
@@ -93,7 +93,7 @@ describe "UI interactions", ->
 
     say "I click the close button on a column", ->
       beforeEach ->
-        $('#columns .column .column-title:contains("' + columnName + '") span').click()
+        $('#columns .column .column-title:contains("' + columnName + '") span').eq(0).click()
 
       it "should look disabled in the column list", ->
         expect($('#columnList .column-selector:contains("' + columnName + '")').hasClass('active')).toBe false
@@ -103,7 +103,7 @@ describe "UI interactions", ->
 
       also "I click on the disabled column in the column list", ->
         beforeEach ->
-          $('#columnList .column-selector:contains("' + columnName + '")').click()
+          $('#columnList .column-selector:contains("' + columnName + '")').eq(0).click()
 
         it "should look enabled in the column list", ->
           expect($('#columnList .column-selector:contains("' + columnName + '")').hasClass('active')).toBe true
