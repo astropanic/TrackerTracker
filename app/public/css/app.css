@@ -8,6 +8,7 @@ body, html {
 
 body {
   -webkit-font-smoothing: antialiased;
+  color: #111;
   font: normal 12px/15px Helvetica, Arial, sans-serif;
   overflow: hidden;
 }
@@ -81,13 +82,23 @@ body.ajaxRunning #logo h1 {
 /* Search */
 
 #search {
-  float: right;
-  padding: 10px 20px 0 0;
+  position: absolute;
+  right: 12px;
+  top: 50px;
 }
 
-#search input {
+#searchInput {
   font: normal 18px/18px Helvetica, sans-serif;
   width: 200px;
+}
+
+#searchIncludeDone {
+  display: inline-block;
+}
+
+#searchIncludeDone label {
+  color: #666;
+  font: bold 11px/11px Helvetica, sans-serif;
 }
 
 /* Dialog */
@@ -168,7 +179,7 @@ body.ajaxRunning #logo h1 {
 }
 
 #messages .message {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.75);
   border-radius: 6px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   color: #fff;
@@ -188,6 +199,10 @@ body.ajaxRunning #logo h1 {
   position: absolute;
   right: 8px;
   top: 8px;
+}
+
+#messages .message:hover {
+  background: rgba(0, 0, 0, 0.85);
 }
 
 #messages .message:hover span.close {
@@ -414,7 +429,6 @@ body.ajaxRunning #logo h1 {
   cursor: move;
   padding: 6px 6px 6px 38px;
   position: relative;
-  -webkit-transition: background-color 120ms;
 }
 
 .story:hover {
@@ -438,6 +452,10 @@ body.ajaxRunning #logo h1 {
   background-color: #407aa5;
   border-top: 0;
   color: #fff;
+}
+
+.story.release.expanded-story {
+  color: #111;
 }
 
 .story.release:hover {
@@ -481,6 +499,10 @@ body.ajaxRunning #logo h1 {
   padding: 0;
   text-align: center;
   width: 12px;
+}
+
+.story.release .points {
+  display: none;
 }
 
 .story .details {
@@ -572,8 +594,27 @@ body.ajaxRunning #logo h1 {
   background-color: #f3f3d1;
 }
 
+.column-started .story:hover,
+.column-inqa .story:hover,
+.column-passedqa .story:hover,
+.column-delivered .story:hover {
+  background-color: #fafaec;
+}
+
 .column-accepted .story {
   background-color: #daebcf;
+}
+
+.column-accepted .story:hover {
+  background-color: #edf7e7;
+}
+
+.column-icebox .story {
+  background-color: #e4eff7;
+}
+
+.column-icebox .story:hover {
+  background-color: #f7fafc;
 }
 
 .story.expanded-story {

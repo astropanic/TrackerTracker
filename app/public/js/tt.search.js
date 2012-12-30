@@ -18,13 +18,20 @@ TT.Search = (function () {
     TT.View.drawStories();
   };
 
+  pub.includeDone = function () {
+    return $('#includeDone').is(':checked');
+  };
+
   pub.requestMatchingStories = function (term) {
     TT.View.message('Searching for ' + term + '...');
+    if (pub.includeDone()) {
+      term += ' includedone:true';
+    }
     TT.Model.Project.each(function (index, project) {
       TT.Ajax.start();
       $.ajax({
         url: '/stories',
-        data: { projectID: project.id, filter: term + ' includedone:true' },
+        data: { projectID: project.id, filter: term },
         success: function (stories) {
           stories = TT.API.normalizePivotalArray(stories.story);
           if (stories) {
@@ -34,6 +41,8 @@ TT.Search = (function () {
               TT.Model.Story.overwrite(story);
             });
             TT.View.drawStories();
+          } else {
+            TT.View.message('No results found in ' + project.name);
           }
           TT.Ajax.end();
         }

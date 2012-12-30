@@ -184,7 +184,7 @@ TT.View = (function () {
 
     setTimeout(function () {
       element.fadeOut(250, function () { element.remove(); });
-    }, 10000);
+    }, 6000);
   };
 
   return pub;
