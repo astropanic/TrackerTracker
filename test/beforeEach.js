@@ -14,8 +14,6 @@ var it = function(description, func) {
 
 var TT = TT || {};
 
-TT.autoStart = false;
-
 TT.Mock = (function () {
 
   var pub = {};
@@ -304,4 +302,3 @@ beforeEach(function () {
 });
 
 loadCSS();
-TT.Init.onDomReady();
