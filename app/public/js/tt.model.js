@@ -154,15 +154,17 @@ TT.Model = (function () {
 
   pub.User.onBeforeAdd = function (user) {
     return {
-      id: user.id,
+      id: parseInt(user.id, 10),
       initials: user.person.initials,
-      name: user.person.name
+      name: user.person.name,
+      email: user.person.email
     };
   };
 
   pub.Column = Model('Column');
 
   pub.Column.onBeforeAdd = function (column) {
+    column.sortable = column.sortable === false ? column.sortable : true;
     column.class_name = 'column-' + TT.Utils.cssify(column.name);
     return column;
   };

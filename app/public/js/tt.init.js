@@ -94,6 +94,15 @@ TT.Init = (function () {
         return { current_state: 'accepted' };
       }
     });
+
+    TT.Model.Column.add({
+      name: 'Current',
+      active: false,
+      sortable: false,
+      filter: function (story) {
+        return story.current_iteration === true;
+      }
+    });
   };
 
   pub.setLayout = function () {

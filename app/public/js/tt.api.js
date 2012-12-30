@@ -16,23 +16,33 @@ TT.API = (function () {
 
   // If only one item exists, Pivotal API sends that by itself, otherwise as an array of items
   pub.normalizePivotalArray = function (items) {
-    return $.isPlainObject(items) ? [items] : items;
+    return !items ? [] : $.isPlainObject(items) ? [items] : items;
   };
 
   pub.addProjects = function (projects) {
     $.each(pub.normalizePivotalArray(projects), function (index, project) {
       TT.Model.Project.add(project);
       if (project.memberships && project.memberships.membership) {
-        addEach(project.memberships.membership, TT.Model.User.add);
+        var memberships = pub.normalizePivotalArray(project.memberships.membership);
+        $.each(memberships, function (index, membership) {
+          TT.Model.User.overwrite(membership, 'name');
+        });
       }
     });
   };
 
   pub.addIterations = function (iterations) {
+    // This assumes first iteration is always current.
+    var current_iteration = true;
     $.each(pub.normalizePivotalArray(iterations), function (index, iteration) {
       if (iteration.stories && iteration.stories.story) {
-        addEach(iteration.stories.story, TT.Model.Story.add);
+        var stories = pub.normalizePivotalArray(iteration.stories.story);
+        $.each(stories, function (index, story) {
+          story.current_iteration = current_iteration;
+          TT.Model.Story.add(story);
+        });
       }
+      current_iteration = false;
     });
   };
 
