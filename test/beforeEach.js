@@ -49,12 +49,39 @@ TT.Mock = (function () {
               }
             ]
           }
+        },
+        {
+          id: "123456",
+          name: "Another Project",
+          labels: "green,red,blocked,passedqa,{ qa }",
+          memberships: {
+            membership: [
+              {
+                id: "100",
+                person: {
+                  email: "nobody@example.com",
+                  name: "Product Manager",
+                  initials: "PM"
+                },
+                role: "Owner"
+              },
+              {
+                id: "101",
+                person: {
+                  email: "nobody@example.com",
+                  name: "Developer",
+                  initials: "DVL"
+                },
+                role: "Owner"
+              }
+            ]
+          }
         }
       ]
     });
   };
 
-  pub.iterations = function () {
+  pub.iterations_12345 = function () {
     return JSON.stringify({
       iteration: [
         {
@@ -138,6 +165,75 @@ TT.Mock = (function () {
                     }
                   ]
                 }
+              },
+              {
+                id: '201',
+                project_id: '123456',
+                story_type: 'feature',
+                url: 'http://www.pivotaltracker.com/story/show/201',
+                estimate: '1',
+                current_state: 'accepted',
+                description: 'Example Accepted Feature in Another Project',
+                name: 'Example Accepted Feature in Another Project',
+                requested_by: 'Product Manager',
+                owned_by: 'Developer',
+                created_at: '2012/10/26 17:28:19 EDT',
+                updated_at: '2012/11/26 15:22:01 EST',
+                labels: '{ qa }',
+                notes: {
+                  note: [
+                    {
+                      id: '31572297',
+                      text: 'Example Note',
+                      author: 'Developer',
+                      noted_at: '2012/11/01 20:52:14 EDT'
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      timestamp: 1356746505004
+    });
+  };
+
+  pub.iterations_123456 = function () {
+    return JSON.stringify({
+      iteration: [
+        {
+          id: '1',
+          number: '1',
+          start: '2012/12/23 23:00:00 EST',
+          finish: '2013/01/06 23:00:00 EST',
+          team_strength: '1',
+          stories: {
+            story: [
+              {
+                id: '201',
+                project_id: '123456',
+                story_type: 'feature',
+                url: 'http://www.pivotaltracker.com/story/show/201',
+                estimate: '1',
+                current_state: 'accepted',
+                description: 'Example Accepted Feature in Another Project',
+                name: 'Example Accepted Feature in Another Project',
+                requested_by: 'Product Manager',
+                owned_by: 'Developer',
+                created_at: '2012/10/26 17:28:19 EDT',
+                updated_at: '2012/11/26 15:22:01 EST',
+                labels: '{ qa }',
+                notes: {
+                  note: [
+                    {
+                      id: '31572297',
+                      text: 'Example Note',
+                      author: 'Developer',
+                      noted_at: '2012/11/01 20:52:14 EDT'
+                    }
+                  ]
+                }
               }
             ]
           }
@@ -152,9 +248,10 @@ TT.Mock = (function () {
   };
 
   pub.serverResponse = function (url, data) {
+    data = data || {};
     var urls = {
       '/projects': pub.projects,
-      '/iterations': pub.iterations,
+      '/iterations': pub['iterations_' + data.projectID],
       '/token': pub.token
     };
 
