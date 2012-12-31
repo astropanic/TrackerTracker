@@ -20,10 +20,10 @@ TT.Search = (function () {
           return true;
         }
         var text = JSON.stringify(story).toLowerCase();
-        var match = false;
+        var match = true;
         $.each(terms, function (i, term) {
-          if (text.indexOf(term) !== -1) {
-            match = true;
+          if (text.indexOf(term) === -1) {
+            match = false;
           }
         });
 
