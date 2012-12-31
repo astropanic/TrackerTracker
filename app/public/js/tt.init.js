@@ -234,7 +234,9 @@ TT.Init = (function () {
       TT.View.drawPageLayout();
     } else {
       $.each(TT.Model, function (index, model) {
-        model.flush();
+        if (model.flush) {
+          model.flush();
+        }
       });
       $('#filters .filter').empty().remove();
     }

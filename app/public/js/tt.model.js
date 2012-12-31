@@ -56,7 +56,7 @@ TT.Model = (function () {
     return collection;
   }
 
-  function Model(name) {
+  pub.Model = function (name) {
     var self = {};
 
     self.DB = [];
@@ -94,31 +94,31 @@ TT.Model = (function () {
       self.DB = TT.Utils.arrayMove(self.DB, oldIndex, newIndex);
     };
 
-    self.add = function (obj) {
+    self.add = function (obj, key) {
       if (self.onBeforeAdd) {
         obj = self.onBeforeAdd(obj);
       }
-      self.DB[self.DB.length] = obj;
+
+      var index = self.DB.length;
+      if (key && obj[key]) {
+        var query = {};
+        query[key] = obj[key];
+        index = self.index(query);
+        if (!TT.Utils.isNumber(index)) {
+          index = self.DB.length;
+        }
+      }
+      self.DB[index] = obj;
     };
 
     self.overwrite = function (obj, key) {
-      var default_key = obj.id ? 'id' : obj.name ? 'name' : 'title';
-      key = key || default_key;
-
-      var query = {};
-      query[key] = obj[key];
-
-      if (self.get(query)) {
-        if (self.onBeforeAdd) {
-          obj = self.onBeforeAdd(obj);
-        }
-        self.update(query, obj);
-      } else {
-        self.add(obj);
-      }
+      return self.add(obj, key || 'id');
     };
 
     self.remove = function (query) {
+      if (TT.Utils.isObject(query)) {
+        query = matcherObjectToFunction(query);
+      }
       self.each(function (index, obj) {
         if (query(obj)) {
           self.DB.splice(index, 1);
@@ -135,9 +135,9 @@ TT.Model = (function () {
     };
 
     return self;
-  }
+  };
 
-  pub.Column = Model('Column');
+  pub.Column = pub.Model('Column');
 
   pub.Column.onBeforeAdd = function (column) {
     column.sortable = column.sortable === false ? column.sortable : true;
@@ -145,7 +145,7 @@ TT.Model = (function () {
     return column;
   };
 
-  pub.Filter = Model('Filter');
+  pub.Filter = pub.Model('Filter');
 
   pub.Filter.add = function (filter) {
     var foundFilter = pub.Filter.get({ name: filter.name });
@@ -159,9 +159,9 @@ TT.Model = (function () {
     }
   };
 
-  pub.Layout = Model('Layout');
+  pub.Layout = pub.Model('Layout');
 
-  pub.Project = Model('Project');
+  pub.Project = pub.Model('Project');
 
   pub.Project.onBeforeAdd = function (project) {
     project.id = parseInt(project.id, 10);
@@ -174,7 +174,7 @@ TT.Model = (function () {
     return !!pub.Project.get(query).active;
   };
 
-  pub.Story = Model('Story');
+  pub.Story = pub.Model('Story');
 
   pub.Story.onBeforeAdd = function (story) {
     story.id = parseInt(story.id, 10);
@@ -261,7 +261,7 @@ TT.Model = (function () {
     });
   };
 
-  pub.User = Model('User');
+  pub.User = pub.Model('User');
 
   pub.User.onBeforeAdd = function (user) {
     return {

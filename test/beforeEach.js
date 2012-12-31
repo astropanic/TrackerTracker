@@ -1,15 +1,15 @@
 var xsay = xalso = xdescribe;
 
 var say = function(description, specDefinitions) {
-    return jasmine.getEnv().describe('when ' + description + ',', specDefinitions);
+  return jasmine.getEnv().describe('when ' + description + ',', specDefinitions);
 };
 
 var also = function(description, specDefinitions) {
-    return jasmine.getEnv().describe('and ' + description + ',', specDefinitions);
+  return jasmine.getEnv().describe('and ' + description + ',', specDefinitions);
 };
 
 var it = function(description, func) {
-    return jasmine.getEnv().it('it ' + description, func);
+  return jasmine.getEnv().it('it ' + description, func);
 };
 
 var TT = TT || {};
