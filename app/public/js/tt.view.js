@@ -9,14 +9,6 @@ TT.View = (function () {
 
   pub.Templates = {};
 
-  var initClickHandlers = function (context) {
-    $(context || 'body').find('[data-click-handler]').each(function () {
-      // window.console.log('processing click handler', this);
-      var handler = TT.Utils.strToFunction($(this).data('click-handler'));
-      $(this).click(handler);
-    }).removeAttr('data-click-handler');
-  };
-
   // client-side templating is abstracted away
   pub.render = function (name, data) {
     if (!pub.Templates[name]) {
@@ -27,11 +19,7 @@ TT.View = (function () {
 
   pub.attach = function (html, target, method) {
     method = method || 'appendTo';
-    var element = $(html)[method](target);
-    if (html.indexOf('data-click-handler') !== -1) {
-      initClickHandlers(element.parent());
-    }
-    return element;
+    return $(html)[method](target);
   };
 
   pub.drawPageLayout = function () {
@@ -180,7 +168,7 @@ TT.View = (function () {
 
   pub.drawModalDialog = function (content) {
     var html = pub.render('modalDialog', { content: content });
-    TT.Dialog.dialog = pub.attach(html, 'body');
+    return pub.attach(html, 'body');
   };
 
   pub.drawAccountSettingsForm = function () {

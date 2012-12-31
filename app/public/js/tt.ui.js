@@ -130,6 +130,19 @@ TT.UI = (function () {
     return false;
   };
 
+  pub.init = function () {
+    $('body').click(function (e) {
+      var target = $(e.target).closest('[data-click-handler]');
+      var handler = target.data('click-handler');
+      if (handler) {
+        handler = TT.Utils.strToFunction(handler);
+        if (TT.Utils.isFunction(handler)) {
+          return handler.apply(target[0]);
+        }
+      }
+    });
+  };
+
   return pub;
 
 }());

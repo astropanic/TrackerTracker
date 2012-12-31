@@ -5,8 +5,6 @@ TT.Dialog = (function () {
 
   var pub = {};
 
-  var noop = function () { };
-
   pub.open = function (content) {
     pub.close(function () {
       TT.View.drawModalDialog(content);
@@ -14,12 +12,10 @@ TT.Dialog = (function () {
   };
 
   pub.close = function (callback) {
-    callback = TT.Utils.isFunction(callback) ? callback : noop;
-    if (pub.dialog) {
-      pub.dialog.find('.modal-dialog, .modal-dialog-overlay').empty().remove();
-      pub.dialog = null;
+    $('.modal-dialog, .modal-dialog-overlay').empty().remove();
+    if (TT.Utils.isFunction(callback)) {
+      callback();
     }
-    callback();
   };
 
   return pub;

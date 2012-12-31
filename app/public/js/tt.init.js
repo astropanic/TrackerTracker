@@ -257,6 +257,7 @@ TT.Init = (function () {
       $(window).resize(TT.View.updateColumnDimensions);
       TT.DragAndDrop.init();
       TT.Search.init();
+      TT.UI.init();
     }
 
     pub.requestProjectsAndIterations();
