@@ -62,11 +62,11 @@ TT.Model = (function () {
     self.DB = [];
     self.name = name;
 
-    self.save = function () {
+    self.clientSave = function () {
       return TT.Utils.localStorage(self.name, JSON.stringify(self.DB));
     };
 
-    self.load = function () {
+    self.clientLoad = function () {
       return TT.Utils.localStorage(self.name);
     };
 
@@ -137,6 +137,30 @@ TT.Model = (function () {
     return self;
   }
 
+  pub.Column = Model('Column');
+
+  pub.Column.onBeforeAdd = function (column) {
+    column.sortable = column.sortable === false ? column.sortable : true;
+    column.class_name = 'column-' + TT.Utils.cssify(column.name);
+    return column;
+  };
+
+  pub.Filter = Model('Filter');
+
+  pub.Filter.add = function (filter) {
+    var foundFilter = pub.Filter.get({ name: filter.name });
+
+    if (!foundFilter) {
+      filter.active = true;
+      filter.element = TT.View.drawFilter(filter);
+      pub.Filter.DB[pub.Filter.DB.length] = filter;
+    } else if (foundFilter.active === false) {
+      TT.UI.reactivateFilter(foundFilter.name);
+    }
+  };
+
+  pub.Layout = Model('Layout');
+
   pub.Project = Model('Project');
 
   pub.Project.onBeforeAdd = function (project) {
@@ -149,27 +173,6 @@ TT.Model = (function () {
   pub.Project.isActive = function (query) {
     return !!pub.Project.get(query).active;
   };
-
-  pub.User = Model('User');
-
-  pub.User.onBeforeAdd = function (user) {
-    return {
-      id: parseInt(user.id, 10),
-      initials: user.person.initials,
-      name: user.person.name,
-      email: user.person.email
-    };
-  };
-
-  pub.Column = Model('Column');
-
-  pub.Column.onBeforeAdd = function (column) {
-    column.sortable = column.sortable === false ? column.sortable : true;
-    column.class_name = 'column-' + TT.Utils.cssify(column.name);
-    return column;
-  };
-
-  pub.Layout = Model('Layout');
 
   pub.Story = Model('Story');
 
@@ -258,18 +261,15 @@ TT.Model = (function () {
     });
   };
 
-  pub.Filter = Model('Filter');
+  pub.User = Model('User');
 
-  pub.Filter.add = function (filter) {
-    var foundFilter = pub.Filter.get({ name: filter.name });
-
-    if (!foundFilter) {
-      filter.active = true;
-      filter.element = TT.View.drawFilter(filter);
-      pub.Filter.DB[pub.Filter.DB.length] = filter;
-    } else if (foundFilter.active === false) {
-      TT.UI.reactivateFilter(foundFilter.name);
-    }
+  pub.User.onBeforeAdd = function (user) {
+    return {
+      id: parseInt(user.id, 10),
+      initials: user.person.initials,
+      name: user.person.name,
+      email: user.person.email
+    };
   };
 
   return pub;

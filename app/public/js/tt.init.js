@@ -13,6 +13,20 @@ TT.Init = (function () {
     // TODO: Allow creating & saving custom columns and layouts
 
     TT.Model.Column.add({
+      name: 'Icebox',
+      active: false,
+      filter: function (story) {
+        return story.current_state === 'unscheduled';
+      },
+      onDragIn: function (story) {
+        return { current_state: 'unscheduled' };
+      },
+      onDragOut: function (story) {
+        return { current_state: 'unstarted' };
+      }
+    });
+
+    TT.Model.Column.add({
       name: 'Unstarted',
       active: true,
       filter: function (story) {
@@ -34,6 +48,7 @@ TT.Init = (function () {
       }
     });
 
+    /*
     TT.Model.Column.add({
       name: 'Finished',
       active: false,
@@ -44,6 +59,7 @@ TT.Init = (function () {
         return { current_state: 'finished' };
       }
     });
+    */
 
     TT.Model.Column.add({
       name: 'In QA',
@@ -95,6 +111,7 @@ TT.Init = (function () {
       }
     });
 
+    /*
     TT.Model.Column.add({
       name: 'Current',
       active: false,
@@ -110,20 +127,7 @@ TT.Init = (function () {
         return story.current_iteration === false;
       }
     });
-
-    TT.Model.Column.add({
-      name: 'Icebox',
-      active: false,
-      filter: function (story) {
-        return story.current_state === 'unscheduled';
-      },
-      onDragIn: function (story) {
-        return { current_state: 'unscheduled' };
-      },
-      onDragOut: function (story) {
-        return { current_state: 'unstarted' };
-      }
-    });
+    */
   };
 
   pub.setLayout = function () {
@@ -134,7 +138,7 @@ TT.Init = (function () {
         active: column.active
       };
     });
-    var savedLayout = TT.Model.Layout.load();
+    var savedLayout = TT.Model.Layout.clientLoad();
 
     if (savedLayout) {
       savedLayout = JSON.parse(savedLayout);

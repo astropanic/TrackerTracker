@@ -93,7 +93,7 @@ TT.View = (function () {
   pub.refreshLayout = function () {
     $('.column-list-nav').empty().remove();
     pub.drawColumnListNav();
-    TT.Model.Layout.save();
+    TT.Model.Layout.clientSave();
     pub.refreshColumns();
   };
 
