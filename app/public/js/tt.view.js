@@ -53,7 +53,7 @@ TT.View = (function () {
     $('.column-bucket').height(height);
 
     var column_count = $columns.length;
-    var width_offset = 14;
+    var width_offset = 18;
     var width = Math.max(pub.MIN_COLUMN_WIDTH, Math.round(($window.width() - width_offset - (column_count * 8)) / column_count));
     $columns.width(width);
 
