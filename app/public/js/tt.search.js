@@ -8,11 +8,26 @@ TT.Search = (function () {
   }
 
   pub.addSearchTag = function (term) {
+    var terms = term.split(' ').map(function (term) {
+      return (term.indexOf(':') !== -1 ? term.split(':')[1] : term).replace(/\'\"/g, '');
+    });
+
     TT.Model.Filter.add({
       name: term,
       type: 'search',
       fn: function (story) {
-        return JSON.stringify(story).toLowerCase().indexOf(term) !== -1;
+        if (terms.length === 0) {
+          return true;
+        }
+        var text = JSON.stringify(story).toLowerCase();
+        var match = false;
+        $.each(terms, function (i, term) {
+          if (text.indexOf(term) !== -1) {
+            match = true;
+          }
+        });
+
+        return match;
       }
     });
     TT.View.drawStories();
