@@ -22,7 +22,8 @@ TT.UI = (function () {
   };
 
   pub.toggleColumnSelector = function () {
-    var name = $.trim($(this).text());
+    var name = $.trim($(this).closest('.column-selector').find('.column-name').text());
+    TT.Model.Column.update({ name: name }, { active: !$(this).hasClass('active') });
     TT.Model.Layout.update({ name: name }, { active: !$(this).hasClass('active') });
     TT.View.refreshLayout();
 
@@ -35,6 +36,7 @@ TT.UI = (function () {
     TT.Model.Layout.update({ name: name }, { active: false });
     TT.View.updateColumnDimensions();
     TT.View.drawColumnListNav();
+    TT.View.refreshColumnStoryCount();
 
     return false;
   };

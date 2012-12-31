@@ -168,6 +168,10 @@ TT.Init = (function () {
     }
 
     TT.Model.Layout.replace(savedLayout ? savedLayout : defaultLayout);
+
+    TT.Model.Layout.each(function (index, column) {
+      TT.Model.Column.update({ name: column.name }, { active: column.active });
+    });
   };
 
   pub.setInactiveProjects = function () {

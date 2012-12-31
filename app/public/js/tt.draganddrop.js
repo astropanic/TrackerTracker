@@ -53,7 +53,7 @@ TT.DragAndDrop = (function () {
   pub.onStoryStop = function () {
     if (dragOutFn || dragInFn) {
       // wait for jQuery sortable to finish up
-      setTimeout(TT.View.drawStories, 0);
+      TT.View.drawStories();
     }
     dragOutFn = dragInFn = null;
   };

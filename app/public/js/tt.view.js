@@ -93,6 +93,12 @@ TT.View = (function () {
     TT.DragAndDrop.initStorySorting();
   };
 
+  pub.refreshColumnStoryCount = function () {
+    TT.Model.Column.each(function (index, column) {
+      $('#columnList .column-selector:contains("' + column.name + '") span.column-story-count').html(column.storyCount);
+    });
+  };
+
   pub.refreshLayout = function () {
     $('.column-list-nav').empty().remove();
     pub.drawColumnListNav();
@@ -116,14 +122,22 @@ TT.View = (function () {
     pub.clearStories();
     pub.showProjectResetButton();
 
+    TT.Model.Column.each(function (index, column) {
+      column.storyCount = 0;
+    });
+
     TT.Model.Story.each(function (index, story) {
-      TT.Model.Layout.each(function (index, column) {
-        column = TT.Model.Column.get({ name: column.name });
+      TT.Model.Column.each(function (index, column) {
         if (column.filter(story) && TT.Model.Project.isActive({ id: story.project_id }) && TT.Model.Story.isNotFiltered(story)) {
-          pub.drawStory(story, column);
+          column.storyCount++;
+          if (column.active) {
+            pub.drawStory(story, column);
+          }
         }
       });
     });
+
+    pub.refreshColumnStoryCount();
   };
 
   pub.setProjectActiveState = function () {
