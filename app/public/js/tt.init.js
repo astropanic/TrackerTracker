@@ -48,7 +48,6 @@ TT.Init = (function () {
       }
     });
 
-    /*
     TT.Model.Column.add({
       name: 'Finished',
       active: false,
@@ -59,7 +58,6 @@ TT.Init = (function () {
         return { current_state: 'finished' };
       }
     });
-    */
 
     TT.Model.Column.add({
       name: 'In QA',
