@@ -72,8 +72,8 @@ TT.UI = (function () {
 
   pub.filterByProject = function () {
     var id = $(this).data('project-id');
-    $('#projects .project input:checked').attr('checked', false);
-    $('#project-' + id).click();
+    $('#projects .project').addClass('inactive');
+    $('#project-' + id).removeClass('inactive');
     TT.View.drawStories();
 
     return false;

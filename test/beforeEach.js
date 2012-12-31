@@ -270,13 +270,25 @@ function loadCSS() {
 
 function visibleStoriesWithTag(tag) {
   return $('#columns .story').filter(function () {
-    return $(this).text().indexOf(tag) !== -1;
+    return $('.tag', this).text().indexOf(tag) !== -1;
   }).length;
 }
 
 function visibleStoriesWithoutTag(tag) {
   return $('#columns .story').filter(function () {
-    return $(this).text().indexOf(tag) === -1;
+    return $('.tag', this).text().indexOf(tag) === -1;
+  }).length;
+}
+
+function visibleStoriesWithProjectID(id) {
+  return $('#columns .story').filter(function () {
+    return $('a.project-name', this).data('project-id') === id;
+  }).length;
+}
+
+function visibleStoriesWithoutProjectID(id) {
+  return $('#columns .story').filter(function () {
+    return $('a.project-name', this).data('project-id') !== id;
   }).length;
 }
 

@@ -4,6 +4,7 @@ describe "UI interactions", ->
     TT.Init.init()
 
   describe "Settings", ->
+    mockPivotalToken = 'abc123'
 
     say "I open the settings dialog", ->
       beforeEach ->
@@ -15,11 +16,11 @@ describe "UI interactions", ->
 
       also "I update the token", ->
         beforeEach ->
-          $('#token-input').val('abc123')
+          $('#token-input').val(mockPivotalToken)
           $('#account-settings .form-action input').click()
 
         it "should save the token", ->
-          expect($.cookie('pivotalToken')).toBe 'abc123'
+          expect($.cookie('pivotalToken')).toBe mockPivotalToken
 
         it "should close the dialog", ->
           expect($('#account-settings').length).toBe 0
@@ -29,7 +30,7 @@ describe "UI interactions", ->
             $('#account-settings-link').click()
 
           it "should display the saved token", ->
-            expect($('#token-input').val()).toBe 'abc123'
+            expect($('#token-input').val()).toBe mockPivotalToken
 
   describe "Tags", ->
     tagName = 'blocked'
@@ -38,7 +39,7 @@ describe "UI interactions", ->
       beforeEach ->
         $('.story .tag:contains("' + tagName + '")').eq(0).click()
 
-      it "should show up in the filter list", ->
+      it "should now show up in the filter list", ->
         expect($('#filters .filter').text()).toContain tagName
 
       it "should only show stories with that matching tag", ->
@@ -95,7 +96,7 @@ describe "UI interactions", ->
       beforeEach ->
         $('#columns .column .column-title:contains("' + columnName + '") span').eq(0).click()
 
-      it "should look disabled in the column list", ->
+      it "should now look disabled in the column list", ->
         expect($('#columnList .column-selector:contains("' + columnName + '")').hasClass('active')).toBe false
 
       it "should no longer be visible in the main content area", ->
@@ -105,7 +106,7 @@ describe "UI interactions", ->
         beforeEach ->
           $('#columnList .column-selector:contains("' + columnName + '")').eq(0).click()
 
-        it "should look enabled in the column list", ->
+        it "should now look enabled in the column list", ->
           expect($('#columnList .column-selector:contains("' + columnName + '")').hasClass('active')).toBe true
 
         it "should once again be visible in the main content area", ->
@@ -127,16 +128,40 @@ describe "UI interactions", ->
         it "should hide the story details", ->
           expect($('.story').eq(0).find('.description').is(':visible')).toBe false
 
-  xdescribe "Projects", ->
+  describe "Projects", ->
+    id = null
+
+    beforeEach ->
+      id = $('.story a.project-name').data('project-id')
 
     say "I click the project initials in a story", ->
+      beforeEach ->
+        $('.story a.project-name').eq(0).click()
 
       it "should only display that project as active in the project list", ->
+        expect($('#project-' + id).siblings('.project').hasClass('inactive')).toBe true
+        expect($('#project-' + id).hasClass('inactive')).toBe false
 
       it "should be the only project visible in the main content area", ->
+        expect(visibleStoriesWithProjectID(id)).not.toBe 0
+        expect(visibleStoriesWithoutProjectID(id)).toBe 0
 
-    say "I click a disabled project in the project list", ->
+    say "I click an enabled project in the project list", ->
+      beforeEach ->
+        $('#project-' + id).click()
 
-      it "should look enabled in the project list", ->
+      it "should now look disabled in the project list", ->
+        expect($('#project-' + id).hasClass('inactive')).toBe true
 
-      it "should make the project stories visible in the main content area", ->
+      it "should hide the project stories in the main content area", ->
+        expect(visibleStoriesWithProjectID(id)).toBe 0
+
+      also "I click a disabled project in the project list", ->
+        beforeEach ->
+          $('#project-' + id).click()
+
+        it "should now look enabled in the project list", ->
+          expect($('#project-' + id).hasClass('inactive')).toBe false
+
+        it "should make the project stories visible in the main content area", ->
+          expect(visibleStoriesWithProjectID(id)).not.toBe 0
