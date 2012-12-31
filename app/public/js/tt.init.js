@@ -7,7 +7,7 @@ TT.Init = (function () {
 
   // bootstrap functions
 
-  pub.initColumns = function () {
+  pub.preloadModels = function () {
 
     // Readymade columns
     // TODO: Allow creating & saving custom columns and layouts
@@ -128,6 +128,26 @@ TT.Init = (function () {
       }
     });
     */
+
+    /*
+    TT.Model.Filter.add({
+      name: 'Owned by Me',
+      type: 'user',
+      active: false,
+      fn: function (story) {
+        return story.owned_by === TT.Utils.getSettings('user_name');
+      }
+    });
+    */
+
+    TT.Model.Filter.add({
+      name: 'Current Iteration',
+      type: 'iteration',
+      active: false,
+      fn: function (story) {
+        return story.current_iteration === true;
+      }
+    });
   };
 
   pub.setLayout = function () {
@@ -221,7 +241,7 @@ TT.Init = (function () {
       $('#filters .filter').empty().remove();
     }
 
-    pub.initColumns();
+    pub.preloadModels();
     pub.setLayout();
 
     TT.View.drawColumns();

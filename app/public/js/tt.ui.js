@@ -107,22 +107,12 @@ TT.UI = (function () {
     return false;
   };
 
-  pub.deactivateFilter = function () {
+  pub.toggleFilter = function () {
     var name = $.trim($(this).text());
-    TT.Model.Filter.update({ name: name }, { active: false });
-    $(this).addClass('inactive').unbind('click').click(function () {
-      pub.reactivateFilter(name);
-      return false;
-    });
-    TT.View.drawStories();
+    var filter = TT.Model.Filter.get({ name: name });
 
-    return false;
-  };
-
-  pub.reactivateFilter = function (name) {
-    TT.Model.Filter.update({ name: name }, { active: true });
-    TT.Model.Filter.get({ name: name }).element.removeClass('inactive')
-      .unbind('click').click(pub.deactivateFilter);
+    TT.Model.Filter.update({ name: filter.name }, { active: !filter.active });
+    filter.element.toggleClass('inactive');
     TT.View.drawStories();
 
     return false;

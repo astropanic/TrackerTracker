@@ -151,7 +151,7 @@ TT.Model = (function () {
     var foundFilter = pub.Filter.get({ name: filter.name });
 
     if (!foundFilter) {
-      filter.active = true;
+      filter.active = filter.active === false ? false : true;
       filter.element = TT.View.drawFilter(filter);
       pub.Filter.DB[pub.Filter.DB.length] = filter;
     } else if (foundFilter.active === false) {

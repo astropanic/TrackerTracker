@@ -35,7 +35,7 @@ TT.View = (function () {
   };
 
   pub.drawPageLayout = function () {
-    pub.attach(pub.render('layout'), 'body');
+    return pub.attach(pub.render('layout'), 'body');
   };
 
   pub.updateColumnDimensions = function () {
@@ -62,13 +62,15 @@ TT.View = (function () {
 
   pub.drawAccountNav = function () {
     $('#account').empty().remove();
+
     return pub.attach(pub.render('accountNav'), '#logo');
   };
 
   pub.drawColumnListNav = function () {
     $('#columnList .column-list-nav').empty().remove();
     var html = pub.render('columnListNav', { columns: TT.Model.Layout.get() });
-    pub.attach(html, '#columnList');
+
+    return pub.attach(html, '#columnList');
   };
 
   pub.drawColumns = function () {
@@ -79,6 +81,7 @@ TT.View = (function () {
         html += pub.render('column', TT.Model.Column.get({ name: column.name }));
       }
     });
+
     return pub.attach(html, '#columns');
   };
 
@@ -100,7 +103,8 @@ TT.View = (function () {
   pub.drawProjectList = function (projects) {
     $('#projects .projects').empty().remove();
     var html = pub.render('projectList', { projects: projects });
-    pub.attach(html, '#projects');
+
+    return pub.attach(html, '#projects');
   };
 
   pub.clearStories = function () {
@@ -138,19 +142,26 @@ TT.View = (function () {
 
   pub.drawStory = function (story, column) {
     var html = pub.render('story', story);
-    pub.attach(html, '.' + column.class_name + ' .column-bucket');
+
+    return pub.attach(html, '.' + column.class_name + ' .column-bucket');
   };
 
   pub.drawStoryDetails = function (story) {
     var data = TT.Model.Story.get({ id: story.data('story-id') });
     var html = TT.View.render('storyDetails', data);
     var target = story.find('.container');
-    TT.View.attach(html, target);
+
+    return pub.attach(html, target);
   };
 
   pub.drawFilter = function (filter) {
     var html = pub.render('filter', filter);
-    return pub.attach(html, '#filters', 'prependTo');
+    var element = pub.attach(html, '#filters', 'prependTo');
+    if (filter.active === false) {
+      element.addClass('inactive');
+    }
+
+    return element;
   };
 
   pub.drawModalDialog = function (content) {
