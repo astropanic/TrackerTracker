@@ -83,6 +83,13 @@ TT.DragAndDrop = (function () {
   pub.init = function () {
     pub.initStorySorting();
 
+    /*
+    $('#filters').sortable({
+      distance: 10,
+      tolerance: 'pointer'
+    });
+    */
+
     $('#columns').sortable({
       distance: 10,
       handle: '.column-title',
