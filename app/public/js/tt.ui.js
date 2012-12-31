@@ -63,7 +63,7 @@ TT.UI = (function () {
       url: '/token',
       type: 'POST',
       data: { pivotalToken: pivotalToken },
-      success: TT.Init.onDomReady
+      success: TT.Init.init
     });
     TT.Dialog.close();
 

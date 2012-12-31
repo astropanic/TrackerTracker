@@ -1,9 +1,9 @@
 describe "Init process", ->
 
   beforeEach ->
-    TT.Init.onDomReady()
+    TT.Init.init()
 
-  describe "#onDomReady", ->
+  describe "#init", ->
 
     it "should render the project list nav", ->
       expect($('#projects .project').length).toBeGreaterThan 0

@@ -1,7 +1,7 @@
 describe "UI interactions", ->
 
   beforeEach ->
-    TT.Init.onDomReady()
+    TT.Init.init()
 
   describe "Settings", ->
 

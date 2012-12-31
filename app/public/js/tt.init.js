@@ -211,7 +211,7 @@ TT.Init = (function () {
     TT.View.updateColumnDimensions();
   };
 
-  pub.onDomReady = function () {
+  pub.init = function () {
     if (pub.firstRun) {
       TT.View.drawPageLayout();
     } else {
@@ -227,7 +227,6 @@ TT.Init = (function () {
     TT.View.drawColumns();
     TT.View.drawAccountNav();
     TT.View.drawColumnListNav();
-
     TT.View.updateColumnDimensions();
 
     if (pub.firstRun) {
@@ -248,5 +247,5 @@ TT.Init = (function () {
 // bind init to jQuery on DOM Ready
 
 if (TT.autoStart !== false) {
-  $(TT.Init.onDomReady);
+  $(TT.Init.init);
 }
