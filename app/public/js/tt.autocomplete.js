@@ -37,6 +37,13 @@ TT.Autocomplete = (function () {
       pub.input = pub.target;
     }
 
+    var active = $('#autocomplete .item:contains("' + pub.input.val() + '")');
+    if (active.length) {
+      pub.setActive(active);
+    } else {
+      pub.setActive();
+    }
+
     pub.input.keyup(pub.onKeyUp).blur(function () {
       if (pub.hasMouse) {
         pub.closeOnLeave = true;
@@ -46,7 +53,7 @@ TT.Autocomplete = (function () {
     });
 
     pub.setPosition(options.css);
-    pub.filter();
+    pub.setScrollTop();
 
     $('#autocomplete').mouseenter(function () {
       pub.hasMouse = true;
