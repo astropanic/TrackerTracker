@@ -194,6 +194,7 @@ TT.UI = (function () {
     TT.Autocomplete.open({
       css: { width: 300 },
       items: items,
+      value: $('span', this).text(),
       showInput: true,
       target: this,
       onApply: function () {
@@ -219,10 +220,40 @@ TT.UI = (function () {
     TT.Autocomplete.open({
       css: { width: 100 },
       items: items,
+      value: $('span', this).text(),
       showInput: true,
       target: this,
       onApply: function () {
         var update = { estimate: $(this).data('value') };
+        TT.Model.Story.update(story, update);
+        TT.Model.Story.serverSave(story, update, TT.View.drawStories);
+      }
+    });
+
+    return false;
+  };
+
+  pub.openStoryStateUpdater = function () {
+    var id = $(this).closest('.story').data('story-id');
+    var story = TT.Model.Story.get({ id: id });
+
+    var items = [
+      { name: 'Unstarted', value: 'unstarted' },
+      { name: 'Started', value: 'started' },
+      { name: 'Finished', value: 'finished' },
+      { name: 'Delivered', value: 'delivered' },
+      { name: 'Accepted', value: 'accepted' },
+      { name: 'Rejected', value: 'rejected' }
+    ];
+
+    TT.Autocomplete.open({
+      css: { width: 140 },
+      items: items,
+      value: $('span', this).text(),
+      showInput: true,
+      target: this,
+      onApply: function () {
+        var update = { current_state: $(this).data('value') };
         TT.Model.Story.update(story, update);
         TT.Model.Story.serverSave(story, update, TT.View.drawStories);
       }
@@ -245,6 +276,7 @@ TT.UI = (function () {
     TT.Autocomplete.open({
       css: { width: 140 },
       items: items,
+      value: $('span', this).text(),
       showInput: true,
       target: this,
       onApply: function () {

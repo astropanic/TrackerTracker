@@ -1,11 +1,11 @@
 <div class="details">
   <div class="detail-set">
     <div class="detail"><label>ID</label> <a href="{{url}}" target="_blank">{{id}}</a></div>
-    <div class="detail" data-click-handler="TT.UI.openStoryRequesterUpdater"><label>Requester</label> {{requested_by}}</div>
-    <div class="detail" data-click-handler="TT.UI.openStoryOwnerUpdater"><label>Owner</label> {{owned_by}}</div>
-    <div class="detail" data-click-handler="TT.UI.openStoryPointsUpdater"><label>Points</label> {{estimate}}</div>
-    <div class="detail" data-click-handler="TT.UI.openStoryTypeUpdater"><label>Type</label> <span class="value">{{story_type}}</span></div>
-    <div class="detail last"><label>State</label> {{current_state}}</div>
+    <div class="detail" data-click-handler="TT.UI.openStoryRequesterUpdater"><label>Requester</label> <span>{{requested_by}}</span></div>
+    <div class="detail" data-click-handler="TT.UI.openStoryOwnerUpdater"><label>Owner</label> <span>{{owned_by}}</span></div>
+    <div class="detail" data-click-handler="TT.UI.openStoryPointsUpdater"><label>Points</label> <span>{{estimate}}</span></div>
+    <div class="detail" data-click-handler="TT.UI.openStoryTypeUpdater"><label>Type</label> <span>{{story_type}}</span></div>
+    <div class="detail last" data-click-handler="TT.UI.openStoryStateUpdater"><label>State</label> <span>{{current_state}}</span></div>
   </div>
   <h2>Description</h2>
   <div class="description">{{{description}}}</div>
