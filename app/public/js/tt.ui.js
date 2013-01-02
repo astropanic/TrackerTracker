@@ -151,6 +151,61 @@ TT.UI = (function () {
     return false;
   };
 
+  // TODO: DRY these up
+
+  pub.openStoryRequesterUpdater = function () {
+    var id = $(this).closest('.story').data('story-id');
+    var story = TT.Model.Story.get({ id: id });
+    var project = TT.Model.Project.get({ id: story.project_id });
+    var users = TT.API.normalizePivotalArray(project.memberships.membership);
+    var items = [];
+
+    $.each(users, function (i, user) {
+      items[items.length] = { name: user.person.name, value: user.person.name };
+    });
+
+    TT.Autocomplete.open({
+      css: { width: 300 },
+      items: items,
+      value: $('span', this).text(),
+      showInput: true,
+      target: this,
+      onApply: function () {
+        var update = { requested_by: $(this).data('value') };
+        TT.Model.Story.update(story, update);
+        TT.Model.Story.serverSave(story, update, TT.View.drawStories);
+      }
+    });
+
+    return false;
+  };
+
+  pub.openStoryOwnerUpdater = function () {
+    var id = $(this).closest('.story').data('story-id');
+    var story = TT.Model.Story.get({ id: id });
+    var project = TT.Model.Project.get({ id: story.project_id });
+    var users = TT.API.normalizePivotalArray(project.memberships.membership);
+    var items = [];
+
+    $.each(users, function (i, user) {
+      items[items.length] = { name: user.person.name, value: user.person.name };
+    });
+
+    TT.Autocomplete.open({
+      css: { width: 300 },
+      items: items,
+      showInput: true,
+      target: this,
+      onApply: function () {
+        var update = { owned_by: $(this).data('value') };
+        TT.Model.Story.update(story, update);
+        TT.Model.Story.serverSave(story, update, TT.View.drawStories);
+      }
+    });
+
+    return false;
+  };
+
   pub.openStoryPointsUpdater = function () {
     var id = $(this).closest('.story').data('story-id');
     var story = TT.Model.Story.get({ id: id });
