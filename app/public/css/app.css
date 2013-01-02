@@ -31,6 +31,20 @@ a:hover {
   color: #024;
 }
 
+input.textfield {
+  border: 1px solid #ccc;
+  border-radius: 1px;
+  outline: none;
+}
+
+input.textfield:hover {
+  border-color: #aaa;
+}
+
+input.textfield:focus {
+  border-color: #08c;
+}
+
 /* Header */
 
 #header {
@@ -82,7 +96,7 @@ body.ajaxRunning #logo h1 {
 /* Dialog */
 
 .modal-dialog-overlay {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.7);
   height: 100%;
   left: 0;
   position: fixed;
@@ -669,6 +683,10 @@ body.ajaxRunning #logo h1 {
 }
 
 /* Autocomplete */
+
+input.textfield.autocomplete {
+  background: url(/images/filter-search-inactive.png) no-repeat scroll 99% center;
+}
 
 #autocomplete {
   background: #fff;
