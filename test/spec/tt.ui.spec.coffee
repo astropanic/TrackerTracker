@@ -11,12 +11,12 @@ describe "UI interactions", ->
         $('#account-settings-link').click()
 
       it "should have an empty token field", ->
-        expect($('#token-input').val()).toBe ''
+        expect($('#pivotal-token-input').val()).toBe ''
         expect($.cookie('pivotalToken')).toBe null
 
       also "I update the token", ->
         beforeEach ->
-          $('#token-input').val(mockPivotalToken)
+          $('#pivotal-token-input').val(mockPivotalToken)
           $('#account-settings .form-action input').click()
 
         it "should save the token", ->
@@ -30,7 +30,7 @@ describe "UI interactions", ->
             $('#account-settings-link').click()
 
           it "should display the saved token", ->
-            expect($('#token-input').val()).toBe mockPivotalToken
+            expect($('#pivotal-token-input').val()).toBe mockPivotalToken
 
   describe "Tags", ->
     tagName = 'blocked'

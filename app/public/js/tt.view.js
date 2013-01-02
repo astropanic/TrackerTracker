@@ -174,10 +174,9 @@ TT.View = (function () {
   pub.drawAccountSettingsForm = function () {
     TT.Dialog.open(pub.render('accountSettings'));
 
-    var pivotalToken = $.cookie('pivotalToken');
-    if (pivotalToken) {
-      $('#token-input').val(pivotalToken);
-    }
+    $('#pivotal-token-input').val($.cookie('pivotalToken')).focus();
+    $('#pivotal-username').val($.cookie('pivotalUsername'));
+    $('#pivotal-username').focus(TT.UI.openPivotalUsernameAutocomplete);
   };
 
   pub.showProjectResetButton = function () {

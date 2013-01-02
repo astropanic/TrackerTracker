@@ -12,16 +12,7 @@ exports.hasToken = function (req, res, next) {
     pivotalCache.useToken(req.cookies[PIVOTAL_TOKEN_COOKIE]);
     res.cookie(PIVOTAL_TOKEN_COOKIE, req.cookies[PIVOTAL_TOKEN_COOKIE], { maxAge: TWO_YEARS });
     next();
-  } else {
-    res.set('Content-Type', 'text/javascript');
-    res.send('TT.UI.requestToken();');
   }
-};
-
-exports.useToken = function (req, res) {
-  res.cookie(PIVOTAL_TOKEN_COOKIE, req.body[PIVOTAL_TOKEN_COOKIE], { maxAge: TWO_YEARS });
-  res.set('Content-Type', 'text/javascript');
-  res.send('TT.Ajax.end();');
 };
 
 exports.getProjects = function (req, res) {

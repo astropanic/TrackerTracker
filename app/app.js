@@ -33,7 +33,6 @@ app.get('/iterations', routes.hasToken, routes.getIterations);
 app.get('/stories', routes.hasToken, routes.getStories);
 
 app.post('/updateStory', routes.hasToken, routes.updateStory);
-app.post('/token', routes.useToken);
 
 http.createServer(app).listen(app.get('port'), function () {
   console.log("Express server listening on port " + app.get('port'));

@@ -3,10 +3,6 @@ TT.Search = (function () {
 
   var pub = {};
 
-  function enterKeyPressed(e) {
-    return e.which === 13;
-  }
-
   pub.addSearchTag = function (term) {
     var terms = term.split(' ').map(function (term) {
       return (term.indexOf(':') !== -1 ? term.split(':')[1] : term).replace(/\'\"/g, '');
@@ -80,7 +76,7 @@ TT.Search = (function () {
     $('#search input').blur(function () {
       $(this).val('');
     }).keyup(function (e) {
-      if (enterKeyPressed(e)) {
+      if (TT.Utils.keyPressed(e, 'ENTER')) {
         pub.submitSearch();
       }
     });

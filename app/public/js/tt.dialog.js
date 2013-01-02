@@ -12,10 +12,12 @@ TT.Dialog = (function () {
   };
 
   pub.close = function (callback) {
-    $('.modal-dialog, .modal-dialog-overlay').empty().remove();
+    $('.modal-dialog, .modal-dialog-overlay').remove();
     if (TT.Utils.isFunction(callback)) {
       callback();
     }
+
+    return false;
   };
 
   return pub;

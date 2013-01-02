@@ -4,10 +4,14 @@
   <div class="form">
     <div class="form-input">
       <label><a href="https://www.pivotaltracker.com/profile" target="_blank">Pivotal Tracker</a> API Token</label>
-      <input id="token-input" type="input" name="token" value="" class="textfield" />
+      <input id="pivotal-token-input" type="input" value="" class="textfield" tabindex="1" />
+    </div>
+    <div class="form-input">
+      <label>Your User Account</label>
+      <input id="pivotal-username" type="input" value="" class="autocomplete textfield" tabindex="2" />
     </div>
     <div class="form-action">
-      <input type="submit" data-click-handler="TT.UI.submitToken" value="Submit Token" class="submit" />
+      <input type="submit" data-click-handler="TT.UI.saveAccountSettings" value="Save Settings" class="submit" tabindex="3" />
       <a class="cancel" href="#" data-click-handler="TT.Dialog.close">Cancel</a>
     </div>
   </div>

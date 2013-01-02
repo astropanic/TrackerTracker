@@ -52,7 +52,6 @@ TT.DragAndDrop = (function () {
 
   pub.onStoryStop = function () {
     if (dragOutFn || dragInFn) {
-      // wait for jQuery sortable to finish up
       TT.View.drawStories();
     }
     dragOutFn = dragInFn = null;

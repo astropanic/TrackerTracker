@@ -667,3 +667,34 @@ body.ajaxRunning #logo h1 {
 .column.ui-sortable-placeholder {
   box-shadow: none;
 }
+
+/* Autocomplete */
+
+#autocomplete {
+  background: #fff;
+  border: 1px solid #666;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  overflow-y: scroll;
+  overflow-x: hidden;
+  position: fixed;
+  z-index: 9999;
+}
+
+#autocomplete .item {
+  background: #fff;
+  border-bottom: 1px dotted rgba(0, 0, 0, 0.3);
+  color: #111;
+  cursor: pointer;
+  display: block;
+  font: normal 13px/15px Helvetica, sans-serif;
+  padding: 6px 8px 5px;
+}
+
+#autocomplete .item:hover {
+  background: #eee;
+}
+
+#autocomplete .item.active {
+  background: #069;
+  color: #fff;
+}

@@ -52,26 +52,6 @@ TT.UI = (function () {
     return false;
   };
 
-  pub.requestToken = function () {
-    TT.View.drawAccountSettingsForm();
-  };
-
-  pub.submitToken = function () {
-    var pivotalToken = $('#token-input').val();
-    if (!pivotalToken) {
-      return false;
-    }
-    $.ajax({
-      url: '/token',
-      type: 'POST',
-      data: { pivotalToken: pivotalToken },
-      success: TT.Init.init
-    });
-    TT.Dialog.close();
-
-    return false;
-  };
-
   pub.filterByProject = function () {
     var id = $(this).data('project-id');
     $('#projects .project').addClass('inactive');
@@ -126,6 +106,45 @@ TT.UI = (function () {
     TT.Model.Filter.remove({ name: name });
     $filter.empty().remove();
     TT.View.drawStories();
+
+    return false;
+  };
+
+  pub.openAccountSettings = function () {
+    TT.View.drawAccountSettingsForm();
+
+    return false;
+  };
+
+  pub.saveAccountSettings = function () {
+    var pivotalToken = $('#pivotal-token-input').val();
+    var pivotalUsername = $('#pivotal-username').val();
+
+    if (!pivotalToken) {
+      // TODO: client-side validation
+      return false;
+    }
+
+    $.cookie('pivotalToken', pivotalToken, { expires: 365 });
+    $.cookie('pivotalUsername', pivotalUsername, { expires: 365 });
+
+    TT.Dialog.close();
+    TT.Init.init();
+
+    return false;
+  };
+
+  pub.openPivotalUsernameAutocomplete = function () {
+    var items = [];
+
+    TT.Model.User.each(function (index, user) {
+      items[items.length] = {
+        name: '<strong>' + user.name + '</strong> (' + user.initials + ')',
+        value: user.name
+      };
+    });
+
+    TT.Autocomplete.open({ items: items, target: this });
 
     return false;
   };
