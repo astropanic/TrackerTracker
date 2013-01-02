@@ -45,7 +45,9 @@ TT.UI = (function () {
     var story = $(this).closest('.story').toggleClass('expanded-story');
     if (story.hasClass('expanded-story')) {
       TT.View.drawStoryDetails(story);
+      TT.Model.Story.update({ id: story.data('story-id') }, { expanded: true });
     } else {
+      TT.Model.Story.update({ id: story.data('story-id') }, { expanded: false });
       story.find('.details').empty().remove();
     }
 

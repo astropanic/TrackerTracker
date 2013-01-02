@@ -144,8 +144,14 @@ TT.View = (function () {
 
   pub.drawStory = function (story, column) {
     var html = pub.render('story', story);
+    var element = pub.attach(html, '.' + column.class_name + ' .column-bucket');
 
-    return pub.attach(html, '.' + column.class_name + ' .column-bucket');
+    if (story.expanded) {
+      element.toggleClass('expanded-story');
+      pub.drawStoryDetails(element);
+    }
+
+    return element;
   };
 
   pub.drawStoryDetails = function (story) {
