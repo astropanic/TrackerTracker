@@ -245,7 +245,7 @@ TT.Model = (function () {
     return story;
   };
 
-  pub.Story.serverSave = function (story, data) {
+  pub.Story.serverSave = function (story, data, callback) {
     TT.Ajax.start();
     $.ajax({
       url: '/updateStory',
@@ -257,6 +257,9 @@ TT.Model = (function () {
       },
       success: function () {
         TT.Ajax.end();
+        if (callback) {
+          callback();
+        }
       }
     });
   };

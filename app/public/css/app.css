@@ -34,7 +34,10 @@ a:hover {
 input.textfield {
   border: 1px solid #ccc;
   border-radius: 1px;
+  font: normal 18px/18px monospace;
+  margin: 3px 0;
   outline: none;
+  padding: 4px 6px;
 }
 
 input.textfield:hover {
@@ -138,9 +141,6 @@ body.ajaxRunning #logo h1 {
 }
 
 #account-settings input.textfield {
-  font: normal 18px/18px monospace;
-  margin: 3px 0;
-  padding: 4px 6px;
   width: 380px;
 }
 
@@ -692,10 +692,18 @@ input.textfield.autocomplete {
   background: #fff;
   border: 1px solid #666;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
-  overflow-y: scroll;
-  overflow-x: hidden;
   position: fixed;
   z-index: 9999;
+}
+
+#autocomplete .list {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#autocomplete-input {
+  display: none;
+  margin: 3px;
 }
 
 #autocomplete .item {

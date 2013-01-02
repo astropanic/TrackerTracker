@@ -151,6 +151,57 @@ TT.UI = (function () {
     return false;
   };
 
+  pub.openStoryPointsUpdater = function () {
+    var id = $(this).closest('.story').data('story-id');
+    var story = TT.Model.Story.get({ id: id });
+    var project = TT.Model.Project.get({ id: story.project_id });
+    var items = [];
+
+    $.each(project.point_scale.split(','), function (i, point) {
+      items[items.length] = { name: point, value: point };
+    });
+
+    TT.Autocomplete.open({
+      css: { width: 100 },
+      items: items,
+      showInput: true,
+      target: this,
+      onApply: function () {
+        var update = { estimate: $(this).data('value') };
+        TT.Model.Story.update(story, update);
+        TT.Model.Story.serverSave(story, update, TT.View.drawStories);
+      }
+    });
+
+    return false;
+  };
+
+  pub.openStoryTypeUpdater = function () {
+    var id = $(this).closest('.story').data('story-id');
+    var story = TT.Model.Story.get({ id: id });
+
+    var items = [
+      { name: 'Feature', value: 'feature' },
+      { name: 'Bug', value: 'bug' },
+      { name: 'Chore', value: 'chore' },
+      { name: 'Release', value: 'release' }
+    ];
+
+    TT.Autocomplete.open({
+      css: { width: 140 },
+      items: items,
+      showInput: true,
+      target: this,
+      onApply: function () {
+        var update = { story_type: $(this).data('value') };
+        TT.Model.Story.update(story, update);
+        TT.Model.Story.serverSave(story, update, TT.View.drawStories);
+      }
+    });
+
+    return false;
+  };
+
   pub.init = function () {
     $('body').click(function (e) {
       var target = $(e.target).closest('[data-click-handler]');

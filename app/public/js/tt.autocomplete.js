@@ -6,20 +6,17 @@ TT.Autocomplete = (function () {
   pub.MAX_HEIGHT = 240;
 
   pub.target = null;
+  pub.input = null;
+  pub.onApply = null;
+  pub.hasMouse = false;
+  pub.closeOnLeave = false;
 
   pub.open = function (options) {
+    pub.close();
+
     pub.hasMouse = false;
     pub.closeOnLeave = false;
-
-    pub.close();
-    pub.target = $(options.target);
-    pub.target.keyup(pub.onKeyUp).blur(function () {
-      if (pub.hasMouse) {
-        pub.closeOnLeave = true;
-      } else {
-        pub.close();
-      }
-    });
+    pub.onApply = options.onApply;
 
     var data = {
       className: options.className,
@@ -28,6 +25,25 @@ TT.Autocomplete = (function () {
 
     var html = TT.View.render('autocomplete', data);
     TT.View.attach(html, 'body');
+
+    pub.target = $(options.target);
+
+    if (options.showInput) {
+      pub.input = $('#autocomplete-input').show().focus();
+      if (options.value) {
+        pub.input.val(options.value);
+      }
+    } else {
+      pub.input = pub.target;
+    }
+
+    pub.input.keyup(pub.onKeyUp).blur(function () {
+      if (pub.hasMouse) {
+        pub.closeOnLeave = true;
+      } else {
+        pub.close();
+      }
+    });
 
     pub.setPosition(options.css);
     pub.filter();
@@ -43,7 +59,7 @@ TT.Autocomplete = (function () {
   };
 
   pub.filter = function () {
-    var value = pub.target.val().toLowerCase();
+    var value = pub.input.val().toLowerCase();
 
     if (value) {
       $('#autocomplete .item').show().filter(function () {
@@ -58,9 +74,9 @@ TT.Autocomplete = (function () {
 
   pub.close = function () {
     $('#autocomplete').remove();
-    if (pub.target) {
-      pub.target.unbind('keyup blur');
-      pub.target = null;
+    if (pub.input) {
+      pub.input.unbind('keyup blur');
+      pub.input = null;
     }
 
     $('body').unbind('.TT.Autocomplete');
@@ -95,11 +111,16 @@ TT.Autocomplete = (function () {
     var offset = pub.target.offset();
 
     $('#autocomplete').css($.extend({
-      maxHeight: pub.MAX_HEIGHT,
       left: offset.left,
       top: offset.top + pub.target.outerHeight() - 1,
       width: pub.target.outerWidth() - 2
     }, customCSS || {}));
+
+    $('#autocomplete .list').css({ maxHeight: pub.MAX_HEIGHT });
+
+    $('#autocomplete-input').css({
+      width: $('#autocomplete').outerWidth() - 22
+    });
   };
 
   pub.setActive = function (element) {
@@ -116,7 +137,7 @@ TT.Autocomplete = (function () {
 
     if (active.length) {
       var index = 0;
-      var offset = Math.round(($('#autocomplete').outerHeight() / active.outerHeight()) / 2);
+      var offset = Math.round(($('#autocomplete .list').outerHeight() / active.outerHeight()) / 2);
 
       $('#autocomplete .item:visible').filter(function (i) {
         if ($(this).hasClass('active')) {
@@ -126,14 +147,17 @@ TT.Autocomplete = (function () {
       top = $('#autocomplete .active').outerHeight() * (index - offset);
     }
 
-    $('#autocomplete').scrollTop(top);
+    $('#autocomplete .list').scrollTop(top);
   };
 
   pub.apply = function (element) {
-    pub.clicked = new Date().getTime();
     element = element || this;
-    pub.target.val($(element).data('value')).blur();
+    pub.input.val($(element).data('value')).blur();
     pub.close();
+
+    if (pub.onApply) {
+      pub.onApply.apply(element);
+    }
 
     return false;
   };

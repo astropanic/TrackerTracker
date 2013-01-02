@@ -1,6 +1,6 @@
 <div id="story-{{id}}" data-story-id="{{id}}" class="story story-{{id}} {{ story_type }} {{current_state}}">
   <div class="container">
-    <div class="points">{{estimate}}</div>
+    <div class="points" data-click-handler="TT.UI.openStoryPointsUpdater">{{estimate}}</div>
     <div class="toggle-arrow" data-click-handler="TT.UI.toggleStory"></div>
     <div class="icon"></div>
     <div class="title">
