@@ -88,6 +88,17 @@ TT.Init = (function () {
     });
 
     TT.Model.Column.add({
+      name: 'Rejected',
+      active: false,
+      filter: function (story) {
+        return story.current_state === 'rejected';
+      },
+      onDragIn: function (story) {
+        return { current_state: 'rejected' };
+      }
+    });
+
+    TT.Model.Column.add({
       name: 'Delivered',
       active: true,
       filter: function (story) {
