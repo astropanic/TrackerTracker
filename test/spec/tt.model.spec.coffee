@@ -6,6 +6,10 @@ describe "Models", ->
     beforeEach ->
       Color.flush()
 
+    say "we try to get a non-existing object", ->
+      it "should return undefined", ->
+        expect(Color.get({ id: 999 })).toBe undefined
+
     say "we try to get the index of a non-existing object", ->
       it "should return undefined", ->
         expect(Color.index({ id: 999 })).toBe undefined
