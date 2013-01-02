@@ -127,16 +127,17 @@ TT.Init = (function () {
     });
     */
 
-    /*
-    TT.Model.Filter.add({
-      name: 'Owned by Me',
-      type: 'user',
-      active: false,
-      fn: function (story) {
-        return story.owned_by === TT.Utils.getSettings('user_name');
-      }
-    });
-    */
+    var myUsername = $.cookie('pivotalUsername');
+    if (myUsername) {
+      TT.Model.Filter.add({
+        name: 'Owned by Me',
+        type: 'user',
+        active: false,
+        fn: function (story) {
+          return story.owned_by === myUsername;
+        }
+      });
+    }
 
     TT.Model.Filter.add({
       name: 'Current Iteration',
