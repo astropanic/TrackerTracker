@@ -108,7 +108,6 @@ TT.View = (function () {
   pub.drawStories = function () {
     pub.setProjectActiveState();
     pub.clearStories();
-    pub.showProjectResetButton();
 
     TT.Model.Column.each(function (index, column) {
       column.storyCount = 0;
@@ -183,14 +182,6 @@ TT.View = (function () {
     $('#pivotal-token-input').val($.cookie('pivotalToken')).focus();
     $('#pivotal-username').val($.cookie('pivotalUsername'));
     $('#pivotal-username').focus(TT.UI.openPivotalUsernameAutocomplete);
-  };
-
-  pub.showProjectResetButton = function () {
-    if ($('#projects .project.inactive').length > 0) {
-      $('#project-reset').css('display', 'inline-block');
-    } else {
-      $('#project-reset').css('display', 'none');
-    }
   };
 
   pub.message = function (str, type) {

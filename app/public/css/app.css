@@ -236,10 +236,10 @@ body.ajaxRunning #logo h1 {
   color: #fff;
 }
 
-#project-reset {
+#project-update {
   background: url(/images/refresh.png) no-repeat scroll top left transparent;
   cursor: pointer;
-  display: none;
+  display: inline-block;
   height: 16px;
   left: 6px;
   opacity: 0.7;
@@ -248,7 +248,7 @@ body.ajaxRunning #logo h1 {
   width: 16px;
 }
 
-#project-reset:hover {
+#project-update:hover {
   opacity: 1;
 }
 

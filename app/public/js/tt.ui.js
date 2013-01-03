@@ -14,13 +14,6 @@ TT.UI = (function () {
     return false;
   };
 
-  pub.resetProjectList = function () {
-    $('#projects .project.inactive').removeClass('inactive');
-    TT.View.drawStories();
-
-    return false;
-  };
-
   pub.toggleColumnSelector = function () {
     var name = $.trim($(this).closest('.column-selector').find('.column-name').text());
     TT.Model.Column.update({ name: name }, { active: !$(this).hasClass('active') });
