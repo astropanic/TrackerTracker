@@ -165,9 +165,9 @@ TT.UI = (function () {
     });
 
     TT.Autocomplete.open({
-      css: { width: 300 },
+      css: { width: 200 },
       items: items,
-      value: $('span', this).text(),
+      value: $(this).text(),
       showInput: true,
       target: this,
       onApply: function () {
@@ -192,9 +192,9 @@ TT.UI = (function () {
     });
 
     TT.Autocomplete.open({
-      css: { width: 300 },
+      css: { width: 200 },
       items: items,
-      value: $('span', this).text(),
+      value: $(this).text(),
       showInput: true,
       target: this,
       onApply: function () {
@@ -218,9 +218,9 @@ TT.UI = (function () {
     });
 
     TT.Autocomplete.open({
-      css: { width: 100 },
+      css: { width: 80 },
       items: items,
-      value: $('span', this).text(),
+      value: $(this).text(),
       showInput: true,
       target: this,
       onApply: function () {
@@ -247,9 +247,9 @@ TT.UI = (function () {
     ];
 
     TT.Autocomplete.open({
-      css: { width: 140 },
+      css: { width: 120 },
       items: items,
-      value: $('span', this).text(),
+      value: $(this).text(),
       showInput: true,
       target: this,
       onApply: function () {
@@ -274,9 +274,9 @@ TT.UI = (function () {
     ];
 
     TT.Autocomplete.open({
-      css: { width: 140 },
+      css: { width: 120 },
       items: items,
-      value: $('span', this).text(),
+      value: $(this).text(),
       showInput: true,
       target: this,
       onApply: function () {

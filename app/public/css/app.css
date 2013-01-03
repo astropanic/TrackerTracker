@@ -555,6 +555,14 @@ body.ajaxRunning #logo h1 {
   width: 72px;
 }
 
+.story .detail span.editable {
+  background: url(/images/arrow.open.png) no-repeat scroll center right transparent;
+  display: inline-block;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 1px 15px 1px 0;
+}
+
 .story .detail.last {
   border-bottom: 0;
 }
@@ -703,6 +711,7 @@ input.textfield.autocomplete {
 
 #autocomplete-input {
   display: none;
+  font: normal 14px/18px monospace;
   margin: 3px;
 }
 
