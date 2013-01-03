@@ -256,7 +256,7 @@ TT.Init = (function () {
 
   pub.addProjects = function (projects) {
     $.each(TT.Utils.normalizePivotalArray(projects), function (index, project) {
-      TT.Model.Project.add(project);
+      TT.Model.Project.overwrite(project);
       if (project.memberships && project.memberships.membership) {
         var memberships = TT.Utils.normalizePivotalArray(project.memberships.membership);
         $.each(memberships, function (index, membership) {

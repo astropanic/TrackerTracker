@@ -107,8 +107,10 @@ TT.Model = (function () {
         if (!TT.Utils.isNumber(index)) {
           index = self.DB.length;
         }
+        self.DB[index] = $.extend({}, self.DB[index], obj);
+      } else {
+        self.DB[index] = obj;
       }
-      self.DB[index] = obj;
     };
 
     self.overwrite = function (obj, key) {

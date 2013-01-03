@@ -34,7 +34,7 @@ a:hover {
 input.textfield {
   border: 1px solid #ccc;
   border-radius: 1px;
-  font: normal 18px/18px monospace;
+  font: normal 18px/18px Helvetica, sans-serif;
   margin: 3px 0;
   outline: none;
   padding: 4px 6px;
@@ -711,7 +711,7 @@ input.textfield.autocomplete {
 
 #autocomplete-input {
   display: none;
-  font: normal 14px/18px monospace;
+  font: normal 14px/18px Helvetica, sans-serif;
   margin: 3px;
 }
 
