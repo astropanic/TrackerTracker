@@ -298,6 +298,14 @@ body.ajaxRunning #logo h1 {
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
 }
 
+.filter.sticky {
+  padding-right: 8px;
+}
+
+.filter.sticky span.close {
+  display: none;
+}
+
 .filter-search span.name,
 .filter-search.inactive:hover span.name {
   background: url(/images/filter-search-active.png) no-repeat scroll -1px -1px;

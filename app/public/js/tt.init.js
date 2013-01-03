@@ -144,6 +144,7 @@ TT.Init = (function () {
         name: 'Owned by Me',
         type: 'user',
         active: false,
+        sticky: true,
         fn: function (story) {
           return story.owned_by === myUsername;
         }
@@ -154,6 +155,7 @@ TT.Init = (function () {
       name: 'Current Iteration',
       type: 'iteration',
       active: false,
+      sticky: true,
       fn: function (story) {
         return story.current_iteration === true;
       }

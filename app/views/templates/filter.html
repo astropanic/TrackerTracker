@@ -1,4 +1,4 @@
-<div class="filter filter-{{type}}" data-click-handler="TT.UI.toggleFilter">
+<div data-filter-id="{{id}}" class="filter filter-{{type}} {{#sticky}}sticky{{/sticky}}" data-click-handler="TT.UI.toggleFilter">
   <span class="name">{{name}}</span>
-  <span class="close"></span>
+  <span class="close" data-click-handler="TT.UI.removeFilter"></span>
 </div>

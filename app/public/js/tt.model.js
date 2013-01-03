@@ -154,6 +154,8 @@ TT.Model = (function () {
 
     if (!foundFilter) {
       filter.active = filter.active === false ? false : true;
+      filter.sticky = filter.sticky === true ? true : false;
+      filter.id = TT.Utils.cssify(filter.type + '-' + filter.name);
       filter.element = TT.View.drawFilter(filter);
       pub.Filter.DB[pub.Filter.DB.length] = filter;
     } else if (foundFilter.active === false) {

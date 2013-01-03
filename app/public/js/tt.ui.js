@@ -92,10 +92,10 @@ TT.UI = (function () {
   };
 
   pub.toggleFilter = function () {
-    var name = $.trim($(this).text());
-    var filter = TT.Model.Filter.get({ name: name });
+    var id = $(this).closest('.filter').data('filter-id');
+    var filter = TT.Model.Filter.get({ id: id });
 
-    TT.Model.Filter.update({ name: filter.name }, { active: !filter.active });
+    TT.Model.Filter.update({ id: id }, { active: !filter.active });
     filter.element.toggleClass('inactive');
     TT.View.drawStories();
 
@@ -104,8 +104,8 @@ TT.UI = (function () {
 
   pub.removeFilter = function () {
     var $filter = $(this).closest('.filter');
-    var name = $.trim($filter.text());
-    TT.Model.Filter.remove({ name: name });
+    var id = $filter.data('filter-id');
+    TT.Model.Filter.remove({ id: id });
     $filter.empty().remove();
     TT.View.drawStories();
 
