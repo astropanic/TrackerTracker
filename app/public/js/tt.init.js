@@ -197,11 +197,20 @@ TT.Init = (function () {
     }
   };
 
+  function addEach(items, addFn) {
+    if (items) {
+      items = TT.Utils.normalizePivotalArray(items);
+      $.each(items, function (index, item) {
+        addFn(item);
+      });
+    }
+  }
+
   pub.requestProjectsAndIterations = function () {
     function useProjectData(projects) {
       projects = JSON.parse(projects).project;
       TT.Ajax.end();
-      TT.API.addProjects(projects);
+      pub.addProjects(projects);
       TT.View.drawProjectList(projects);
       pub.setInactiveProjects();
       pub.requestAllIterations();
@@ -232,7 +241,7 @@ TT.Init = (function () {
         success: function (iterations) {
           iterations = JSON.parse(iterations).iteration;
           if (iterations) {
-            TT.API.addIterations(iterations);
+            pub.addIterations(iterations);
             TT.View.drawStories();
           } else {
             var note = 'Invalid response from the server. Did you enter the right token?';
@@ -243,6 +252,33 @@ TT.Init = (function () {
       });
     });
     TT.View.updateColumnDimensions();
+  };
+
+  pub.addProjects = function (projects) {
+    $.each(TT.Utils.normalizePivotalArray(projects), function (index, project) {
+      TT.Model.Project.add(project);
+      if (project.memberships && project.memberships.membership) {
+        var memberships = TT.Utils.normalizePivotalArray(project.memberships.membership);
+        $.each(memberships, function (index, membership) {
+          TT.Model.User.overwrite(membership, 'name');
+        });
+      }
+    });
+  };
+
+  pub.addIterations = function (iterations) {
+    // This assumes first iteration is always current.
+    var current_iteration = true;
+    $.each(TT.Utils.normalizePivotalArray(iterations), function (index, iteration) {
+      if (iteration.stories && iteration.stories.story) {
+        var stories = TT.Utils.normalizePivotalArray(iteration.stories.story);
+        $.each(stories, function (index, story) {
+          story.current_iteration = current_iteration;
+          TT.Model.Story.overwrite(story);
+        });
+      }
+      current_iteration = false;
+    });
   };
 
   pub.init = function () {

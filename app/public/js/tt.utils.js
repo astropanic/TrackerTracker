@@ -3,6 +3,11 @@ TT.Utils = (function () {
 
   var pub = {};
 
+  // If only one item exists, Pivotal API sends that by itself, otherwise as an array of items
+  pub.normalizePivotalArray = function (items) {
+    return !items ? [] : $.isPlainObject(items) ? [items] : items;
+  };
+
   pub.keyPressed = function (e, key) {
     var keys = {
       'TAB': 9,

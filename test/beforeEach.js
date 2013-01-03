@@ -241,16 +241,11 @@ TT.Mock = (function () {
     });
   };
 
-  pub.token = function (data) {
-    $.cookie('pivotalToken', data.pivotalToken);
-  };
-
   pub.serverResponse = function (url, data) {
     data = data || {};
     var urls = {
       '/projects': pub.projects,
-      '/iterations': pub['iterations_' + data.projectID],
-      '/token': pub.token
+      '/iterations': pub['iterations_' + data.projectID]
     };
 
     return urls[url](data);

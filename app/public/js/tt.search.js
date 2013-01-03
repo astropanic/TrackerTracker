@@ -44,7 +44,7 @@ TT.Search = (function () {
         url: '/stories',
         data: { projectID: project.id, filter: term },
         success: function (stories) {
-          stories = TT.API.normalizePivotalArray(stories.story);
+          stories = TT.Utils.normalizePivotalArray(stories.story);
           if (stories) {
             TT.View.message('Found <strong>' + stories.length + '</strong> stories in <strong>' + project.name + '</strong>');
             $.each(stories, function (index, story) {

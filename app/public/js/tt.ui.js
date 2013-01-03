@@ -157,7 +157,7 @@ TT.UI = (function () {
     var id = $(this).closest('.story').data('story-id');
     var story = TT.Model.Story.get({ id: id });
     var project = TT.Model.Project.get({ id: story.project_id });
-    var users = TT.API.normalizePivotalArray(project.memberships.membership);
+    var users = TT.Utils.normalizePivotalArray(project.memberships.membership);
     var items = [];
 
     $.each(users, function (i, user) {
@@ -184,7 +184,7 @@ TT.UI = (function () {
     var id = $(this).closest('.story').data('story-id');
     var story = TT.Model.Story.get({ id: id });
     var project = TT.Model.Project.get({ id: story.project_id });
-    var users = TT.API.normalizePivotalArray(project.memberships.membership);
+    var users = TT.Utils.normalizePivotalArray(project.memberships.membership);
     var items = [];
 
     $.each(users, function (i, user) {

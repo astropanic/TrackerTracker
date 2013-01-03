@@ -184,7 +184,7 @@ TT.Model = (function () {
     story.estimate = story.estimate >= 0 ? story.estimate : '';
     story.labels = story.labels ? story.labels.indexOf(',') !== -1 ? story.labels.split(',') : [story.labels] : [];
     if (story.notes && story.notes.note) {
-      story.notes = $.map(TT.API.normalizePivotalArray(story.notes.note), function (note, index) {
+      story.notes = $.map(TT.Utils.normalizePivotalArray(story.notes.note), function (note, index) {
         if (note.text) {
           note.text = TT.Utils.showdownLite(note.text);
         }
