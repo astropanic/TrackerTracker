@@ -7,7 +7,7 @@ TT.Init = (function () {
 
   // bootstrap functions
 
-  pub.preloadModels = function () {
+  pub.preloadColumns = function () {
 
     // Readymade columns
     // TODO: Allow creating & saving custom columns and layouts
@@ -138,15 +138,24 @@ TT.Init = (function () {
     });
     */
 
-    var myUsername = $.cookie('pivotalUsername');
-    if (myUsername) {
+  };
+
+  pub.preloadFilters = function () {
+    var filters = TT.Model.Filter.clientLoad();
+
+    if (filters) {
+      return pub.restoreFilters(filters);
+    }
+
+    if ($.cookie('pivotalUsername')) {
       TT.Model.Filter.add({
         name: 'Owned by Me',
         type: 'user',
         active: false,
         sticky: true,
+        pure: true,
         fn: function (story) {
-          return story.owned_by === myUsername;
+          return story.owned_by === $.cookie('pivotalUsername');
         }
       });
     }
@@ -156,8 +165,32 @@ TT.Init = (function () {
       type: 'iteration',
       active: false,
       sticky: true,
+      pure: true,
       fn: function (story) {
         return story.current_iteration === true;
+      }
+    });
+  };
+
+  pub.restoreFilters = function (filters) {
+    $.each(JSON.parse(filters), function (index, filter) {
+      if (filter.type !== 'search') {
+        if (filter.pure) {
+          filter.fn = eval(filter.fn);
+          TT.Model.Filter.add(filter);
+        } else {
+          if (filter.type === 'user') {
+            filter.fn = function (story) {
+              return story.owned_by === filter.name || story.requested_by === filter.name;
+            };
+            TT.Model.Filter.add(filter);
+          } else if (filter.type === 'tag') {
+            filter.fn = function (story) {
+              return TT.Model.Story.hasTag(story, filter.name);
+            };
+            TT.Model.Filter.add(filter);
+          }
+        }
       }
     });
   };
@@ -295,7 +328,8 @@ TT.Init = (function () {
       $('#filters .filter').empty().remove();
     }
 
-    pub.preloadModels();
+    pub.preloadColumns();
+    pub.preloadFilters();
     pub.setLayout();
 
     TT.View.drawColumns();

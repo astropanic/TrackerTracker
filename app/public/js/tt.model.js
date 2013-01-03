@@ -63,7 +63,18 @@ TT.Model = (function () {
     self.name = name;
 
     self.clientSave = function () {
-      return TT.Utils.localStorage(self.name, JSON.stringify(self.DB));
+      var copy = [];
+      self.each(function (index, item) {
+        copy[index] = {};
+        $.each(item, function (key, value) {
+          if (TT.Utils.isFunction(value)) {
+            value = '(' + value + ');';
+          }
+          // this will fail on DOM elements, need to handle that
+          copy[index][key] = value;
+        });
+      });
+      return TT.Utils.localStorage(self.name, JSON.stringify(copy));
     };
 
     self.clientLoad = function () {
@@ -156,11 +167,12 @@ TT.Model = (function () {
       filter.active = filter.active === false ? false : true;
       filter.sticky = filter.sticky === true ? true : false;
       filter.id = TT.Utils.cssify(filter.type + '-' + filter.name);
-      filter.element = TT.View.drawFilter(filter);
       pub.Filter.DB[pub.Filter.DB.length] = filter;
+      TT.View.drawFilter(filter);
     } else if (foundFilter.active === false) {
-      foundFilter.element.click();
+      $('.filter[data-filter-id="' + foundFilter.id + '"]').click();
     }
+    pub.Filter.clientSave();
   };
 
   pub.Layout = pub.Model('Layout');

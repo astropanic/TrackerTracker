@@ -38,6 +38,7 @@ module.exports = function(grunt) {
         browser: true,
         curly: true,
         eqeqeq: true,
+        evil: true,
         forin: true,
         indent: 2,
         jquery: true,

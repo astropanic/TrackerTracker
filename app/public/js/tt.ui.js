@@ -96,8 +96,9 @@ TT.UI = (function () {
     var filter = TT.Model.Filter.get({ id: id });
 
     TT.Model.Filter.update({ id: id }, { active: !filter.active });
-    filter.element.toggleClass('inactive');
+    $(this).toggleClass('inactive');
     TT.View.drawStories();
+    TT.Model.Filter.clientSave();
 
     return false;
   };
@@ -108,6 +109,7 @@ TT.UI = (function () {
     TT.Model.Filter.remove({ id: id });
     $filter.empty().remove();
     TT.View.drawStories();
+    TT.Model.Filter.clientSave();
 
     return false;
   };
