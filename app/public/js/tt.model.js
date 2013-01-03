@@ -5,6 +5,10 @@ TT.Model = (function () {
 
   function matcherObjectToFunction(matchers) {
     return function (obj) {
+      if (!obj) {
+        return false;
+      }
+
       var match = true;
       $.each(matchers, function (key, val) {
         if (obj[key] !== val) {
@@ -17,6 +21,10 @@ TT.Model = (function () {
 
   function updateObjectToFunction(updates) {
     return function (obj) {
+      if (!obj) {
+        return obj;
+      }
+
       $.each(updates, function (key, val) {
         obj[key] = val;
       });
