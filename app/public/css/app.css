@@ -599,7 +599,8 @@ body.ajaxRunning #logo h1 {
 }
 
 .story .description,
-.story .note {
+.story .note .text,
+.story .attachment .text {
   background: rgba(255, 255, 255, 0.5);
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 3px;
@@ -616,14 +617,18 @@ body.ajaxRunning #logo h1 {
   text-align: left;
 }
 
-.story .note .author {
+.story .note .author,
+.story .attachment .author {
   font-weight: bold;
   margin: 6px 0 0;
 }
 
-.story .note .date {
-  color: #666;
+.story .note .date,
+.story .attachment .date {
+  color: #777;
   font-size: 11px;
+  font-style: italic;
+  text-align: right;
 }
 
 .story.blocked {

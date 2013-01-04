@@ -207,11 +207,29 @@ TT.Model = (function () {
     story.description = TT.Utils.isString(story.description) ? TT.Utils.showdownLite(story.description) : '';
     story.estimate = story.estimate >= 0 ? story.estimate : '';
     story.labels = story.labels ? story.labels.indexOf(',') !== -1 ? story.labels.split(',') : [story.labels] : [];
+
+    if (story.attachments && story.attachments.attachment) {
+      story.attachments = $.map(TT.Utils.normalizePivotalArray(story.attachments.attachment), function (note, index) {
+        if (note.description && TT.Utils.isString(note.description)) {
+          note.description = TT.Utils.showdownLite(note.description);
+        } else {
+          note.description = '';
+        }
+
+        // TODO: date format
+        return note;
+      });
+    }
+
     if (story.notes && story.notes.note) {
       story.notes = $.map(TT.Utils.normalizePivotalArray(story.notes.note), function (note, index) {
-        if (note.text) {
+        if (note.text && TT.Utils.isString(note.text)) {
           note.text = TT.Utils.showdownLite(note.text);
+        } else {
+          note.text = '';
         }
+
+        // TODO: date format
         return note;
       });
     }
