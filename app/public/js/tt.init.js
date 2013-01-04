@@ -147,18 +147,16 @@ TT.Init = (function () {
       return pub.restoreFilters(filters);
     }
 
-    if ($.cookie('pivotalUsername')) {
-      TT.Model.Filter.add({
-        name: 'Owned by Me',
-        type: 'user',
-        active: false,
-        sticky: true,
-        pure: true,
-        fn: function (story) {
-          return story.owned_by === $.cookie('pivotalUsername');
-        }
-      });
-    }
+    TT.Model.Filter.add({
+      name: 'Owned by Me',
+      type: 'user',
+      active: false,
+      sticky: true,
+      pure: true,
+      fn: function (story) {
+        return story.owned_by === $.cookie('pivotalUsername');
+      }
+    });
 
     TT.Model.Filter.add({
       name: 'Current Iteration',
