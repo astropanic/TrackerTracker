@@ -568,6 +568,7 @@ body.ajaxRunning #logo h1 {
   display: inline-block;
   cursor: pointer;
   font-weight: bold;
+  min-height: 4px;
   padding: 1px 15px 1px 0;
 }
 
@@ -729,7 +730,7 @@ input.textfield.autocomplete {
   color: #111;
   cursor: pointer;
   display: block;
-  font: normal 13px/15px Helvetica, sans-serif;
+  font: normal 12px/14px Helvetica, sans-serif;
   padding: 6px 8px 5px;
 }
 

@@ -250,15 +250,6 @@ TT.Init = (function () {
     }
   };
 
-  function addEach(items, addFn) {
-    if (items) {
-      items = TT.Utils.normalizePivotalArray(items);
-      $.each(items, function (index, item) {
-        addFn(item);
-      });
-    }
-  }
-
   pub.requestProjectsAndIterations = function () {
     function useProjectData(projects) {
       projects = JSON.parse(projects).project;
