@@ -172,22 +172,42 @@ TT.Init = (function () {
 
   pub.restoreFilters = function (filters) {
     $.each(JSON.parse(filters), function (index, filter) {
-      if (filter.type !== 'search') {
-        if (filter.pure) {
-          filter.fn = eval(filter.fn);
+      if (filter.pure) {
+        filter.fn = eval(filter.fn);
+        TT.Model.Filter.add(filter);
+      } else {
+        if (filter.type === 'user') {
+          filter.fn = function (story) {
+            return story.owned_by === filter.name || story.requested_by === filter.name;
+          };
           TT.Model.Filter.add(filter);
-        } else {
-          if (filter.type === 'user') {
-            filter.fn = function (story) {
-              return story.owned_by === filter.name || story.requested_by === filter.name;
-            };
-            TT.Model.Filter.add(filter);
-          } else if (filter.type === 'tag') {
-            filter.fn = function (story) {
-              return TT.Model.Story.hasTag(story, filter.name);
-            };
-            TT.Model.Filter.add(filter);
-          }
+        } else if (filter.type === 'tag') {
+          filter.fn = function (story) {
+            return TT.Model.Story.hasTag(story, filter.name);
+          };
+          TT.Model.Filter.add(filter);
+        } else if (filter.type === 'search') {
+          filter.active = false;
+          var terms = TT.Search.parseSearchQuery(filter.name);
+          filter.fn = function (story) {
+            if (terms.length === 0) {
+              return true;
+            }
+            var text = JSON.stringify(story).toLowerCase();
+            var match = true;
+            $.each(terms, function (i, term) {
+              if (text.indexOf(term) === -1) {
+                match = false;
+              }
+            });
+
+            return match;
+          };
+          TT.Model.Filter.add(filter);
+          $('.filter[data-filter-id="' + filter.id + '"]').click(function () {
+            TT.Search.requestMatchingStories(filter.name);
+            $(this).unbind('click');
+          });
         }
       }
     });

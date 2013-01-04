@@ -3,10 +3,14 @@ TT.Search = (function () {
 
   var pub = {};
 
-  pub.addSearchTag = function (term) {
-    var terms = term.split(' ').map(function (term) {
+  pub.parseSearchQuery = function (term) {
+    return term.split(' ').map(function (term) {
       return (term.indexOf(':') !== -1 ? term.split(':')[1] : term).replace(/\'\"/g, '');
     });
+  };
+
+  pub.addSearchTag = function (term) {
+    var terms = pub.parseSearchQuery(term);
 
     TT.Model.Filter.add({
       name: term,
