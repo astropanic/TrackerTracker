@@ -13,21 +13,10 @@ exports.useToken = function (token) {
 };
 
 exports.getProjects = function (callback) {
-  var key = pivotal.token + '_projects';
-
-  client.get(key, function (err, results) {
-    if (results) {
-      console.log('[getProjects] using cached results');
-      callback(results);
-    } else {
-      console.log('[getProjects] hitting API');
-      pivotal.getProjects(function (err, results) {
-        results = JSON.stringify(results);
-
-        client.set(key, results);
-        callback(results);
-      });
-    }
+  console.log('[getProjects] hitting API');
+  pivotal.getProjects(function (err, results) {
+    results = JSON.stringify(results);
+    callback(results);
   });
 };
 

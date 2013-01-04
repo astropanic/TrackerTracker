@@ -14,6 +14,13 @@ TT.UI = (function () {
     return false;
   };
 
+  pub.refreshProjects = function () {
+    TT.Utils.localStorage('projects', null);
+    TT.Init.requestProjectsAndIterations();
+
+    return false;
+  };
+
   pub.toggleColumnSelector = function () {
     var name = $.trim($(this).closest('.column-selector').find('.column-name').text());
     TT.Model.Column.update({ name: name }, { active: !$(this).hasClass('active') });
