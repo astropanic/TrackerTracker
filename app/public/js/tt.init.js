@@ -333,7 +333,6 @@ TT.Init = (function () {
     pub.setLayout();
 
     TT.View.drawColumns();
-    TT.View.drawAccountNav();
     TT.View.drawColumnListNav();
     TT.View.updateColumnDimensions();
 
