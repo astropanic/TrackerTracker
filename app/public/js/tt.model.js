@@ -207,32 +207,7 @@ TT.Model = (function () {
     story.description = TT.Utils.isString(story.description) ? TT.Utils.showdownLite(story.description) : '';
     story.estimate = story.estimate >= 0 ? story.estimate : '';
     story.labels = story.labels ? story.labels.indexOf(',') !== -1 ? story.labels.split(',') : [story.labels] : [];
-
-    if (story.attachments && story.attachments.attachment) {
-      story.attachments = $.map(TT.Utils.normalizePivotalArray(story.attachments.attachment), function (note, index) {
-        if (note.description && TT.Utils.isString(note.description)) {
-          note.description = TT.Utils.showdownLite(note.description);
-        } else {
-          note.description = '';
-        }
-
-        // TODO: date format
-        return note;
-      });
-    }
-
-    if (story.notes && story.notes.note) {
-      story.notes = $.map(TT.Utils.normalizePivotalArray(story.notes.note), function (note, index) {
-        if (note.text && TT.Utils.isString(note.text)) {
-          note.text = TT.Utils.showdownLite(note.text);
-        } else {
-          note.text = '';
-        }
-
-        // TODO: date format
-        return note;
-      });
-    }
+    story.notes = compileNotes(story);
 
     var project = TT.Model.Project.get({ id: story.project_id }) || {};
     var user = TT.Model.User.get({ name: story.owned_by }) || {};
@@ -243,6 +218,62 @@ TT.Model = (function () {
 
     return story;
   };
+
+  function isImage(filename) {
+    return (/\.(gif|jpg|jpeg|png)$/i).test(filename);
+  }
+
+  function compileNotes(story) {
+    if (story.notes && story.notes.note) {
+      story.notes = $.map(TT.Utils.normalizePivotalArray(story.notes.note), function (note, index) {
+        if (TT.Utils.isString(note.text)) {
+          note.text = TT.Utils.showdownLite(note.text);
+        } else {
+          note.text = '';
+        }
+        note.timestamp = new Date(note.noted_at).getTime();
+        note.attachments = [];
+
+        return note;
+      });
+    } else {
+      story.notes = [];
+    }
+
+    if (story.attachments && story.attachments.attachment) {
+      $.each(TT.Utils.normalizePivotalArray(story.attachments.attachment), function (index, attachment) {
+        attachment.timestamp = new Date(attachment.uploaded_at).getTime();
+        attachment.isImage = isImage(attachment.filename);
+        if (TT.Utils.isString(attachment.description)) {
+          attachment.description = TT.Utils.showdownLite(attachment.description);
+          var noteIndex = find(story.notes, { text: attachment.description }, true)[0];
+          if (noteIndex) {
+            story.notes[noteIndex].attachments.push(attachment);
+            return;
+          }
+        } else {
+          attachment.description = '';
+        }
+
+        story.notes[story.notes.length] = {
+          timestamp: attachment.timestamp,
+          text: attachment.description,
+          author: attachment.uploaded_by,
+          noted_at: attachment.uploaded_at,
+          isImage: attachment.isImage,
+          id: parseInt(attachment.id, 10),
+          attachments: [
+            {
+              url: attachment.url,
+              filename: attachment.filename
+            }
+          ]
+        };
+      });
+    }
+
+    return TT.Utils.sortByProperty(story.notes, 'timestamp').reverse();
+  }
 
   pub.Story.onBeforeSave = function (data) {
     if (data.labels) {

@@ -122,6 +122,12 @@ TT.Utils = (function () {
     return arr;
   };
 
+  pub.sortByProperty = function (arr, prop) {
+    return arr.sort(function (a, b) {
+      return a[prop] > b[prop] ? 1 : a[prop] === b[prop] ? 0 : -1;
+    });
+  };
+
   return pub;
 
 }());

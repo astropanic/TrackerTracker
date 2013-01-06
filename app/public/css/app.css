@@ -1,4 +1,18 @@
 
+/* Clearfix */
+
+.clearfix:after {
+    clear: both;
+    content: '.';
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
 /* Global */
 
 body, html {
@@ -492,7 +506,7 @@ body.ajaxRunning #logo h1 {
 }
 
 .story.release.expanded-story:hover {
-  background-color: #f3f3f3 !important;
+  background-color: #e0d9c7 !important;
 }
 
 .story .toggle-arrow {
@@ -598,37 +612,67 @@ body.ajaxRunning #logo h1 {
   margin: 8px 0 0;
 }
 
+.story .attachments {
+  margin-right: 20px;
+}
+
+.story .attachment a {
+  background: url(/images/file.png) no-repeat scroll 6px 6px #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  display: block;
+  margin: 8px 0 0;
+  padding: 7px 10px 7px 25px;
+  word-wrap: break-word;
+}
+
+.story .image {
+  border: 5px solid #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  margin: 8px 0 0;
+  max-height: 120px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.story .image img {
+  display: block;
+  width: 100%;
+}
+
 .story .description,
-.story .note .text,
-.story .attachment .text {
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 3px;
-  margin: 4px 0 5px;
-  padding: 10px 12px;
+.story .note {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  margin: 6px 0;
+  padding: 11px 12px 6px;
+  word-wrap: break-word;
 }
 
-.story .dates {
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  color: #777;
-  font: normal 11px/15px Helvetica, sans-serif;
-  margin: 10px 0 0;
-  padding: 6px 2px 0;
-  text-align: left;
+.story .description {
+  padding: 11px 12px;
 }
 
-.story .note .author,
-.story .attachment .author {
-  font-weight: bold;
+.story .text {
   margin: 6px 0 0;
 }
 
-.story .note .date,
-.story .attachment .date {
-  color: #777;
+.story .note .author {
+  font-weight: bold;
+}
+
+.story .note .date {
+  color: #888;
   font-size: 11px;
-  font-style: italic;
+  margin: 6px 0 0;
   text-align: right;
+}
+
+.story .dates {
+  color: #777;
+  font: normal 11px/15px Helvetica, sans-serif;
+  margin: 8px 0 0;
+  padding: 0 2px;
 }
 
 .story.blocked {
@@ -678,7 +722,7 @@ body.ajaxRunning #logo h1 {
 }
 
 .story.expanded-story {
-  background-color: #f3f3f3 !important;
+  background-color: #e0d9c7 !important;
   cursor: default;
 }
 
@@ -725,7 +769,7 @@ input.textfield.autocomplete {
 
 #autocomplete-input {
   display: none;
-  font: normal 14px/18px Helvetica, sans-serif;
+  font: bold 14px/18px Helvetica, sans-serif;
   margin: 3px;
 }
 

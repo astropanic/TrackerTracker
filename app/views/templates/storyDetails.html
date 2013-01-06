@@ -29,22 +29,28 @@
     {{#notes}}
       <div class="note">
         <div class="author">{{author}}</div>
-        <div class="text">{{{text}}}</div>
+        {{#text}}
+          <div class="text">
+            {{{text}}}
+          </div>
+        {{/text}}
+        <div class="attachments clearfix">
+          {{#attachments}}
+            {{#isImage}}
+              <div class="image">
+                <a href="{{url}}?inline=true" target="_blank"><img src="{{url}}?inline=true" alt="{{filename}}" /></a>
+              </div>
+            {{/isImage}}
+            {{^isImage}}
+              <div class="attachment">
+                <a href="{{url}}" target="_blank">{{filename}}</a>
+              </div>
+            {{/isImage}}
+          {{/attachments}}
+        </div>
         <div class="date">{{noted_at}}</div>
       </div>
     {{/notes}}
-  </div>
-  <h2>Attachments</h2>
-  <div class="attachments">
-    {{#attachments}}
-      <div class="attachment">
-        <div class="author">{{uploaded_by}}</div>
-        <div class="text">{{{description}}}
-          <div class="download"><a href="{{url}}" target="_blank">{{filename}}</a></div>
-        </div>
-        <div class="date">{{uploaded_at}}</div>
-      </div>
-    {{/attachments}}
   </div>
   <div class="dates">
     <div class="created-at"><strong>Created</strong> {{created_at}}</div>
