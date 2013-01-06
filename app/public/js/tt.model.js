@@ -204,7 +204,7 @@ TT.Model = (function () {
     story.id = parseInt(story.id, 10);
     story.project_id = parseInt(story.project_id, 10);
     story.name = TT.Utils.showdownLite(story.name);
-    story.description = TT.Utils.isString(story.description) ? TT.Utils.showdownLite(story.description) : '';
+    story.formatted_description = TT.Utils.isString(story.description) ? TT.Utils.showdownLite(story.description) : 'Add a description...';
     story.estimate = story.estimate >= 0 ? story.estimate : '';
     story.labels = story.labels ? story.labels.indexOf(',') !== -1 ? story.labels.split(',') : [story.labels] : [];
     story.notes = compileNotes(story);
@@ -245,9 +245,9 @@ TT.Model = (function () {
         attachment.timestamp = new Date(attachment.uploaded_at).getTime();
         attachment.isImage = isImage(attachment.filename);
         if (TT.Utils.isString(attachment.description)) {
-          attachment.description = TT.Utils.showdownLite(attachment.description);
           var noteIndex = find(story.notes, { text: attachment.description }, true)[0];
-          if (noteIndex) {
+          attachment.description = TT.Utils.showdownLite(attachment.description);
+          if (TT.Utils.isNumber(noteIndex)) {
             story.notes[noteIndex].attachments.push(attachment);
             return;
           }

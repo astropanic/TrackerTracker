@@ -11,6 +11,14 @@ TT.Autocomplete = (function () {
   pub.hasMouse = false;
   pub.closeOnLeave = false;
 
+  pub.onInputBlur = function () {
+    if (pub.hasMouse) {
+      pub.closeOnLeave = true;
+    } else {
+      pub.close();
+    }
+  };
+
   pub.open = function (options) {
     pub.close();
 
@@ -34,23 +42,22 @@ TT.Autocomplete = (function () {
         pub.input.val(options.value);
       }
     } else {
+      if (options.noActive) {
+        $('#autocomplete-input').show().css({ position: 'absolute', top: '-9999px' }).focus().blur(pub.onInputBlur);
+      }
       pub.input = pub.target;
     }
 
-    var active = $('#autocomplete .item:contains("' + pub.input.val() + '")');
-    if (active.length) {
-      pub.setActive(active);
-    } else {
-      pub.setActive();
+    if (!options.noActive) {
+      var active = $('#autocomplete .item:contains("' + pub.input.val() + '")');
+      if (active.length) {
+        pub.setActive(active);
+      } else {
+        pub.setActive();
+      }
     }
 
-    pub.input.keyup(pub.onKeyUp).blur(function () {
-      if (pub.hasMouse) {
-        pub.closeOnLeave = true;
-      } else {
-        pub.close();
-      }
-    });
+    pub.input.keyup(pub.onKeyUp).blur(pub.onInputBlur);
 
     pub.setPosition(options.css);
     pub.setScrollTop();

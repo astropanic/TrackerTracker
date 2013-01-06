@@ -378,10 +378,10 @@ body.ajaxRunning #logo h1 {
   color: #999;
   cursor: pointer;
   display: inline-block;
-  font: bold 11px/29px Helvetica, sans-serif;
-  height: 28px;
+  font: bold 11px/31px Helvetica, sans-serif;
+  height: 30px;
   margin: 0 1px 0 0;
-  padding: 0 11px;
+  padding: 0 12px;
   text-transform: uppercase;
 }
 
@@ -523,6 +523,10 @@ body.ajaxRunning #logo h1 {
   background: url(/images/arrow.open.png) -1px 0 no-repeat transparent;
 }
 
+.story .title {
+  word-wrap: break-word;
+}
+
 .story .project-name {
   color: #b65000;
   font-weight: bold;
@@ -539,6 +543,7 @@ body.ajaxRunning #logo h1 {
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 2px;
   color: #666;
+  cursor: pointer;
   font: normal 10px/13px Helvetica, sans-serif;
   float: right;
   height: 13px;
@@ -607,13 +612,31 @@ body.ajaxRunning #logo h1 {
 }
 
 .story h2 {
-  color: #666;
-  font: bold 11px/11px Helvetica, sans-serif;
-  margin: 8px 0 0;
+  color: #111;
+  font: bold 12px/12px Helvetica, sans-serif;
+  margin: 12px 0 0;
 }
 
 .story .attachments {
-  margin-right: 20px;
+}
+
+.story .attachment-container {
+  position: relative;
+}
+
+.story .attachment-control {
+  background: url(/images/arrow.down.faded.png) 3px 4px no-repeat #fff;
+  cursor: pointer;
+  display: block;
+  height: 20px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 20px;
+}
+
+.story .attachment-control:hover {
+  background: url(/images/arrow.open.png) 2px 4px no-repeat #fff;
 }
 
 .story .attachment a {
@@ -640,6 +663,7 @@ body.ajaxRunning #logo h1 {
 }
 
 .story .description,
+.story .note-form,
 .story .note {
   background: rgba(255, 255, 255, 0.6);
   border-radius: 2px;
@@ -649,8 +673,13 @@ body.ajaxRunning #logo h1 {
   word-wrap: break-word;
 }
 
+.story .note-form,
 .story .description {
-  padding: 11px 12px;
+  box-shadow: none;
+  cursor: text;
+  border: 1px solid #999;
+  margin-right: 2px;
+  padding: 9px 11px;
 }
 
 .story .text {

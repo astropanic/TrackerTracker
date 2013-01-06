@@ -291,6 +291,31 @@ TT.UI = (function () {
     return false;
   };
 
+  pub.openStoryAttachmentControls = function () {
+    var id = $(this).data('id');
+    var url = $(this).data('url');
+
+    var actions = [
+      { name: 'Download', value: 'Download' },
+      { name: 'Delete', value: 'Delete' }
+    ];
+
+    TT.Autocomplete.open({
+      css: { width: 80 },
+      items: actions,
+      target: this,
+      noActive: true,
+      onApply: function () {
+        var action = $(this).data('value');
+        if (action === 'Download') {
+          document.location = url;
+        }
+      }
+    });
+
+    return false;
+  };
+
   pub.init = function () {
     $('body').click(function (e) {
       var target = $(e.target).closest('[data-click-handler]');

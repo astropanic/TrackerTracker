@@ -23,9 +23,12 @@
     </div>
   </div>
   <h2>Description</h2>
-  <div class="description">{{{description}}}</div>
+  <div class="description">{{{formatted_description}}}</div>
   <h2>Notes</h2>
   <div class="notes">
+    <div class="note note-form">
+      Add a note...
+    </div>
     {{#notes}}
       <div class="note">
         <div class="author">{{author}}</div>
@@ -36,16 +39,19 @@
         {{/text}}
         <div class="attachments clearfix">
           {{#attachments}}
-            {{#isImage}}
-              <div class="image">
-                <a href="{{url}}?inline=true" target="_blank"><img src="{{url}}?inline=true" alt="{{filename}}" /></a>
-              </div>
-            {{/isImage}}
-            {{^isImage}}
-              <div class="attachment">
-                <a href="{{url}}" target="_blank">{{filename}}</a>
-              </div>
-            {{/isImage}}
+            <div class="attachment-container">
+              <div data-id="{{id}}" data-url="{{url}}" class="attachment-control" data-click-handler="TT.UI.openStoryAttachmentControls"></div>
+              {{#isImage}}
+                <div class="image">
+                  <a href="{{url}}?inline=true" target="_blank"><img src="{{url}}?inline=true" alt="{{filename}}" /></a>
+                </div>
+              {{/isImage}}
+              {{^isImage}}
+                <div class="attachment">
+                  <a href="{{url}}" target="_blank">{{filename}}</a>
+                </div>
+              {{/isImage}}
+            </div>
           {{/attachments}}
         </div>
         <div class="date">{{noted_at}}</div>
