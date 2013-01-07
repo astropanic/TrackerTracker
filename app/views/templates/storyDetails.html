@@ -23,11 +23,17 @@
     </div>
   </div>
   <h2>Description</h2>
-  <div class="description">{{{formatted_description}}}</div>
-  <h2>Notes</h2>
+  <div class="description textfield" data-click-handler="TT.UI.editStoryDescription">{{{formatted_description}}}</div>
+  <h2>Labels</h2>
+  <div class="labels textfield" data-click-handler="TT.UI.editStoryTags">
+    {{#labels}}
+      <div class="tag">{{.}}</div>
+    {{/labels}}
+  </div>
+  <h2>Activity</h2>
   <div class="notes">
-    <div class="note note-form">
-      Add a note...
+    <div class="note textfield" data-click-handler="TT.UI.addStoryNote">
+      Add a note
     </div>
     {{#notes}}
       <div class="note">
@@ -54,7 +60,7 @@
             </div>
           {{/attachments}}
         </div>
-        <div class="date">{{noted_at}}</div>
+        <div class="date">{{noted_at}} | <a href="#" class="delete" data-click-handler="TT.UI.deleteStoryNote">Delete</a></div>
       </div>
     {{/notes}}
   </div>

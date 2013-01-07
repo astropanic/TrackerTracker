@@ -147,8 +147,22 @@ TT.View = (function () {
     return element;
   };
 
+  pub.redrawStory = function (story) {
+    $('#columns .story-' + story.id).each(function () {
+      var html = pub.render('story', story);
+      var element = pub.attach(html, this, 'insertAfter');
+
+      if (story.expanded) {
+        element.toggleClass('expanded-story');
+        pub.drawStoryDetails(element);
+      }
+
+      $(this).remove();
+    });
+  };
+
   pub.drawStoryDetails = function (story) {
-    var data = TT.Model.Story.get({ id: story.data('story-id') });
+    var data = TT.Model.Story.get({ id: story.data('id') });
     var html = TT.View.render('storyDetails', data);
     var target = story.find('.container');
 

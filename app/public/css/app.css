@@ -45,7 +45,7 @@ a:hover {
   color: #024;
 }
 
-input.textfield {
+textarea, input.textfield {
   border: 1px solid #ccc;
   border-radius: 1px;
   font: normal 18px/18px Helvetica, sans-serif;
@@ -54,12 +54,17 @@ input.textfield {
   padding: 4px 6px;
 }
 
-input.textfield:hover {
+textarea:hover, input.textfield:hover {
   border-color: #aaa;
 }
 
-input.textfield:focus {
+textarea:focus, input.textfield:focus {
   border-color: #08c;
+}
+
+textarea {
+  font: normal 13px/15px Helvetica, sans-serif;
+  padding: 6px 12px;
 }
 
 /* Header */
@@ -506,7 +511,7 @@ body.ajaxRunning #logo h1 {
 }
 
 .story.release.expanded-story:hover {
-  background-color: #e0d9c7 !important;
+  background-color: #e9e7dd !important;
 }
 
 .story .toggle-arrow {
@@ -622,6 +627,7 @@ body.ajaxRunning #logo h1 {
 
 .story .attachment-container {
   position: relative;
+  max-width: 400px;
 }
 
 .story .attachment-control {
@@ -662,24 +668,34 @@ body.ajaxRunning #logo h1 {
   width: 100%;
 }
 
-.story .description,
-.story .note-form,
-.story .note {
+.story .note,
+.story textarea,
+.story .textfield {
   background: rgba(255, 255, 255, 0.6);
   border-radius: 2px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  font: normal 12px/15px Helvetica, sans-serif;
   margin: 6px 0;
   padding: 11px 12px 6px;
   word-wrap: break-word;
 }
 
-.story .note-form,
-.story .description {
-  box-shadow: none;
+.story textarea,
+.story .textfield {
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15) inset;
   cursor: text;
   border: 1px solid #999;
   margin-right: 2px;
   padding: 9px 11px;
+}
+
+.story .textarea {
+  display: block;
+  margin-right: 26px;
+}
+
+.story textarea {
+  width: 100%;
 }
 
 .story .text {
@@ -695,6 +711,15 @@ body.ajaxRunning #logo h1 {
   font-size: 11px;
   margin: 6px 0 0;
   text-align: right;
+}
+
+.story .note .date .delete {
+  color: #888;
+}
+
+.story .note .date .delete:hover {
+  color: #900;
+  font-weight: bold;
 }
 
 .story .dates {
@@ -751,7 +776,7 @@ body.ajaxRunning #logo h1 {
 }
 
 .story.expanded-story {
-  background-color: #e0d9c7 !important;
+  background-color: #e9e7dd !important;
   cursor: default;
 }
 
@@ -819,4 +844,49 @@ input.textfield.autocomplete {
 #autocomplete .item.active {
   background: #069;
   color: #fff;
+}
+
+/* textarea */
+
+.textarea .actions {
+  margin: 0 -16px 0 0;
+  text-align: right;
+}
+
+.textarea .actions a {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.textarea .actions .save {
+  background: #cc7c16;
+  background: -webkit-linear-gradient(#cc7c16, #8d5711);
+  background: -moz-linear-gradient(#cc7c16, #8d5711);
+  background: linear-gradient(#cc7c16, #8d5711);
+  border: 1px solid #8d5711;
+  border-radius: 3px;
+  box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font: bold 11px/23px Helvetica, sans-serif;
+  padding: 1px 12px 0;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+  text-transform: uppercase;
+}
+
+.textarea .actions .save:hover {
+  background: #df8a1e;
+  background: -webkit-linear-gradient(#df8a1e, #9e5d09);
+  background: -moz-linear-gradient(#df8a1e, #9e5d09);
+  background: linear-gradient(#df8a1e, #9e5d09);
+  border-color: #9e5d09;
+}
+
+.textarea .actions .cancel {
+  color: rgba(0, 0, 0, 0.5);
+  font: normal 11px/11px Helvetica, sans-serif;
+}
+
+.textarea .actions .cancel:hover {
+  color: rgba(0, 0, 0, 0.9);
+  text-decoration: underline;
 }

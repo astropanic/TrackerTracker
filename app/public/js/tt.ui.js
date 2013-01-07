@@ -45,9 +45,9 @@ TT.UI = (function () {
     var story = $(this).closest('.story').toggleClass('expanded-story');
     if (story.hasClass('expanded-story')) {
       TT.View.drawStoryDetails(story);
-      TT.Model.Story.update({ id: story.data('story-id') }, { expanded: true });
+      TT.Model.Story.update({ id: story.data('id') }, { expanded: true });
     } else {
-      TT.Model.Story.update({ id: story.data('story-id') }, { expanded: false });
+      TT.Model.Story.update({ id: story.data('id') }, { expanded: false });
       story.find('.details').empty().remove();
     }
 
@@ -156,7 +156,7 @@ TT.UI = (function () {
   // TODO: DRY these up
 
   pub.openStoryRequesterUpdater = function () {
-    var id = $(this).closest('.story').data('story-id');
+    var id = $(this).closest('.story').data('id');
     var story = TT.Model.Story.get({ id: id });
     var project = TT.Model.Project.get({ id: story.project_id });
     var users = TT.Utils.normalizePivotalArray(project.memberships.membership);
@@ -183,7 +183,7 @@ TT.UI = (function () {
   };
 
   pub.openStoryOwnerUpdater = function () {
-    var id = $(this).closest('.story').data('story-id');
+    var id = $(this).closest('.story').data('id');
     var story = TT.Model.Story.get({ id: id });
     var project = TT.Model.Project.get({ id: story.project_id });
     var users = TT.Utils.normalizePivotalArray(project.memberships.membership);
@@ -210,7 +210,7 @@ TT.UI = (function () {
   };
 
   pub.openStoryPointsUpdater = function () {
-    var id = $(this).closest('.story').data('story-id');
+    var id = $(this).closest('.story').data('id');
     var story = TT.Model.Story.get({ id: id });
     var project = TT.Model.Project.get({ id: story.project_id });
     var items = [];
@@ -236,7 +236,7 @@ TT.UI = (function () {
   };
 
   pub.openStoryStateUpdater = function () {
-    var id = $(this).closest('.story').data('story-id');
+    var id = $(this).closest('.story').data('id');
     var story = TT.Model.Story.get({ id: id });
 
     var items = [
@@ -265,7 +265,7 @@ TT.UI = (function () {
   };
 
   pub.openStoryTypeUpdater = function () {
-    var id = $(this).closest('.story').data('story-id');
+    var id = $(this).closest('.story').data('id');
     var story = TT.Model.Story.get({ id: id });
 
     var items = [
@@ -309,10 +309,76 @@ TT.UI = (function () {
         var action = $(this).data('value');
         if (action === 'Download') {
           document.location = url;
+        } else if (action === 'Delete') {
+          // TODO: delete attachment
         }
       }
     });
 
+    return false;
+  };
+
+  pub.textAreaSave = function () {
+    return false;
+  };
+
+  pub.textAreaCancel = function () {
+    return false;
+  };
+
+  pub.editStoryTags = function () {
+    return false;
+  };
+
+  pub.editStoryDescription = function () {
+    var id = $(this).closest('.story').data('id');
+    var story = TT.Model.Story.get({ id: id });
+
+    var html = TT.View.render('textarea', {
+      text: story.description,
+      onSave: 'TT.UI.saveStoryDescription',
+      onCancel: 'TT.UI.cancelEditDescription'
+    });
+    var textarea = TT.View.attach(html, this, 'insertAfter').find('textarea');
+    textarea.focus().autosize();
+
+    $(this).hide();
+
+    return false;
+  };
+
+  pub.saveStoryDescription = function () {
+    var id = $(this).closest('.story').data('id');
+    var story = TT.Model.Story.get({ id: id });
+
+    var description = $(this).closest('.textarea').find('textarea').val();
+    var formatted_description = description ? TT.Utils.showdownLite(description) : 'Click to add a description';
+
+    TT.Model.Story.update({ id: id }, {
+      description: description,
+      formatted_description: formatted_description
+    });
+
+    $(this).closest('.story').find('.description').html(formatted_description).show();
+    $(this).closest('.textarea').remove();
+
+    TT.Model.Story.serverSave(story, { description: description });
+
+    return false;
+  };
+
+  pub.cancelEditDescription = function () {
+    $(this).closest('.story').find('.description').show();
+    $(this).closest('.textarea').remove();
+
+    return false;
+  };
+
+  pub.addStoryNote = function () {
+    return false;
+  };
+
+  pub.deleteStoryNote = function () {
     return false;
   };
 

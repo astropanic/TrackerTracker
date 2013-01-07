@@ -32,7 +32,7 @@ TT.DragAndDrop = (function () {
       return true;
     }
 
-    var story = TT.Model.Story.get({ id: $(ui.item).data('story-id') });
+    var story = TT.Model.Story.get({ id: $(ui.item).data('id') });
     var data = {};
 
     dragInFn = pub.getDragFn(ui.item, 'in');

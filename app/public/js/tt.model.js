@@ -204,7 +204,8 @@ TT.Model = (function () {
     story.id = parseInt(story.id, 10);
     story.project_id = parseInt(story.project_id, 10);
     story.name = TT.Utils.showdownLite(story.name);
-    story.formatted_description = TT.Utils.isString(story.description) ? TT.Utils.showdownLite(story.description) : 'Add a description...';
+    story.description = TT.Utils.isString(story.description) ? story.description : '';
+    story.formatted_description = story.description ? TT.Utils.showdownLite(story.description) : 'Click to add a description';
     story.estimate = story.estimate >= 0 ? story.estimate : '';
     story.labels = story.labels ? story.labels.indexOf(',') !== -1 ? story.labels.split(',') : [story.labels] : [];
     story.notes = compileNotes(story);
