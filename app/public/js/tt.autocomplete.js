@@ -122,18 +122,24 @@ TT.Autocomplete = (function () {
   };
 
   pub.setPosition = function (customCSS) {
+    var $autocomplete = $('#autocomplete');
     var offset = pub.target.offset();
 
-    $('#autocomplete').css($.extend({
+    $autocomplete.css($.extend({
       left: offset.left,
       top: offset.top + pub.target.outerHeight() - 1,
       width: pub.target.outerWidth() - 2
     }, customCSS || {}));
 
-    $('#autocomplete .list').css({ maxHeight: pub.MAX_HEIGHT });
+    $autocomplete.find('.list').css({ maxHeight: pub.MAX_HEIGHT });
 
     $('#autocomplete-input').css({
       width: $('#autocomplete').outerWidth() - 22
+    });
+
+    $autocomplete.css({
+      left: Math.min($autocomplete.offset().left, $(window).width() - $autocomplete.outerWidth() - 3),
+      top: Math.min($autocomplete.offset().top, $(window).height() - $autocomplete.outerHeight() - 3)
     });
   };
 
