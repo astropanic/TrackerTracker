@@ -49,7 +49,10 @@ TT.Autocomplete = (function () {
     }
 
     if (!options.noActive) {
-      var active = $('#autocomplete .item:contains("' + pub.input.val() + '")');
+      var inputVal = pub.input.val();
+      var active = $('#autocomplete .item').filter(function () {
+        return $(this).data('value') === inputVal || $(this).text() === inputVal;
+      });
       if (active.length) {
         pub.setActive(active);
       } else {
