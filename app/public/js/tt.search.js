@@ -77,9 +77,7 @@ TT.Search = (function () {
 
   pub.init = function () {
     var timeout;
-    $('#search input').blur(function () {
-      $(this).val('');
-    }).keyup(function (e) {
+    $('#search input').keyup(function (e) {
       if (TT.Utils.keyPressed(e, 'ENTER')) {
         pub.submitSearch();
       }
