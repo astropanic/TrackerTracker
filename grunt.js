@@ -13,7 +13,7 @@ module.exports = function(grunt) {
       'app/public/js/bundle/lib.js': [
         'app/public/js/lib/jquery-1.8.3.min.js',
         'app/public/js/lib/jquery-ui-1.9.2.custom.min.js',
-        'app/public/js/lib/jquery.cookie.js',
+        'app/public/js/lib/jquery.*.js',
         'app/public/js/lib/hogan.js'
       ]
     },
