@@ -5,7 +5,7 @@ TT.View = (function () {
 
   var pub = {};
 
-  pub.MIN_COLUMN_WIDTH = 260;
+  pub.MIN_COLUMN_WIDTH = 280;
 
   pub.Templates = {};
 
