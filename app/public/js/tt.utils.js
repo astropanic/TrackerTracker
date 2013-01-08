@@ -99,7 +99,7 @@ TT.Utils = (function () {
   };
 
   pub.showdownLite = function (text) {
-    if (TT.Utils.isString(text)) {
+    if (pub.isString(text)) {
       // <br />
       text = text.replace(/\n/g, '<br />');
       // <strong> must go first
@@ -108,6 +108,16 @@ TT.Utils = (function () {
       text = text.replace(/(\w)_(\w)/g, '$1[[underscore]]$2'); // ** GFM **  "~E95E" == escaped "_"
       text = text.replace(/(_)(?=\S)([^\r]*?\S)\1/g, '<em>$2</em>');
       text = text.replace(/\[\[underscore\]\]/g, '_');
+    }
+
+    return text;
+  };
+
+  pub.linebreaks = function (text) {
+    if (pub.isString(text)) {
+      // <br />
+      text = text.replace(/\n+\s+\n+/g, '<br /><br />');
+      text = text.replace(/\n/g, '<br />');
     }
 
     return text;

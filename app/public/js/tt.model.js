@@ -94,11 +94,15 @@ TT.Model = (function () {
     };
 
     self.get = function (query) {
-      return query ? find(self.DB, query)[0] : self.DB;
+      return query ? self.find(query)[0] : self.DB;
     };
 
     self.index = function (query) {
       return find(self.DB, query, true)[0];
+    };
+
+    self.isEmpty = function (query) {
+      return self.find(query).length === 0;
     };
 
     self.each = function (fn) {
@@ -228,7 +232,7 @@ TT.Model = (function () {
     if (story.notes && story.notes.note) {
       story.notes = $.map(TT.Utils.normalizePivotalArray(story.notes.note), function (note, index) {
         if (TT.Utils.isString(note.text)) {
-          note.text = TT.Utils.showdownLite(note.text);
+          note.text = TT.Utils.linebreaks(note.text);
         } else {
           note.text = '';
         }
@@ -247,7 +251,7 @@ TT.Model = (function () {
         attachment.isImage = isImage(attachment.filename);
         if (TT.Utils.isString(attachment.description)) {
           var noteIndex = find(story.notes, { text: attachment.description }, true)[0];
-          attachment.description = TT.Utils.showdownLite(attachment.description);
+          attachment.description = TT.Utils.linebreaks(attachment.description);
           if (TT.Utils.isNumber(noteIndex)) {
             story.notes[noteIndex].attachments.push(attachment);
             return;

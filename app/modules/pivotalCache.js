@@ -61,3 +61,12 @@ exports.updateStory = function (projectID, storyID, data, callback) {
     }
   });
 };
+
+exports.addStoryComment = function (projectID, storyID, comment, callback) {
+  console.log('[addStoryComment: ' + projectID + '] hitting API');
+  pivotal.addStoryComment(projectID, storyID, comment, function (err, results) {
+    if (results) {
+      callback(results);
+    }
+  });
+};

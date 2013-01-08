@@ -144,30 +144,34 @@ TT.Init = (function () {
     var filters = TT.Model.Filter.clientLoad();
 
     if (filters) {
-      return pub.restoreFilters(filters);
+      pub.restoreFilters(filters);
     }
 
-    TT.Model.Filter.add({
-      name: 'Owned by Me',
-      type: 'user',
-      active: false,
-      sticky: true,
-      pure: true,
-      fn: function (story) {
-        return story.owned_by === $.cookie('pivotalUsername');
-      }
-    });
+    if (TT.Model.Filter.isEmpty({ name: 'Owned by Me' })) {
+      TT.Model.Filter.add({
+        name: 'Owned by Me',
+        type: 'user',
+        active: false,
+        sticky: true,
+        pure: true,
+        fn: function (story) {
+          return story.owned_by === $.cookie('pivotalUsername');
+        }
+      });
+    }
 
-    TT.Model.Filter.add({
-      name: 'Current Iteration',
-      type: 'iteration',
-      active: false,
-      sticky: true,
-      pure: true,
-      fn: function (story) {
-        return story.current_iteration === true;
-      }
-    });
+    if (TT.Model.Filter.isEmpty({ name: 'Current Iteration' })) {
+      TT.Model.Filter.add({
+        name: 'Current Iteration',
+        type: 'iteration',
+        active: false,
+        sticky: true,
+        pure: true,
+        fn: function (story) {
+          return story.current_iteration === true;
+        }
+      });
+    }
   };
 
   pub.restoreFilters = function (filters) {

@@ -144,6 +144,12 @@ TT.View = (function () {
       pub.drawStoryDetails(element);
     }
 
+    var temporaryDescription = TT.UI.getTemporaryDescription(story.id);
+    if (temporaryDescription.text) {
+      element.find('.description').click();
+      element.find('textarea').val(temporaryDescription.text).focus().height(temporaryDescription.height);
+    }
+
     return element;
   };
 

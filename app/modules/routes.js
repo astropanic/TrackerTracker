@@ -35,7 +35,12 @@ exports.getStories = function (req, res) {
 
 exports.updateStory = function (req, res) {
   pivotalCache.updateStory(req.body.projectID, req.body.storyID, req.body.data, function (results) {
-    res.set('Content-Type', 'text/javascript');
-    res.send('{}');
+    res.json(true);
+  });
+};
+
+exports.addStoryComment = function (req, res) {
+  pivotalCache.addStoryComment(req.body.projectID, req.body.storyID, req.body.comment, function (results) {
+    res.json(true);
   });
 };

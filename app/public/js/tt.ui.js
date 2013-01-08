@@ -318,14 +318,6 @@ TT.UI = (function () {
     return false;
   };
 
-  pub.textAreaSave = function () {
-    return false;
-  };
-
-  pub.textAreaCancel = function () {
-    return false;
-  };
-
   pub.editStoryTags = function () {
     return false;
   };
@@ -334,13 +326,17 @@ TT.UI = (function () {
     var id = $(this).closest('.story').data('id');
     var story = TT.Model.Story.get({ id: id });
 
+    story.isBeingEdited = true;
+
     var html = TT.View.render('textarea', {
       text: story.description,
       onSave: 'TT.UI.saveStoryDescription',
       onCancel: 'TT.UI.cancelEditDescription'
     });
     var textarea = TT.View.attach(html, this, 'insertAfter').find('textarea');
-    textarea.focus().autosize();
+    textarea.focus().autosize().keyup(function () {
+      pub.saveTemporaryDescription(story.id, textarea.val(), textarea.height());
+    });
 
     $(this).hide();
 
@@ -359,6 +355,8 @@ TT.UI = (function () {
       formatted_description: formatted_description
     });
 
+    pub.resetTemporaryDescription(id);
+
     $(this).closest('.story').find('.description').html(formatted_description).show();
     $(this).closest('.textarea').remove();
 
@@ -368,13 +366,92 @@ TT.UI = (function () {
   };
 
   pub.cancelEditDescription = function () {
+    var id = $(this).closest('.story').data('id');
+
     $(this).closest('.story').find('.description').show();
     $(this).closest('.textarea').remove();
+
+    pub.resetTemporaryDescription(id);
 
     return false;
   };
 
+  pub.saveTemporaryDescription = function (id, text, height) {
+    TT.Utils.localStorage('story' + id, JSON.stringify({
+      text: text,
+      height: height
+    }));
+  };
+
+  pub.getTemporaryDescription = function (id) {
+    var obj = TT.Utils.localStorage('story' + id);
+    return obj ? JSON.parse(obj) : false;
+  };
+
+  pub.resetTemporaryDescription = function (id) {
+    TT.Utils.localStorage('story' + id, null);
+  };
+
   pub.addStoryNote = function () {
+    var id = $(this).closest('.story').data('id');
+    var story = TT.Model.Story.get({ id: id });
+
+    var html = TT.View.render('textarea', {
+      onSave: 'TT.UI.saveStoryNote',
+      onCancel: 'TT.UI.cancelStoryNote'
+    });
+    var textarea = TT.View.attach(html, this, 'insertAfter').find('textarea');
+    textarea.focus().autosize();
+
+    $(this).hide();
+
+    return false;
+  };
+
+  pub.saveStoryNote = function () {
+    var id = $(this).closest('.story').data('id');
+    var story = TT.Model.Story.get({ id: id });
+
+    var comment = $(this).closest('.textarea').find('textarea').val();
+    var author = $.cookie('pivotalUsername');
+
+    if (!comment || !author) {
+      return false;
+    }
+
+    story.notes.unshift({
+      timestamp: new Date().getTime(),
+      text: comment,
+      author: author,
+      noted_at: new Date() + '',
+      isImage: false
+    });
+
+    $(this).closest('.story').find('.add-note').show();
+    $(this).closest('.textarea').remove();
+
+    TT.Ajax.start();
+    $.ajax({
+      url: '/addStoryComment',
+      type: 'POST',
+      data: {
+        projectID: story.project_id,
+        storyID: story.id,
+        comment: comment
+      },
+      complete: function () {
+        TT.Ajax.end();
+        TT.View.redrawStory(story);
+      }
+    });
+
+    return false;
+  };
+
+  pub.cancelStoryNote = function () {
+    $(this).closest('.story').find('.add-note').show();
+    $(this).closest('.textarea').remove();
+
     return false;
   };
 
