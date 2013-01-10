@@ -356,7 +356,11 @@ TT.Init = (function () {
       TT.UI.init();
     }
 
-    pub.requestProjectsAndIterations();
+    if ($.cookie('pivotalToken')) {
+      pub.requestProjectsAndIterations();
+    } else {
+      TT.View.drawAccountSettingsForm();
+    }
 
     pub.firstRun = false;
   };

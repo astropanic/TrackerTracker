@@ -4,15 +4,15 @@ describe "UI interactions", ->
     TT.Init.init()
 
   describe "Settings", ->
-    mockPivotalToken = 'abc123'
+    mockPivotalToken = 'my_new_token'
 
     say "I open the settings dialog", ->
       beforeEach ->
         $('#account-settings-link').click()
 
       it "should have an empty token field", ->
-        expect($('#pivotal-token-input').val()).toBe ''
-        expect($.cookie('pivotalToken')).toBe null
+        expect($('#pivotal-token-input').val()).toBe 'abc123'
+        expect($.cookie('pivotalToken')).toBe 'abc123'
 
       also "I update the token", ->
         beforeEach ->

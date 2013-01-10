@@ -301,7 +301,7 @@ function visibleStoriesWithoutOwner(name) {
 }
 
 beforeEach(function () {
-  $.cookie('pivotalToken', null);
+  $.cookie('pivotalToken', 'abc123');
 
   TT.Mock.localStorage = {};
 
