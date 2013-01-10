@@ -135,10 +135,7 @@ TT.View = (function () {
     TT.Utils.localStorage('projectList', projectList);
   };
 
-  pub.drawStory = function (story, column) {
-    var html = pub.render('story', story);
-    var element = pub.attach(html, '.' + column.class_name + ' .column-bucket');
-
+  pub.restoreStoryState = function (element, story) {
     if (story.expanded) {
       element.toggleClass('expanded-story');
       pub.drawStoryDetails(element);
@@ -147,9 +144,15 @@ TT.View = (function () {
     var temporaryDescription = TT.UI.getTemporaryDescription(story.id);
     if (temporaryDescription.text) {
       element.find('.description').click();
-      element.find('textarea').val(temporaryDescription.text).focus().height(temporaryDescription.height);
+      element.find('textarea').val(temporaryDescription.text).height(temporaryDescription.height).focus();
     }
+  };
 
+  pub.drawStory = function (story, column) {
+    var html = pub.render('story', story);
+    var element = pub.attach(html, '.' + column.class_name + ' .column-bucket');
+
+    pub.restoreStoryState(element, story);
     return element;
   };
 
@@ -158,11 +161,7 @@ TT.View = (function () {
       var html = pub.render('story', story);
       var element = pub.attach(html, this, 'insertAfter');
 
-      if (story.expanded) {
-        element.toggleClass('expanded-story');
-        pub.drawStoryDetails(element);
-      }
-
+      pub.restoreStoryState(element, story);
       $(this).remove();
     });
   };

@@ -333,13 +333,13 @@ TT.UI = (function () {
       onSave: 'TT.UI.saveStoryDescription',
       onCancel: 'TT.UI.cancelEditDescription'
     });
+
     var textarea = TT.View.attach(html, this, 'insertAfter').find('textarea');
-    textarea.focus().autosize().keyup(function () {
+    textarea.focus().autosize().bind('keyup blur', function () {
       pub.saveTemporaryDescription(story.id, textarea.val(), textarea.height());
     });
 
     $(this).hide();
-
     return false;
   };
 

@@ -248,7 +248,7 @@ TT.Mock = (function () {
       '/iterations': pub['iterations_' + data.projectID]
     };
 
-    return urls[url](data);
+    return urls[url] ? urls[url](data) : {};
   };
 
   return pub;
@@ -302,7 +302,20 @@ function visibleStoriesWithoutOwner(name) {
 
 beforeEach(function () {
   $.cookie('pivotalToken', null);
-  spyOn(TT.Utils, 'localStorage')
+
+  TT.Mock.localStorage = {};
+
+  spyOn(TT.Utils, 'localStorage').andCallFake(function (key, value) {
+    if (value === null && TT.Mock.localStorage[key]) {
+      delete TT.Mock.localStorage[key];
+    } else if (value) {
+      if (!TT.Utils.isString(value)) {
+        value = JSON.stringify(value);
+      }
+      TT.Mock.localStorage[key] = value;
+    }
+    return TT.Mock.localStorage[key];
+  });
   spyOn($, 'ajax').andCallFake(function (options) {
     options.success(TT.Mock.serverResponse(options.url, options.data));
   });

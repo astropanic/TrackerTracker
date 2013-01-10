@@ -113,20 +113,72 @@ describe "UI interactions", ->
           expect($('#columns .column .column-title:contains("' + columnName + '")').length).toBe 1
 
   describe "Stories", ->
+    id = null
+    project_id = null
+    original_description = null
+    edited_description = 'my edited description'
+
+    beforeEach ->
+      id = $('.story').eq(0).data('id')
+      project_id = TT.Model.Story.get({ id: id }).project_id
 
     say "I open a story", ->
       beforeEach ->
-        $('.story').eq(0).find('.toggle-arrow').click()
+        $('.story-' + id).find('.toggle-arrow').click()
+        original_description = $('.story-' + id).find('.description').html()
 
       it "should display the story details", ->
-        expect($('.story').eq(0).find('.description').is(':visible')).toBe true
+        expect($('.story-' + id).find('.description').is(':visible')).toBe true
 
       also "I close the same story", ->
         beforeEach ->
-          $('.story').eq(0).find('.toggle-arrow').click()
+          $('.story-' + id).find('.toggle-arrow').click()
 
         it "should hide the story details", ->
-          expect($('.story').eq(0).find('.description').is(':visible')).toBe false
+          expect($('.story-' + id).find('.description').is(':visible')).toBe false
+
+      also "I start editing the story description", ->
+        beforeEach ->
+          $('.story-' + id).find('.description').click()
+          $('.story-' + id).find('.details textarea').val(edited_description).blur()
+
+        also "I trigger a redraw of the stories", ->
+          beforeEach ->
+            TT.View.drawStories()
+
+          it "should restore the edited description", ->
+            expect($('.story-' + id).find('.details textarea').val()).toBe edited_description
+
+          also "I cancel the edit", ->
+            beforeEach ->
+              $('.story-' + id).find('.textarea .actions a.cancel').click()
+
+            it "should restore the original description", ->
+              expect($('.story-' + id).find('.description').html()).toBe original_description
+
+        also "I save the edited description", ->
+          beforeEach ->
+            $('.story-' + id).find('.textarea .actions a.save').click()
+
+          it "should save the description on the client-side", ->
+            expect(TT.Model.Story.get({ id: id }).description).toBe edited_description
+
+          it "should try to save the description on the server-side", ->
+            expect($.ajax).toHaveBeenCalledWith {
+              url: '/updateStory',
+              type: 'POST',
+              data: {
+                projectID: project_id,
+                storyID: id,
+                data: {
+                  description: edited_description
+                }
+              },
+              success: jasmine.any(Function)
+            }
+
+          it "should display the new description", ->
+            expect($('.story-' + id).find('.description').html()).toBe edited_description
 
   describe "Projects", ->
     id = null
