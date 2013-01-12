@@ -189,6 +189,10 @@ TT.UI = (function () {
     var users = TT.Utils.normalizePivotalArray(project.memberships.membership);
     var items = [];
 
+    if (story.current_state === 'unscheduled' || story.current_state === 'unstarted') {
+      items[items.length] = { name: '<em>none</em>', value: '' };
+    }
+
     $.each(users, function (i, user) {
       items[items.length] = { name: user.person.name, value: user.person.name };
     });
@@ -215,20 +219,27 @@ TT.UI = (function () {
     var project = TT.Model.Project.get({ id: story.project_id });
     var items = [];
 
+    if (story.current_state === 'unscheduled' || story.current_state === 'unstarted') {
+      items[items.length] = { name: '<em>unestimated</em>', value: '-1' };
+    }
+
     $.each(project.point_scale.split(','), function (i, point) {
       items[items.length] = { name: point, value: point };
     });
 
     TT.Autocomplete.open({
-      css: { width: 80 },
+      css: { width: 90 },
       items: items,
       value: $(this).text(),
       showInput: true,
       target: this,
       onApply: function () {
         var update = { estimate: $(this).data('value') };
-        TT.Model.Story.update(story, update);
         TT.Model.Story.serverSave(story, update, TT.View.drawStories);
+        if (update.estimate < 0) {
+          update.estimate = '';
+        }
+        TT.Model.Story.update(story, update);
       }
     });
 
@@ -240,6 +251,7 @@ TT.UI = (function () {
     var story = TT.Model.Story.get({ id: id });
 
     var items = [
+      { name: 'Unscheduled', value: 'unscheduled' },
       { name: 'Unstarted', value: 'unstarted' },
       { name: 'Started', value: 'started' },
       { name: 'Finished', value: 'finished' },
