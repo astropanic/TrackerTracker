@@ -459,6 +459,18 @@ TT.UI = (function () {
     return false;
   };
 
+  pub.loadIcebox = function () {
+    $(this).closest('.column-note').remove();
+
+    var column = TT.Model.Column.get({ name: 'Icebox' });
+    column.sortable = true;
+    column.template = null;
+
+    TT.Search.requestMatchingStories('state:unscheduled');
+
+    return false;
+  };
+
   pub.init = function () {
     $('body').click(function (e) {
       var target = $(e.target).closest('[data-click-handler]');

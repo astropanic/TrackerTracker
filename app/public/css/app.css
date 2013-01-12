@@ -67,6 +67,32 @@ textarea {
   padding: 6px 12px;
 }
 
+/* Action buttons */
+
+a.action {
+  background: #cc7c16;
+  background: -webkit-linear-gradient(#cc7c16, #8d5711);
+  background: -moz-linear-gradient(#cc7c16, #8d5711);
+  background: linear-gradient(#cc7c16, #8d5711);
+  border: 1px solid #8d5711;
+  border-radius: 3px;
+  box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  display: inline-block;
+  font: bold 11px/23px Helvetica, sans-serif;
+  padding: 1px 12px 0;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+  text-transform: uppercase;
+}
+
+a.action:hover {
+  background: #df8a1e;
+  background: -webkit-linear-gradient(#df8a1e, #9e5d09);
+  background: -moz-linear-gradient(#df8a1e, #9e5d09);
+  background: linear-gradient(#df8a1e, #9e5d09);
+  border-color: #9e5d09;
+}
+
 /* Header */
 
 #header {
@@ -889,4 +915,21 @@ input.textfield.autocomplete {
 .textarea .actions .cancel:hover {
   color: rgba(0, 0, 0, 0.9);
   text-decoration: underline;
+}
+
+/* Column note */
+
+.column-note {
+  background: #eee;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  margin: 20px 24px;
+  padding: 16px 18px 18px;
+}
+
+.column-note h2 {
+  font: bold 15px/18px Helvetica, sans-serif;
+}
+
+.column-note .p {
+  margin: 8px 0 12px 0;
 }

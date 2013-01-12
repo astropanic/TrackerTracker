@@ -15,6 +15,10 @@ TT.Init = (function () {
     TT.Model.Column.add({
       name: 'Icebox',
       active: false,
+      sortable: false,
+      template: function () {
+        return TT.View.render('emptyIcebox');
+      },
       filter: function (story) {
         return story.current_state === 'unscheduled';
       },

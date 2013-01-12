@@ -57,14 +57,18 @@ TT.View = (function () {
 
   pub.drawColumns = function () {
     $('#columns .column').empty().remove();
-    var html = '';
     TT.Model.Layout.each(function (index, column) {
       if (column.active) {
-        html += pub.render('column', TT.Model.Column.get({ name: column.name }));
+        var actualColumn = TT.Model.Column.get({ name: column.name });
+        var html = pub.render('column', actualColumn);
+        var element = pub.attach(html, '#columns');
+
+        if (actualColumn.template) {
+          html = actualColumn.template();
+          pub.attach(html, '#columns .column.' + actualColumn.class_name + ' .column-bucket');
+        }
       }
     });
-
-    return pub.attach(html, '#columns');
   };
 
   pub.refreshColumns = function () {

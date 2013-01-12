@@ -48,7 +48,7 @@ exports.getCurrentBacklogIterations = function (projectID, callback) {
 
 exports.getStories = function (projectID, filter, callback) {
   console.log('[getStories: ' + projectID + '] hitting API');
-  pivotal.getStories(projectID, { limit: 500, filter: filter }, function (err, results) {
+  pivotal.getStories(projectID, { limit: 1000, filter: filter }, function (err, results) {
     callback(results || {});
   });
 };
