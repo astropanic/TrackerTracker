@@ -196,7 +196,33 @@ TT.View = (function () {
   pub.drawAccountSettingsForm = function () {
     TT.Dialog.open(pub.render('accountSettings'));
 
-    $('#pivotal-token-input').val($.cookie('pivotalToken')).focus();
+    var id;
+    $('#pivotal-token-input').val($.cookie('pivotalToken')).focus().bind('keyup paste', function () {
+      var me = this;
+      clearTimeout(id);
+      id = setTimeout(function () {
+        var token = $.trim($(me).val());
+        if (token && token !== TT.Utils.getToken()) {
+          $(me).addClass('updating');
+          $.cookie('pivotalToken', token, { expires: 365 });
+          $.ajax({
+            url: '/projects',
+            success: function (projects) {
+              $(me).removeClass('updating');
+              var parsedProjects = JSON.parse(projects);
+              if (parsedProjects) {
+                $(me).addClass('valid').removeClass('invalid');
+                TT.Utils.localStorage('projects', projects);
+                TT.Init.addProjects(parsedProjects.project);
+              } else {
+                $(me).addClass('invalid').removeClass('valid');
+              }
+            }
+          });
+        }
+      }, 100);
+    });
+
     $('#pivotal-username').val($.cookie('pivotalUsername'));
     $('#pivotal-username').focus(TT.UI.openPivotalUsernameAutocomplete);
   };

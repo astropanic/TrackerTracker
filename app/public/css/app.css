@@ -67,6 +67,18 @@ textarea {
   padding: 6px 12px;
 }
 
+input.valid {
+  background: url(/images/check.png) no-repeat scroll 98.6% 50% transparent;
+}
+
+input.invalid {
+  background: url(/images/error.png) no-repeat scroll 98.6% 50% transparent;
+}
+
+input.updating {
+  background: url(/images/loading-white.gif) no-repeat scroll 98.6% 50% transparent;
+}
+
 /* Action buttons */
 
 a.action {

@@ -12,6 +12,10 @@ TT.Utils = (function () {
     return $.cookie('pivotalUsername') || '';
   };
 
+  pub.getToken = function () {
+    return $.cookie('pivotalToken') || '';
+  };
+
   pub.keyPressed = function (e, key) {
     var keys = {
       'TAB': 9,
