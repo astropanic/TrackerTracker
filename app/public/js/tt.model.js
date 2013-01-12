@@ -289,14 +289,19 @@ TT.Model = (function () {
   };
 
   pub.Story.isNotFiltered = function (story) {
-    var result = true;
+    var result = false;
+    var noFilters = true;
+
     TT.Model.Filter.each(function (index, filter) {
-      if (result && filter.active && !filter.fn(story)) {
-        result = false;
+      if (filter.active) {
+        noFilters = false;
+        if (filter.fn(story)) {
+          result = true;
+        }
       }
     });
 
-    return result;
+    return noFilters || result;
   };
 
   pub.Story.hasTag = function (story, tag) {
