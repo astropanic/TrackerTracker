@@ -8,6 +8,10 @@ TT.Utils = (function () {
     return !items ? [] : $.isPlainObject(items) ? [items] : items;
   };
 
+  pub.getUsername = function () {
+    return $.cookie('pivotalUsername') || '';
+  };
+
   pub.keyPressed = function (e, key) {
     var keys = {
       'TAB': 9,

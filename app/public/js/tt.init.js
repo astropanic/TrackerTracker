@@ -48,7 +48,11 @@ TT.Init = (function () {
         return story.current_state === 'started';
       },
       onDragIn: function (story) {
-        return { current_state: 'started' };
+        return {
+          current_state: 'started',
+          owned_by: story.owned_by || TT.Utils.getUsername(),
+          estimate: story.estimate || '0'
+        };
       }
     });
 
@@ -59,7 +63,11 @@ TT.Init = (function () {
         return story.current_state === 'finished';
       },
       onDragIn: function (story) {
-        return { current_state: 'finished' };
+        return {
+          current_state: 'finished',
+          owned_by: story.owned_by || TT.Utils.getUsername(),
+          estimate: story.estimate || '0'
+        };
       }
     });
 
@@ -70,7 +78,12 @@ TT.Init = (function () {
         return story.current_state === 'finished' && !TT.Model.Story.hasTag(story, 'passedqa');
       },
       onDragIn: function (story) {
-        return { current_state: 'finished', labels: TT.Model.Story.addTag(story, 'inqa').labels };
+        return {
+          current_state: 'finished',
+          labels: TT.Model.Story.addTag(story, 'inqa').labels,
+          owned_by: story.owned_by || TT.Utils.getUsername(),
+          estimate: story.estimate || '0'
+        };
       },
       onDragOut: function (story) {
         return { labels: TT.Model.Story.removeTag(story, 'inqa').labels };
@@ -84,7 +97,12 @@ TT.Init = (function () {
         return story.current_state === 'finished' && TT.Model.Story.hasTag(story, 'passedqa');
       },
       onDragIn: function (story) {
-        return { current_state: 'finished', labels: TT.Model.Story.addTag(story, 'passedqa').labels };
+        return {
+          current_state: 'finished',
+          labels: TT.Model.Story.addTag(story, 'passedqa').labels,
+          owned_by: story.owned_by || TT.Utils.getUsername(),
+          estimate: story.estimate || '0'
+        };
       },
       onDragOut: function (story) {
         return { labels: TT.Model.Story.removeTag(story, 'passedqa').labels };
@@ -98,7 +116,11 @@ TT.Init = (function () {
         return story.current_state === 'rejected';
       },
       onDragIn: function (story) {
-        return { current_state: 'rejected' };
+        return {
+          current_state: 'rejected',
+          owned_by: story.owned_by || TT.Utils.getUsername(),
+          estimate: story.estimate || '0'
+        };
       }
     });
 
@@ -109,7 +131,11 @@ TT.Init = (function () {
         return story.current_state === 'delivered';
       },
       onDragIn: function (story) {
-        return { current_state: 'delivered' };
+        return {
+          current_state: 'delivered',
+          owned_by: story.owned_by || TT.Utils.getUsername(),
+          estimate: story.estimate || '0'
+        };
       }
     });
 
@@ -120,7 +146,11 @@ TT.Init = (function () {
         return story.current_state === 'accepted';
       },
       onDragIn: function (story) {
-        return { current_state: 'accepted' };
+        return {
+          current_state: 'accepted',
+          owned_by: story.owned_by || TT.Utils.getUsername(),
+          estimate: story.estimate || '0'
+        };
       }
     });
 
