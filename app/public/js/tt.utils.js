@@ -146,6 +146,27 @@ TT.Utils = (function () {
     });
   };
 
+  pub.updateStoryState = function (id, state) {
+    var existingState = pub.getStoryState(id);
+    state = pub.isObject(state) ? $.extend({}, existingState, state) : existingState;
+
+    var isEmpty = true;
+    $.each(state, function (key, val) {
+      if (pub.exists(val)) {
+        isEmpty = false;
+      } else {
+        delete state[key];
+      }
+    });
+
+    pub.localStorage('storyState.' + id, isEmpty ? null : state);
+  };
+
+  pub.getStoryState = function (id) {
+    var obj = pub.localStorage('storyState.' + id);
+    return pub.exists(obj) ? JSON.parse(obj) : {};
+  };
+
   return pub;
 
 }());

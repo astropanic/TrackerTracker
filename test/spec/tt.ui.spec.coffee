@@ -140,25 +140,25 @@ describe "UI interactions", ->
       also "I start editing the story description", ->
         beforeEach ->
           $('.story-' + id).find('.description').click()
-          $('.story-' + id).find('.details textarea').val(edited_description).blur()
+          $('.story-' + id).find('.description-container textarea').val(edited_description).blur()
 
         also "I trigger a redraw of the stories", ->
           beforeEach ->
             TT.View.drawStories()
 
           it "should restore the edited description", ->
-            expect($('.story-' + id).find('.details textarea').val()).toBe edited_description
+            expect($('.story-' + id).find('.description-container textarea').val()).toBe edited_description
 
           also "I cancel the edit", ->
             beforeEach ->
-              $('.story-' + id).find('.textarea .actions a.cancel').click()
+              $('.story-' + id).find('.description-container .actions a.cancel').click()
 
             it "should restore the original description", ->
               expect($('.story-' + id).find('.description').html()).toBe original_description
 
         also "I save the edited description", ->
           beforeEach ->
-            $('.story-' + id).find('.textarea .actions a.save').click()
+            $('.story-' + id).find('.description-container .actions a.save').click()
 
           it "should save the description on the client-side", ->
             expect(TT.Model.Story.get({ id: id }).description).toBe edited_description
@@ -179,6 +179,48 @@ describe "UI interactions", ->
 
           it "should display the new description", ->
             expect($('.story-' + id).find('.description').html()).toBe edited_description
+
+      also "I start writing a note", ->
+        my_note = 'Here is my note'
+
+        beforeEach ->
+          $('.story-' + id).find('.add-note').click()
+          $('.story-' + id).find('.notes textarea').val(my_note).blur()
+
+        also "I trigger a redraw of the stories", ->
+          beforeEach ->
+            TT.View.drawStories()
+
+          it "should restore the note", ->
+            expect($('.story-' + id).find('.notes textarea').val()).toBe my_note
+
+        also "I cancel the note", ->
+          beforeEach ->
+            $('.story-' + id).find('.notes .actions a.cancel').click()
+
+          it "should remove the note form", ->
+            expect($('.story-' + id).find('.notes textarea').length).toBe 0
+            expect($('.story-' + id).find('.add-note').length).toBe 1
+
+        # TODO: Figure out why this passes in Safari but fails in FF/Chrome
+        xalso "I save the note", ->
+          beforeEach ->
+            $('.story-' + id).find('.notes .actions a.save').click()
+
+          it "should save the note on the client-side", ->
+            expect(TT.Model.Story.get({ id: id }).notes[0].text).toBe my_note
+
+          it "should save the note on the server-side", ->
+            expect($.ajax).toHaveBeenCalledWith {
+              url: '/addStoryComment',
+              type: 'POST',
+              data: {
+                projectID: project_id,
+                storyID: id,
+                comment: my_note
+              },
+              complete: jasmine.any(Function)
+            }
 
   describe "Projects", ->
     id = null

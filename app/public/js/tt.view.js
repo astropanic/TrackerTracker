@@ -18,6 +18,8 @@ TT.View = (function () {
   };
 
   pub.attach = function (html, target, method) {
+    // Valid methods are appendTo, prependTo, insertAfter, insertBefore
+    // since they return the new element, not the target
     method = method || 'appendTo';
     return $(html)[method](target);
   };
@@ -145,10 +147,14 @@ TT.View = (function () {
       pub.drawStoryDetails(element);
     }
 
-    var temporaryDescription = TT.UI.getTemporaryDescription(story.id);
-    if (temporaryDescription.text) {
+    var state = TT.Utils.getStoryState(story.id);
+    if (state.description) {
       element.find('.description').click();
-      element.find('textarea').val(temporaryDescription.text).height(temporaryDescription.height).focus();
+      element.find('.description-container textarea').val(state.description).height(state.descriptionHeight).focus();
+    }
+    if (state.note) {
+      element.find('.add-note').click();
+      element.find('.notes textarea').val(state.note).height(state.noteHeight).focus();
     }
   };
 

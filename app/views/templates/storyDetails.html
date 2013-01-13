@@ -22,8 +22,10 @@
       <span class="editable" data-click-handler="TT.UI.openStoryStateUpdater">{{current_state}}</span>
     </div>
   </div>
-  <h2>Description</h2>
-  <div class="description textfield" data-click-handler="TT.UI.editStoryDescription">{{{formatted_description}}}</div>
+  <div class="description-container">
+    <h2>Description</h2>
+    <div class="description textfield" data-click-handler="TT.UI.editStoryDescription">{{{formatted_description}}}</div>
+  </div>
   <h2>Labels</h2>
   <div class="labels textfield" data-click-handler="TT.UI.editStoryTags">
     {{#labels}}

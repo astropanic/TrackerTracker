@@ -317,7 +317,8 @@ beforeEach(function () {
     return TT.Mock.localStorage[key];
   });
   spyOn($, 'ajax').andCallFake(function (options) {
-    options.success(TT.Mock.serverResponse(options.url, options.data));
+    options.success && options.success(TT.Mock.serverResponse(options.url, options.data));
+    options.complete && options.complete();
   });
 });
 
