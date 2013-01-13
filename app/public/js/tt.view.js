@@ -241,8 +241,8 @@ TT.View = (function () {
     });
 
     setTimeout(function () {
-      element.fadeOut(250, function () { element.remove(); });
-    }, 6000);
+      element.fadeOut(1000, function () { element.remove(); });
+    }, 3000);
   };
 
   return pub;
