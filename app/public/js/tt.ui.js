@@ -156,155 +156,134 @@ TT.UI = (function () {
     return false;
   };
 
-  // TODO: DRY these up
-
   pub.openStoryRequesterUpdater = function () {
-    var id = $(this).closest('.story').data('id');
-    var story = TT.Model.Story.get({ id: id });
-    var project = TT.Model.Project.get({ id: story.project_id });
-    var users = TT.Utils.normalizePivotalArray(project.memberships.membership);
-    var items = [];
+    var getItems = function (story) {
+      var project = TT.Model.Project.get({ id: story.project_id });
+      var users = TT.Utils.normalizePivotalArray(project.memberships.membership);
+      var items = [];
 
-    $.each(users, function (i, user) {
-      items[items.length] = { name: user.person.name, value: user.person.name };
-    });
+      $.each(users, function (i, user) {
+        items[items.length] = { name: user.person.name, value: user.person.name };
+      });
 
-    TT.Autocomplete.open({
-      css: { width: 200 },
-      items: items,
-      value: $(this).text(),
-      showInput: true,
-      target: this,
-      onApply: function () {
-        var update = { requested_by: $(this).data('value') };
-        TT.Model.Story.update(story, update);
-        TT.Model.Story.serverSave(story, update, TT.View.drawStories);
-      }
-    });
+      return items;
+    };
 
-    return false;
+    return openStoryUpdater(this, { getItems: getItems, key: 'requested_by' });
   };
 
   pub.openStoryOwnerUpdater = function () {
-    var id = $(this).closest('.story').data('id');
-    var story = TT.Model.Story.get({ id: id });
-    var project = TT.Model.Project.get({ id: story.project_id });
-    var users = TT.Utils.normalizePivotalArray(project.memberships.membership);
-    var items = [];
+    var getItems = function (story) {
+      var project = TT.Model.Project.get({ id: story.project_id });
+      var users = TT.Utils.normalizePivotalArray(project.memberships.membership);
+      var items = [];
 
-    if (story.current_state === 'unscheduled' || story.current_state === 'unstarted') {
-      items[items.length] = { name: '<em>none</em>', value: '' };
-    }
-
-    $.each(users, function (i, user) {
-      items[items.length] = { name: user.person.name, value: user.person.name };
-    });
-
-    TT.Autocomplete.open({
-      css: { width: 200 },
-      items: items,
-      value: $(this).text(),
-      showInput: true,
-      target: this,
-      onApply: function () {
-        var update = { owned_by: $(this).data('value') };
-        TT.Model.Story.update(story, update);
-        TT.Model.Story.serverSave(story, update, TT.View.drawStories);
+      if (story.current_state === 'unscheduled' || story.current_state === 'unstarted') {
+        items[items.length] = { name: '<em>none</em>', value: '' };
       }
-    });
 
-    return false;
+      $.each(users, function (i, user) {
+        items[items.length] = { name: user.person.name, value: user.person.name };
+      });
+
+      return items;
+    };
+
+    return openStoryUpdater(this, { getItems: getItems, key: 'owned_by' });
   };
 
   pub.openStoryPointsUpdater = function () {
-    var id = $(this).closest('.story').data('id');
-    var story = TT.Model.Story.get({ id: id });
-    var project = TT.Model.Project.get({ id: story.project_id });
-    var items = [];
+    var getItems = function (story) {
+      var project = TT.Model.Project.get({ id: story.project_id });
+      var items = [];
 
-    if (story.current_state === 'unscheduled' || story.current_state === 'unstarted') {
-      items[items.length] = { name: '<em>unestimated</em>', value: '-1' };
-    }
+      if (story.current_state === 'unscheduled' || story.current_state === 'unstarted') {
+        items[items.length] = { name: '<em>unestimated</em>', value: '-1' };
+      }
 
-    $.each(project.point_scale.split(','), function (i, point) {
-      items[items.length] = { name: point, value: point };
+      $.each(project.point_scale.split(','), function (i, point) {
+        items[items.length] = { name: point, value: point };
+      });
+
+      return items;
+    };
+
+    var onBeforeUpdate = function (update) {
+      if (update.estimate < 0) {
+        update.estimate = '';
+      }
+
+      return update;
+    };
+
+    return openStoryUpdater(this, {
+      getItems: getItems,
+      key: 'estimate',
+      width: 100,
+      onBeforeUpdate: onBeforeUpdate
     });
+  };
+
+  pub.openStoryStateUpdater = function () {
+    var getItems = function (story) {
+      return [
+        { name: 'Unscheduled', value: 'unscheduled' },
+        { name: 'Unstarted', value: 'unstarted' },
+        { name: 'Started', value: 'started' },
+        { name: 'Finished', value: 'finished' },
+        { name: 'Delivered', value: 'delivered' },
+        { name: 'Accepted', value: 'accepted' },
+        { name: 'Rejected', value: 'rejected' }
+      ];
+    };
+
+    return openStoryUpdater(this, {
+      getItems: getItems,
+      key: 'current_state',
+      width: 120
+    });
+  };
+
+  pub.openStoryTypeUpdater = function () {
+    var getItems = function (story) {
+      return [
+        { name: 'Feature', value: 'feature' },
+        { name: 'Bug', value: 'bug' },
+        { name: 'Chore', value: 'chore' },
+        { name: 'Release', value: 'release' }
+      ];
+    };
+
+    return openStoryUpdater(this, {
+      getItems: getItems,
+      key: 'story_type',
+      width: 120
+    });
+  };
+
+  function openStoryUpdater(context, options) {
+    var id = $(context).closest('.story').data('id');
+    var story = TT.Model.Story.get({ id: id });
 
     TT.Autocomplete.open({
-      css: { width: 90 },
-      items: items,
-      value: $(this).text(),
+      css: { width: options.width || 200 },
+      items: options.getItems(story),
+      value: $(context).text(),
       showInput: true,
-      target: this,
+      target: context,
       onApply: function () {
-        var update = { estimate: $(this).data('value') };
+        var update = {};
+        update[options.key] = $(this).data('value');
         TT.Model.Story.serverSave(story, update, TT.View.drawStories);
-        if (update.estimate < 0) {
-          update.estimate = '';
+        if (options.onBeforeUpdate) {
+          update = options.onBeforeUpdate(update);
         }
         TT.Model.Story.update(story, update);
       }
     });
 
     return false;
-  };
-
-  pub.openStoryStateUpdater = function () {
-    var id = $(this).closest('.story').data('id');
-    var story = TT.Model.Story.get({ id: id });
-
-    var items = [
-      { name: 'Unscheduled', value: 'unscheduled' },
-      { name: 'Unstarted', value: 'unstarted' },
-      { name: 'Started', value: 'started' },
-      { name: 'Finished', value: 'finished' },
-      { name: 'Delivered', value: 'delivered' },
-      { name: 'Accepted', value: 'accepted' },
-      { name: 'Rejected', value: 'rejected' }
-    ];
-
-    TT.Autocomplete.open({
-      css: { width: 120 },
-      items: items,
-      value: $(this).text(),
-      showInput: true,
-      target: this,
-      onApply: function () {
-        var update = { current_state: $(this).data('value') };
-        TT.Model.Story.update(story, update);
-        TT.Model.Story.serverSave(story, update, TT.View.drawStories);
-      }
-    });
-
-    return false;
-  };
-
-  pub.openStoryTypeUpdater = function () {
-    var id = $(this).closest('.story').data('id');
-    var story = TT.Model.Story.get({ id: id });
-
-    var items = [
-      { name: 'Feature', value: 'feature' },
-      { name: 'Bug', value: 'bug' },
-      { name: 'Chore', value: 'chore' },
-      { name: 'Release', value: 'release' }
-    ];
-
-    TT.Autocomplete.open({
-      css: { width: 120 },
-      items: items,
-      value: $(this).text(),
-      showInput: true,
-      target: this,
-      onApply: function () {
-        var update = { story_type: $(this).data('value') };
-        TT.Model.Story.update(story, update);
-        TT.Model.Story.serverSave(story, update, TT.View.drawStories);
-      }
-    });
-
-    return false;
-  };
+  }
 
   pub.openStoryAttachmentControls = function () {
     var id = $(this).data('id');
