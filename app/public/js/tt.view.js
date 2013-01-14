@@ -148,6 +148,7 @@ TT.View = (function () {
     }
 
     var state = TT.Utils.getStoryState(story.id);
+    // TODO: clean this up
     if (state.description) {
       element.find('.description').click();
       element.find('.description-container textarea').val(state.description).height(state.descriptionHeight).focus();
@@ -155,6 +156,10 @@ TT.View = (function () {
     if (state.note) {
       element.find('.add-note').click();
       element.find('.notes textarea').val(state.note).height(state.noteHeight).focus();
+    }
+    if (state.name) {
+      element.find('.title').click();
+      element.find('.title-container textarea').val(state.name).height(state.nameHeight).focus();
     }
   };
 
@@ -179,9 +184,8 @@ TT.View = (function () {
   pub.drawStoryDetails = function (story) {
     var data = TT.Model.Story.get({ id: story.data('id') });
     var html = TT.View.render('storyDetails', data);
-    var target = story.find('.container');
 
-    return pub.attach(html, target);
+    return pub.attach(html, story);
   };
 
   pub.drawFilter = function (filter) {

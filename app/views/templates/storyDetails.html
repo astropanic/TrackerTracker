@@ -1,6 +1,10 @@
 <div class="details">
+  <div class="title-container">
+    <h2>Title</h2>
+    <div class="title textfield" data-click-handler="TT.UI.editStoryTitle">{{{formatted_name}}}</div>
+  </div>
   <div class="detail-set">
-    <div class="detail"><label>ID</label> <a href="{{url}}" target="_blank">{{id}}</a></div>
+    <div class="detail"><label>Story ID</label> <a href="{{url}}" target="_blank">{{id}}</a></div>
     <div class="detail">
       <label>Requester</label>
       <span class="editable" data-click-handler="TT.UI.openStoryRequesterUpdater">{{requested_by}}</span>

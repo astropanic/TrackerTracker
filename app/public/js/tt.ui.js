@@ -51,7 +51,15 @@ TT.UI = (function () {
     } else {
       TT.Model.Story.update({ id: story.data('id') }, { expanded: false });
       story.find('.details').empty().remove();
-      TT.Utils.updateStoryState(id, { description: null, descriptionHeight: null, note: null, noteHeight: null });
+      // TODO: Clean this up
+      TT.Utils.updateStoryState(id, {
+        name: null,
+        nameHeight: null,
+        description: null,
+        descriptionHeight: null,
+        note: null,
+        noteHeight: null
+      });
     }
 
     return false;
@@ -316,11 +324,31 @@ TT.UI = (function () {
     return false;
   };
 
-  pub.editStoryDescription = function () {
+  pub.editStoryTitle = function () {
     var id = $(this).closest('.story').data('id');
     var story = TT.Model.Story.get({ id: id });
 
-    story.isBeingEdited = true;
+    var html = TT.View.render('textarea', {
+      text: story.name,
+      onSave: 'TT.UI.saveStoryTitle',
+      onCancel: 'TT.UI.cancelEditTitle'
+    });
+
+    var textarea = TT.View.attach(html, this, 'insertAfter').find('textarea');
+    textarea.focus().autosize().bind('keyup blur', function () {
+      TT.Utils.updateStoryState(story.id, {
+        name: textarea.val(),
+        nameHeight: textarea.height()
+      });
+    });
+
+    $(this).hide();
+    return false;
+  };
+
+  pub.editStoryDescription = function () {
+    var id = $(this).closest('.story').data('id');
+    var story = TT.Model.Story.get({ id: id });
 
     var html = TT.View.render('textarea', {
       text: story.description,
@@ -337,38 +365,6 @@ TT.UI = (function () {
     });
 
     $(this).hide();
-    return false;
-  };
-
-  pub.saveStoryDescription = function () {
-    var id = $(this).closest('.story').data('id');
-    var story = TT.Model.Story.get({ id: id });
-
-    var description = $(this).closest('.textarea').find('textarea').val();
-    var formatted_description = description ? TT.Utils.showdownLite(description) : 'Click to add a description';
-
-    TT.Model.Story.update({ id: id }, {
-      description: description,
-      formatted_description: formatted_description
-    });
-
-    TT.Utils.updateStoryState(id, { description: null, descriptionHeight: null });
-
-    $(this).closest('.story').find('.description').html(formatted_description).show();
-    $(this).closest('.textarea').remove();
-
-    TT.Model.Story.serverSave(story, { description: description });
-
-    return false;
-  };
-
-  pub.cancelEditDescription = function () {
-    var id = $(this).closest('.story').data('id');
-    TT.Utils.updateStoryState(id, { description: null, descriptionHeight: null });
-
-    $(this).closest('.story').find('.description').show();
-    $(this).closest('.textarea').remove();
-
     return false;
   };
 
@@ -390,6 +386,51 @@ TT.UI = (function () {
     });
 
     $(this).hide();
+    return false;
+  };
+
+  pub.saveStoryTitle = function () {
+    var id = $(this).closest('.story').data('id');
+    var story = TT.Model.Story.get({ id: id });
+
+    var name = $(this).closest('.textarea').find('textarea').val();
+    if (!name) {
+      TT.View.message('Title is required.', 'error');
+      return false;
+    }
+
+    var formatted_name = TT.Utils.showdownLite(formatted_name);
+
+    TT.Model.Story.update({ id: id }, { name: name, formatted_name: formatted_name });
+    TT.Utils.updateStoryState(id, { name: null, nameHeight: null });
+
+    $(this).closest('.story').find('.title').show().html(TT.Utils.showdownLite(name));
+    $(this).closest('.textarea').remove();
+
+    TT.Model.Story.serverSave(story, { name: name });
+
+    return false;
+  };
+
+  pub.saveStoryDescription = function () {
+    var id = $(this).closest('.story').data('id');
+    var story = TT.Model.Story.get({ id: id });
+
+    var description = $(this).closest('.textarea').find('textarea').val();
+    var formatted_description = description ? TT.Utils.showdownLite(description) : 'Click to add a description';
+
+    TT.Model.Story.update({ id: id }, {
+      description: description,
+      formatted_description: formatted_description
+    });
+
+    TT.Utils.updateStoryState(id, { description: null, descriptionHeight: null });
+
+    $(this).closest('.story').find('.description').show().html(formatted_description);
+    $(this).closest('.textarea').remove();
+
+    TT.Model.Story.serverSave(story, { description: description });
+
     return false;
   };
 
@@ -437,19 +478,36 @@ TT.UI = (function () {
     return false;
   };
 
+  pub.cancelEditTitle = function () {
+    return cancelStoryEdit(this, {
+      selector: '.title',
+      state: { name: null, nameHeight: null }
+    });
+  };
+
+  pub.cancelEditDescription = function () {
+    return cancelStoryEdit(this, {
+      selector: '.description',
+      state: { description: null, descriptionHeight: null }
+    });
+  };
+
   pub.cancelStoryNote = function () {
-    var id = $(this).closest('.story').data('id');
-    TT.Utils.updateStoryState(id, { note: null, noteHeight: null });
-
-    $(this).closest('.story').find('.add-note').show();
-    $(this).closest('.textarea').remove();
-
-    return false;
+    return cancelStoryEdit(this, {
+      selector: '.add-note',
+      state: { note: null, noteHeight: null }
+    });
   };
 
-  pub.deleteStoryNote = function () {
+  function cancelStoryEdit(context, options) {
+    var id = $(context).closest('.story').data('id');
+    TT.Utils.updateStoryState(id, options.state);
+
+    $(context).closest('.story').find(options.selector).show();
+    $(context).closest('.textarea').remove();
+
     return false;
-  };
+  }
 
   pub.loadIcebox = function () {
     $(this).closest('.column-note').remove();

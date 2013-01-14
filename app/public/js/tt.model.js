@@ -207,7 +207,7 @@ TT.Model = (function () {
   pub.Story.onBeforeAdd = function (story) {
     story.id = parseInt(story.id, 10);
     story.project_id = parseInt(story.project_id, 10);
-    story.name = TT.Utils.showdownLite(story.name);
+    story.formatted_name = TT.Utils.showdownLite(story.name);
     story.description = TT.Utils.isString(story.description) ? story.description : '';
     story.formatted_description = story.description ? TT.Utils.showdownLite(story.description) : 'Click to add a description';
     story.estimate = story.estimate >= 0 ? story.estimate : '';

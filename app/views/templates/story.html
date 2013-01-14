@@ -1,11 +1,11 @@
 <div id="story-{{id}}" data-id="{{id}}" class="story story-{{id}} {{ story_type }} {{current_state}}">
-  <div class="container">
+  <div class="toggle-arrow" data-click-handler="TT.UI.toggleStory"></div>
+  <div class="summary">
     <div class="points" data-click-handler="TT.UI.openStoryPointsUpdater">{{estimate}}</div>
-    <div class="toggle-arrow" data-click-handler="TT.UI.toggleStory"></div>
     <div class="icon"></div>
     <div class="title">
       <a href="#" data-project-id="{{project_id}}" data-click-handler="TT.UI.filterByProject" class="project-name project-{{project_classname}}">{{project_name}}</a>
-      {{{name}}}
+      {{{formatted_name}}}
       {{#initials}}
         <a href="#" class="story-owner" data-username="{{owned_by}}" data-click-handler="TT.UI.filterByUser">{{initials}}</a>
       {{/initials}}
