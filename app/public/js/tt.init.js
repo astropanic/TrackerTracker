@@ -206,6 +206,21 @@ TT.Init = (function () {
         }
       });
     }
+
+    if (TT.Model.Filter.isEmpty({ name: 'Updated Recently' })) {
+      TT.Model.Filter.add({
+        name: 'Updated Recently',
+        type: 'time',
+        active: false,
+        sticky: true,
+        pure: true,
+        fn: function (story) {
+          var two_days = 1000 * 60 * 60 * 24 * 2;
+          var updated = new Date(story.updated_at).getTime();
+          return updated > (new Date().getTime() - two_days);
+        }
+      });
+    }
   };
 
   pub.restoreFilters = function (filters) {
