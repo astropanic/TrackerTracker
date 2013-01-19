@@ -6,13 +6,10 @@
     "start": "node app"
   },
   "dependencies": {
-    "async": "*",
     "express": "3.0.4",
     "hogan.js": "*",
     "jade": "*",
     "pivotal": "git://github.com/Wizcorp/node-pivotal.git#master",
-    "redis": "*",
-    "sugar": "*",
-    "underscore": "*"
+    "redis": "*"
   }
 }

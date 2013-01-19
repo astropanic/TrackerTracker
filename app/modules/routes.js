@@ -1,7 +1,7 @@
+var pivotalCache = require('./pivotalCache.js');
+
 var TWO_YEARS = 2 * 365 * 24 * 60 * 60 * 1000;
 var PIVOTAL_TOKEN_COOKIE = 'pivotalToken';
-
-var pivotalCache = require('./pivotalCache.js');
 
 exports.index = function (req, res) {
   res.render('index');

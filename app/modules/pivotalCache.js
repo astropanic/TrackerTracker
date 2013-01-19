@@ -1,5 +1,6 @@
 var pivotal = require('pivotal');
 var redis = require('redis');
+
 var client = redis.createClient();
 
 var CACHE_THRESHOLD = 1000 * 60; // 1 minute
