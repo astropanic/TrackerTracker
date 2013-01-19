@@ -331,146 +331,95 @@ TT.UI = (function () {
   pub.editStoryTitle = function () {
     var story = getStoryFromContext(this);
 
-    var html = TT.View.render('textarea', {
+    return addStoryEditor(this, story, 'name', {
       text: story.name,
       onSave: 'TT.UI.saveStoryTitle',
       onCancel: 'TT.UI.cancelEditTitle'
     });
-
-    var textarea = TT.View.attach(html, this, 'insertAfter').find('textarea');
-    textarea.focus().autosize().bind('keyup blur', function () {
-      TT.Utils.updateStoryState(story.id, {
-        name: textarea.val(),
-        nameHeight: textarea.height()
-      });
-    });
-
-    $(this).hide();
-    return false;
   };
 
   pub.editStoryDescription = function () {
     var story = getStoryFromContext(this);
 
-    var html = TT.View.render('textarea', {
+    return addStoryEditor(this, story, 'description', {
       text: story.description,
       onSave: 'TT.UI.saveStoryDescription',
       onCancel: 'TT.UI.cancelEditDescription'
     });
-
-    var textarea = TT.View.attach(html, this, 'insertAfter').find('textarea');
-    textarea.focus().autosize().bind('keyup blur', function () {
-      TT.Utils.updateStoryState(story.id, {
-        description: textarea.val(),
-        descriptionHeight: textarea.height()
-      });
-    });
-
-    $(this).hide();
-    return false;
   };
 
   pub.addStoryNote = function () {
     var story = getStoryFromContext(this);
 
-    var html = TT.View.render('textarea', {
+    return addStoryEditor(this, story, 'note', {
       onSave: 'TT.UI.saveStoryNote',
       onCancel: 'TT.UI.cancelStoryNote'
     });
+  };
 
-    var textarea = TT.View.attach(html, this, 'insertAfter').find('textarea');
+  function addStoryEditor(context, story, name, actions) {
+    var html = TT.View.render('textarea', actions);
+
+    var textarea = TT.View.attach(html, context, 'insertAfter').find('textarea');
     textarea.focus().autosize().bind('keyup blur', function () {
-      TT.Utils.updateStoryState(story.id, {
-        note: textarea.val(),
-        noteHeight: textarea.height()
-      });
+      var data = {};
+      data[name] = textarea.val();
+      data[name + 'Height'] = textarea.height();
+
+      TT.Utils.updateStoryState(story.id, data);
     });
 
-    $(this).hide();
+    $(context).hide();
+
     return false;
-  };
+  }
 
   pub.saveStoryTitle = function () {
     var story = getStoryFromContext(this);
-
     var name = $(this).closest('.textarea').find('textarea').val();
+    var formatted_name = name ? TT.Utils.showdownLite(name) : '';
+
     if (!name) {
       TT.View.message('Title is required.', 'error');
       return false;
     }
 
-    var formatted_name = TT.Utils.showdownLite(formatted_name);
+    TT.Model.Story.saveTitle(story, name, formatted_name);
 
-    TT.Model.Story.update({ id: story.id }, { name: name, formatted_name: formatted_name });
-    TT.Utils.updateStoryState(story.id, { name: null, nameHeight: null });
-
-    $(this).closest('.story').find('.title').show().html(TT.Utils.showdownLite(name));
+    $(this).closest('.story').find('.title').show().html(formatted_name);
     $(this).closest('.textarea').remove();
-
-    TT.Model.Story.serverSave(story, { name: name });
 
     return false;
   };
 
   pub.saveStoryDescription = function () {
     var story = getStoryFromContext(this);
-
     var description = $(this).closest('.textarea').find('textarea').val();
-    var formatted_description = description ? TT.Utils.showdownLite(description) : 'Click to add a description';
+    var formatted_description = description ? TT.Utils.showdownLite(description) : '<span class="ghost">Click to add a description</span>';
 
-    TT.Model.Story.update({ id: story.id }, {
-      description: description,
-      formatted_description: formatted_description
-    });
-
-    TT.Utils.updateStoryState(story.id, { description: null, descriptionHeight: null });
+    TT.Model.Story.saveDescription(story, description, formatted_description);
 
     $(this).closest('.story').find('.description').show().html(formatted_description);
     $(this).closest('.textarea').remove();
-
-    TT.Model.Story.serverSave(story, { description: description });
 
     return false;
   };
 
   pub.saveStoryNote = function () {
     var story = getStoryFromContext(this);
-
     var comment = $(this).closest('.textarea').find('textarea').val();
-    var author = $.cookie('pivotalUsername');
 
-    if (!comment || !author) {
+    if (!comment) {
+      TT.View.message('Your note is empty.', 'error');
       return false;
     }
 
-    story.notes.unshift({
-      timestamp: new Date().getTime(),
-      text: comment,
-      author: author,
-      noted_at: new Date() + '',
-      isImage: false
+    TT.Model.Story.saveComment(story, comment, function () {
+      TT.View.redrawStory(story);
     });
-
-    TT.Model.Story.update({ id: story.id }, { notes: story.notes });
-    TT.Utils.updateStoryState(story.id, { note: null, noteHeight: null });
 
     $(this).closest('.story').find('.add-note').show();
     $(this).closest('.textarea').remove();
-
-    TT.Ajax.start();
-    $.ajax({
-      url: '/addStoryComment',
-      type: 'POST',
-      data: {
-        projectID: story.project_id,
-        storyID: story.id,
-        comment: comment
-      },
-      complete: function () {
-        TT.Ajax.end();
-        TT.View.redrawStory(story);
-      }
-    });
 
     return false;
   };

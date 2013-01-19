@@ -209,7 +209,7 @@ TT.Model = (function () {
     story.project_id = parseInt(story.project_id, 10);
     story.formatted_name = TT.Utils.showdownLite(story.name);
     story.description = TT.Utils.isString(story.description) ? story.description : '';
-    story.formatted_description = story.description ? TT.Utils.showdownLite(story.description) : 'Click to add a description';
+    story.formatted_description = story.description ? TT.Utils.showdownLite(story.description) : '<span class="ghost">Click to add a description</span>';
     story.estimate = story.estimate >= 0 ? story.estimate : '';
     story.labels = story.labels ? story.labels.indexOf(',') !== -1 ? story.labels.split(',') : [story.labels] : [];
     story.notes = compileNotes(story);
@@ -329,21 +329,56 @@ TT.Model = (function () {
   };
 
   pub.Story.serverSave = function (story, data, callback) {
-    TT.Ajax.start();
-    $.ajax({
-      url: '/updateStory',
-      type: 'POST',
+    TT.Ajax.post('/updateStory', {
       data: {
         projectID: story.project_id,
         storyID: story.id,
         data: pub.Story.onBeforeSave(data)
       },
-      success: function () {
-        TT.Ajax.end();
-        if (callback) {
-          callback();
-        }
-      }
+      callback: callback
+    });
+  };
+
+  pub.Story.saveTitle = function (story, name, formatted_name) {
+    TT.Utils.updateStoryState(story.id, { name: null, nameHeight: null });
+
+    pub.Story.update({ id: story.id }, {
+      name: name,
+      formatted_name: formatted_name
+    });
+    pub.Story.serverSave(story, { name: name });
+  };
+
+  pub.Story.saveDescription = function (story, description, formatted_description) {
+    TT.Utils.updateStoryState(story.id, { description: null, descriptionHeight: null });
+
+    pub.Story.update({ id: story.id }, {
+      description: description,
+      formatted_description: formatted_description
+    });
+    pub.Story.serverSave(story, { description: description });
+  };
+
+  pub.Story.saveComment = function (story, comment, callback) {
+    TT.Utils.updateStoryState(story.id, { note: null, noteHeight: null });
+
+    story.notes.unshift({
+      timestamp: new Date().getTime(),
+      text: comment,
+      author: TT.Utils.getUsername(),
+      noted_at: new Date() + '',
+      isImage: false
+    });
+
+    pub.Story.update({ id: story.id }, { notes: story.notes });
+
+    TT.Ajax.post('/addStoryComment', {
+      data: {
+        projectID: story.project_id,
+        storyID: story.id,
+        comment: comment
+      },
+      callback: callback
     });
   };
 

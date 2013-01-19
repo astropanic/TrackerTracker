@@ -174,7 +174,7 @@ describe "UI interactions", ->
                   description: edited_description
                 }
               },
-              success: jasmine.any(Function)
+              complete: jasmine.any(Function)
             }
 
           it "should display the new description", ->

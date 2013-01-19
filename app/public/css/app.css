@@ -79,6 +79,10 @@ input.updating {
   background: url(/images/loading-white.gif) no-repeat scroll 98.6% 50% transparent;
 }
 
+span.ghost {
+  color: rgba(0, 0, 0, 0.4);
+}
+
 /* Action buttons */
 
 a.action {
