@@ -12,6 +12,7 @@ This is beta software. Use at your own risk. If you have any issues or feature r
 4. Install **Grunt**: `npm -g install grunt`
 5. Install **Testacular**: `npm -g install testacular`
 6. Install **TrackerTracker**: `git clone git@github.com:intentmedia/TrackerTracker.git`
+7. Install NPM packages (from the cloned repo directory): `npm install`
 
 ### Running the app
 
