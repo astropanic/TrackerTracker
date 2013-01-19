@@ -7,6 +7,11 @@ TT.UI = (function () {
 
   var pub = {};
 
+  function getStoryFromContext(context) {
+    var id = $(context).closest('.story').data('id');
+    return TT.Model.Story.get({ id: id });
+  }
+
   pub.selectProject = function () {
     $(this).toggleClass('inactive');
     TT.View.drawStories();
@@ -270,8 +275,7 @@ TT.UI = (function () {
   };
 
   function openStoryUpdater(context, options) {
-    var id = $(context).closest('.story').data('id');
-    var story = TT.Model.Story.get({ id: id });
+    var story = getStoryFromContext(context);
 
     TT.Autocomplete.open({
       css: { width: options.width || 200 },
@@ -325,8 +329,7 @@ TT.UI = (function () {
   };
 
   pub.editStoryTitle = function () {
-    var id = $(this).closest('.story').data('id');
-    var story = TT.Model.Story.get({ id: id });
+    var story = getStoryFromContext(this);
 
     var html = TT.View.render('textarea', {
       text: story.name,
@@ -347,8 +350,7 @@ TT.UI = (function () {
   };
 
   pub.editStoryDescription = function () {
-    var id = $(this).closest('.story').data('id');
-    var story = TT.Model.Story.get({ id: id });
+    var story = getStoryFromContext(this);
 
     var html = TT.View.render('textarea', {
       text: story.description,
@@ -369,8 +371,7 @@ TT.UI = (function () {
   };
 
   pub.addStoryNote = function () {
-    var id = $(this).closest('.story').data('id');
-    var story = TT.Model.Story.get({ id: id });
+    var story = getStoryFromContext(this);
 
     var html = TT.View.render('textarea', {
       onSave: 'TT.UI.saveStoryNote',
@@ -390,8 +391,7 @@ TT.UI = (function () {
   };
 
   pub.saveStoryTitle = function () {
-    var id = $(this).closest('.story').data('id');
-    var story = TT.Model.Story.get({ id: id });
+    var story = getStoryFromContext(this);
 
     var name = $(this).closest('.textarea').find('textarea').val();
     if (!name) {
@@ -401,8 +401,8 @@ TT.UI = (function () {
 
     var formatted_name = TT.Utils.showdownLite(formatted_name);
 
-    TT.Model.Story.update({ id: id }, { name: name, formatted_name: formatted_name });
-    TT.Utils.updateStoryState(id, { name: null, nameHeight: null });
+    TT.Model.Story.update({ id: story.id }, { name: name, formatted_name: formatted_name });
+    TT.Utils.updateStoryState(story.id, { name: null, nameHeight: null });
 
     $(this).closest('.story').find('.title').show().html(TT.Utils.showdownLite(name));
     $(this).closest('.textarea').remove();
@@ -413,18 +413,17 @@ TT.UI = (function () {
   };
 
   pub.saveStoryDescription = function () {
-    var id = $(this).closest('.story').data('id');
-    var story = TT.Model.Story.get({ id: id });
+    var story = getStoryFromContext(this);
 
     var description = $(this).closest('.textarea').find('textarea').val();
     var formatted_description = description ? TT.Utils.showdownLite(description) : 'Click to add a description';
 
-    TT.Model.Story.update({ id: id }, {
+    TT.Model.Story.update({ id: story.id }, {
       description: description,
       formatted_description: formatted_description
     });
 
-    TT.Utils.updateStoryState(id, { description: null, descriptionHeight: null });
+    TT.Utils.updateStoryState(story.id, { description: null, descriptionHeight: null });
 
     $(this).closest('.story').find('.description').show().html(formatted_description);
     $(this).closest('.textarea').remove();
@@ -435,8 +434,7 @@ TT.UI = (function () {
   };
 
   pub.saveStoryNote = function () {
-    var id = $(this).closest('.story').data('id');
-    var story = TT.Model.Story.get({ id: id });
+    var story = getStoryFromContext(this);
 
     var comment = $(this).closest('.textarea').find('textarea').val();
     var author = $.cookie('pivotalUsername');
@@ -453,7 +451,8 @@ TT.UI = (function () {
       isImage: false
     });
 
-    TT.Model.Story.update({ id: id }, { notes: story.notes });
+    TT.Model.Story.update({ id: story.id }, { notes: story.notes });
+    TT.Utils.updateStoryState(story.id, { note: null, noteHeight: null });
 
     $(this).closest('.story').find('.add-note').show();
     $(this).closest('.textarea').remove();
@@ -472,8 +471,6 @@ TT.UI = (function () {
         TT.View.redrawStory(story);
       }
     });
-
-    TT.Utils.updateStoryState(id, { note: null, noteHeight: null });
 
     return false;
   };
@@ -500,8 +497,8 @@ TT.UI = (function () {
   };
 
   function cancelStoryEdit(context, options) {
-    var id = $(context).closest('.story').data('id');
-    TT.Utils.updateStoryState(id, options.state);
+    var story = getStoryFromContext(context);
+    TT.Utils.updateStoryState(story.id, options.state);
 
     $(context).closest('.story').find(options.selector).show();
     $(context).closest('.textarea').remove();
