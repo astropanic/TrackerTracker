@@ -83,7 +83,12 @@ TT.View = (function () {
 
   pub.refreshColumnStoryCount = function () {
     TT.Model.Column.each(function (index, column) {
-      $('#columnList .column-selector:contains("' + column.name + '") span.column-story-count').html(column.storyCount);
+      var $counter = $('#columnList .column-selector:contains("' + column.name + '") span.column-story-count');
+      if (column.storyCount === 0) {
+        $counter.hide();
+      } else {
+        $counter.show().html(column.storyCount);
+      }
     });
   };
 
