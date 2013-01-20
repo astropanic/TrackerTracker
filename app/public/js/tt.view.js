@@ -58,19 +58,38 @@ TT.View = (function () {
   };
 
   pub.drawColumns = function () {
-    $('#columns .column').empty().remove();
+    $('#columns .column').remove();
     TT.Model.Layout.each(function (index, column) {
       if (column.active) {
         var actualColumn = TT.Model.Column.get({ name: column.name });
-        var html = pub.render('column', actualColumn);
-        var element = pub.attach(html, '#columns');
-
-        if (actualColumn.template) {
-          html = actualColumn.template();
-          pub.attach(html, '#columns .column.' + actualColumn.class_name + ' .column-bucket');
-        }
+        pub.drawColumn(actualColumn);
       }
     });
+  };
+
+  pub.drawColumn = function (column) {
+    var html = pub.render('column', column);
+    var element = pub.attach(html, '#columns');
+    pub.drawColumnTemplate(column);
+
+    return element;
+  };
+
+  pub.drawColumnTemplates = function () {
+    $('#columns .column-template').remove();
+    TT.Model.Layout.each(function (index, column) {
+      if (column.active) {
+        var actualColumn = TT.Model.Column.get({ name: column.name });
+        pub.drawColumnTemplate(actualColumn);
+      }
+    });
+  };
+
+  pub.drawColumnTemplate = function (column) {
+    if (column.template) {
+      var html = '<div class="column-template">' + column.template() + '</div>';
+      return pub.attach(html, '#columns .' + column.class_name + ' .column-bucket');
+    }
   };
 
   pub.refreshColumns = function () {
@@ -116,20 +135,24 @@ TT.View = (function () {
 
     TT.Model.Column.each(function (index, column) {
       column.storyCount = 0;
-    });
-
-    TT.Model.Story.each(function (index, story) {
-      TT.Model.Column.each(function (index, column) {
-        if (column.filter && column.filter(story) && TT.Model.Project.isActive({ id: story.project_id }) && TT.Model.Story.isNotFiltered(story)) {
-          column.storyCount++;
-          if (column.active) {
-            pub.drawStory(story, column);
-          }
-        }
-      });
+      pub.drawStoriesInColumn(column);
     });
 
     pub.refreshColumnStoryCount();
+    pub.drawColumnTemplates();
+  };
+
+  pub.drawStoriesInColumn = function (column) {
+    TT.Model.Story.each(function (index, story) {
+      if (column.filter && column.filter(story) &&
+        TT.Model.Project.isActive({ id: story.project_id }) &&
+        TT.Model.Story.isNotFiltered(story)) {
+        column.storyCount++;
+        if (column.active) {
+          pub.drawStory(story, column);
+        }
+      }
+    });
   };
 
   pub.setProjectActiveState = function () {
