@@ -76,6 +76,24 @@ TT.DragAndDrop = (function () {
     var oldIndex = TT.Model.Layout.index({ name: name });
     var newIndex = oldIndex + (column.indexStop - column.indexStart);
 
+    // modify newIndex to account for hidden columns
+    var i, layout;
+    if (oldIndex < newIndex) {
+      for (i = oldIndex; i <= newIndex; i++) {
+        layout = TT.Model.Layout.get()[i];
+        if (layout.active === false) {
+          newIndex++;
+        }
+      }
+    } else if (oldIndex > newIndex) {
+      for (i = oldIndex; i >= newIndex; i--) {
+        layout = TT.Model.Layout.get()[i];
+        if (layout.active === false) {
+          newIndex--;
+        }
+      }
+    }
+
     TT.Model.Layout.move(oldIndex, newIndex);
   };
 
