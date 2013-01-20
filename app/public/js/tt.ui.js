@@ -141,7 +141,7 @@ TT.UI = (function () {
     var pivotalUsername = $('#pivotal-username').val();
 
     if (!pivotalToken) {
-      // TODO: client-side validation
+      TT.View.message('Token is required.', 'error');
       return false;
     }
 
