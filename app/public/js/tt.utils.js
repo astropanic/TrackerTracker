@@ -18,6 +18,9 @@ TT.Utils = (function () {
 
   pub.keyPressed = function (e, key) {
     var keys = {
+      'LEFT_CLICK': 1,
+      'MIDDLE_CLICK': 2,
+      'RIGHT_CLICK': 3,
       'TAB': 9,
       'ENTER': 13,
       'ESCAPE': 27,

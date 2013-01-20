@@ -46,6 +46,15 @@ TT.UI = (function () {
     return false;
   };
 
+  pub.removeColumnOnMiddleClick = function (e) {
+    if (TT.Utils.keyPressed(e, 'MIDDLE_CLICK')) {
+      $(this).find('span').click();
+      return false;
+    }
+
+    // intentionally not returning false here to continue event bubbling
+  };
+
   pub.toggleStory = function () {
     var story = $(this).closest('.story').toggleClass('expanded-story');
     var id = story.data('id');
@@ -107,7 +116,12 @@ TT.UI = (function () {
     return false;
   };
 
-  pub.toggleFilter = function () {
+  pub.toggleFilter = function (e) {
+    if (TT.Utils.keyPressed(e, 'MIDDLE_CLICK')) {
+      $(this).find('span.close').click();
+      return false;
+    }
+
     var id = $(this).closest('.filter').data('filter-id');
     var filter = TT.Model.Filter.get({ id: id });
 
@@ -503,7 +517,7 @@ TT.UI = (function () {
       if (handler) {
         handler = TT.Utils.strToFunction(handler);
         if (TT.Utils.isFunction(handler)) {
-          return handler.apply(target[0]);
+          return handler.call(target[0], e);
         }
       }
     });
