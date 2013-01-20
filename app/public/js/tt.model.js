@@ -113,6 +113,13 @@ TT.Model = (function () {
       return update(self.DB, query, updateFn);
     };
 
+    self.tick = function (query, prop) {
+      return self.update(query, function (obj) {
+        obj[prop] = obj[prop] ? obj[prop] + 1 : 1;
+        return obj;
+      });
+    };
+
     self.move = function (oldIndex, newIndex) {
       self.DB = TT.Utils.arrayMove(self.DB, oldIndex, newIndex);
     };
