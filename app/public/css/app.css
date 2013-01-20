@@ -116,20 +116,20 @@ a.action:hover {
 }
 
 #logo {
-  background: #256188;
+  background: #41a5cc;
   height: 38px;
 }
 
 #logo h1 {
   color: #fff;
   font: normal 18px/18px Helvetica, sans-serif;
-  left: 10px;
+  left: 12px;
   letter-spacing: 6px;
   padding-right: 20px;
   position: absolute;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
   text-transform: uppercase;
-  top: 10px;
+  top: 11px;
 }
 
 body.ajaxRunning #logo h1 {
@@ -220,7 +220,7 @@ body.ajaxRunning #logo h1 {
 /* Nav */
 
 #nav {
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 /* Messages */
