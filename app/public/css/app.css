@@ -672,6 +672,7 @@ body.ajaxRunning #logo h1 {
 }
 
 .story .details .tag {
+  margin: 2px 1px;
   padding-right: 16px;
   position: relative;
 }
@@ -688,6 +689,10 @@ body.ajaxRunning #logo h1 {
 
 .story .tag .delete:hover {
   opacity: 1.0;
+}
+
+.story .details .labels {
+  padding: 6px;
 }
 
 .story h2 {

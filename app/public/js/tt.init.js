@@ -360,6 +360,11 @@ TT.Init = (function () {
           TT.Model.User.overwrite(membership, 'name');
         });
       }
+      if (project.labels) {
+        $.each(project.labels.split(','), function (index, label) {
+          TT.Model.Label.overwrite({ name: label }, 'name');
+        });
+      }
     });
   };
 

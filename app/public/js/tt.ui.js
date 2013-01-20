@@ -326,18 +326,34 @@ TT.UI = (function () {
 
   pub.removeTagFromStory = function () {
     var story = getStoryFromContext(this);
-    var tag = $.trim($(this).closest('.tag').text());
+    var label = $.trim($(this).closest('.tag').text());
 
-    var labels = TT.Model.Story.removeTag(story, tag).labels;
-
-    TT.Model.Story.update({ id: story.id }, { labels: labels });
-    TT.Model.Story.serverSave(story, { labels: labels });
-    TT.View.redrawStory(story);
+    var labels = TT.Model.Story.removeTag(story, label).labels;
+    TT.Model.Story.saveLabels(story, labels);
 
     return false;
   };
 
   pub.editStoryTags = function () {
+    var story = getStoryFromContext(this);
+
+    var labels = $.map(TT.Model.Label.get(), function (label) {
+      return { name: label.name, value: label.name };
+    });
+
+    TT.Autocomplete.open({
+      css: { width: 240 },
+      items: TT.Utils.sortByProperty(labels, 'name'),
+      target: $(this).closest('.labels'),
+      noActive: true,
+      showInput: true,
+      onApply: function () {
+        var label = $(this).data('value');
+        var labels = TT.Model.Story.addTag(story, label).labels;
+        TT.Model.Story.saveLabels(story, labels);
+      }
+    });
+
     return false;
   };
 

@@ -187,6 +187,8 @@ TT.Model = (function () {
     pub.Filter.clientSave();
   };
 
+  pub.Label = pub.Model('Label');
+
   pub.Layout = pub.Model('Layout');
 
   pub.Project = pub.Model('Project');
@@ -337,6 +339,12 @@ TT.Model = (function () {
       },
       callback: callback
     });
+  };
+
+  pub.Story.saveLabels = function (story, labels) {
+    pub.Story.update({ id: story.id }, { labels: labels });
+    pub.Story.serverSave(story, { labels: labels });
+    TT.View.redrawStory(story);
   };
 
   pub.Story.saveTitle = function (story, name, formatted_name) {
