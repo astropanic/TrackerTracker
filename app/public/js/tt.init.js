@@ -13,6 +13,16 @@ TT.Init = (function () {
     // TODO: Allow creating & saving custom columns and layouts
 
     TT.Model.Column.add({
+      name: 'Epics',
+      active: false,
+      sortable: false,
+      template: function () {
+        var labels = TT.Utils.sortByProperty(TT.Model.Label.get(), 'name');
+        return TT.View.render('epics', { labels: labels });
+      }
+    });
+
+    TT.Model.Column.add({
       name: 'Icebox',
       active: false,
       sortable: false,

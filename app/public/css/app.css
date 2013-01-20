@@ -655,7 +655,7 @@ body.ajaxRunning #logo h1 {
   border-bottom: 0;
 }
 
-.story .tag {
+.tag {
   background: #e9dda1;
   border-radius: 2px;
   box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
@@ -667,7 +667,7 @@ body.ajaxRunning #logo h1 {
   padding: 2px 4px;
 }
 
-.story .tag:hover {
+.tag:hover {
   background: #f1d33d;
 }
 
@@ -677,7 +677,7 @@ body.ajaxRunning #logo h1 {
   position: relative;
 }
 
-.story .tag .delete {
+.tag .delete {
   background: url(/images/close.png) no-repeat scroll center center transparent;
   height: 16px;
   opacity: 0.4;
@@ -986,4 +986,28 @@ input.textfield.autocomplete {
 
 .column-note .p {
   margin: 8px 0 12px 0;
+}
+
+/* Epics */
+
+.column-epics .column-bucket {
+  background: #fff;
+}
+
+.epics {
+  padding: 20px;
+}
+
+.epics h2 {
+  font: bold 14px/14px Helvetica, sans-serif;
+  margin: 0 0 8px;
+}
+
+.epics .row {
+}
+
+.epics .tag {
+  font: normal 12px/12px Helvetica, sans-serif;
+  margin: 2px 0;
+  padding: 3px 4px;
 }

@@ -115,7 +115,7 @@ TT.View = (function () {
 
     TT.Model.Story.each(function (index, story) {
       TT.Model.Column.each(function (index, column) {
-        if (column.filter(story) && TT.Model.Project.isActive({ id: story.project_id }) && TT.Model.Story.isNotFiltered(story)) {
+        if (column.filter && column.filter(story) && TT.Model.Project.isActive({ id: story.project_id }) && TT.Model.Story.isNotFiltered(story)) {
           column.storyCount++;
           if (column.active) {
             pub.drawStory(story, column);
