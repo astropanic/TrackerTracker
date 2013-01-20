@@ -180,6 +180,29 @@ describe "UI interactions", ->
           it "should display the new description", ->
             expect($('.story-' + id).find('.description').html()).toBe edited_description
 
+      also "I click the delete button on a tag", ->
+        tagName = 'blocked'
+
+        beforeEach ->
+          $('.story-' + id).find('.details .tag:contains("' + tagName + '") .delete').eq(0).click()
+
+        it "should delete the tag on the client-side", ->
+          expect($('.story-' + id).find('.details .tag:contains("' + tagName + '")').length).toBe 0
+
+        it "should delete the tag on the server-side", ->
+          expect($.ajax).toHaveBeenCalledWith {
+            url: '/updateStory',
+            type: 'POST',
+            data: {
+              projectID: project_id,
+              storyID: id,
+              data: {
+                labels: getLabelsString($('.story-' + id).find('.details .tag'))
+              }
+            },
+            complete: jasmine.any(Function)
+          }
+
       also "I start writing a note", ->
         my_note = 'Here is my note'
 
@@ -202,8 +225,7 @@ describe "UI interactions", ->
             expect($('.story-' + id).find('.notes textarea').length).toBe 0
             expect($('.story-' + id).find('.add-note').length).toBe 1
 
-        # TODO: Figure out why this passes in Safari but fails in FF/Chrome
-        xalso "I save the note", ->
+        also "I save the note", ->
           beforeEach ->
             $('.story-' + id).find('.notes .actions a.save').click()
 

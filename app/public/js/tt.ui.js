@@ -324,6 +324,19 @@ TT.UI = (function () {
     return false;
   };
 
+  pub.removeTagFromStory = function () {
+    var story = getStoryFromContext(this);
+    var tag = $.trim($(this).closest('.tag').text());
+
+    var labels = TT.Model.Story.removeTag(story, tag).labels;
+
+    TT.Model.Story.update({ id: story.id }, { labels: labels });
+    TT.Model.Story.serverSave(story, { labels: labels });
+    TT.View.redrawStory(story);
+
+    return false;
+  };
+
   pub.editStoryTags = function () {
     return false;
   };

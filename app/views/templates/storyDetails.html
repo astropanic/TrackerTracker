@@ -33,7 +33,10 @@
   <h2>Labels</h2>
   <div class="labels textfield" data-click-handler="TT.UI.editStoryTags">
     {{#labels}}
-      <div class="tag">{{.}}</div>
+      <div class="tag" data-click-handler="TT.UI.filterByTag">
+        {{.}}
+        <span class="delete" data-click-handler="TT.UI.removeTagFromStory"></span>
+      </div>
     {{/labels}}
   </div>
   <h2>Activity</h2>

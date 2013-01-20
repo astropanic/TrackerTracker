@@ -300,6 +300,16 @@ function visibleStoriesWithoutOwner(name) {
   return count;
 }
 
+function getLabelsString(elements) {
+  var labels = []
+
+  elements.each(function () {
+    labels[labels.length] = $.trim($(this).text());
+  });
+
+  return labels.join(',');
+}
+
 beforeEach(function () {
   $.cookie('pivotalToken', 'abc123');
 

@@ -671,6 +671,25 @@ body.ajaxRunning #logo h1 {
   background: #f1d33d;
 }
 
+.story .details .tag {
+  padding-right: 16px;
+  position: relative;
+}
+
+.story .tag .delete {
+  background: url(/images/close.png) no-repeat scroll center center transparent;
+  height: 16px;
+  opacity: 0.4;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 16px;
+}
+
+.story .tag .delete:hover {
+  opacity: 1.0;
+}
+
 .story h2 {
   color: #111;
   font: bold 12px/12px Helvetica, sans-serif;
