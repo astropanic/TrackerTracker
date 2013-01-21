@@ -511,6 +511,7 @@ TT.UI = (function () {
   };
 
   pub.init = function () {
+    var timeoutID;
     $('body').click(function (e) {
       var target = $(e.target).closest('[data-click-handler]');
       var handler = target.data('click-handler');
@@ -520,6 +521,18 @@ TT.UI = (function () {
           return handler.call(target[0], e);
         }
       }
+    }).mousemove(function (e) {
+      clearTimeout(timeoutID);
+      timeoutID = setTimeout(function () {
+        var target = $(e.target).closest('[data-hover-handler]');
+        var handler = target.data('hover-handler');
+        if (handler) {
+          handler = TT.Utils.strToFunction(handler);
+          if (TT.Utils.isFunction(handler)) {
+            return handler.call(target[0], e);
+          }
+        }
+      }, 100);
     });
   };
 
