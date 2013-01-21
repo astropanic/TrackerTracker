@@ -88,7 +88,13 @@ TT.View = (function () {
   pub.drawColumnTemplate = function (column) {
     if (column.template) {
       var html = '<div class="column-template">' + column.template() + '</div>';
-      return pub.attach(html, '#columns .' + column.class_name + ' .column-bucket');
+      var element = pub.attach(html, '#columns .' + column.class_name + ' .column-bucket');
+
+      if (column.afterTemplateRender) {
+        column.afterTemplateRender();
+      }
+
+      return element;
     }
   };
 

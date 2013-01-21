@@ -116,7 +116,7 @@ a.action:hover {
 }
 
 #logo {
-  background: #41a5cc;
+  background: #3b9ac7;
   height: 38px;
 }
 
@@ -1004,10 +1004,76 @@ input.textfield.autocomplete {
 }
 
 .epics .row {
+  margin: 5px 0;
+}
+
+.epics .row.inactive {
+  margin: 3px 0;
 }
 
 .epics .tag {
-  font: normal 12px/12px Helvetica, sans-serif;
-  margin: 2px 0;
+  float: left;
+  font: bold 12px/12px Helvetica, sans-serif;
+  margin: 0 1px 2px;
   padding: 3px 4px;
+}
+
+.epics .inactive .tag {
+  background: transparent;
+  box-shadow: none;
+  color: #666;
+  font: normal 11px/13px Helvetica, sans-serif;
+  margin: 1px 0 1px 3px;
+  padding: 0;
+}
+
+.epics .inactive .tag:hover {
+  color: #333;
+  text-decoration: underline;
+}
+
+.epics .inactive .epic-scale {
+  display: none;
+}
+
+.epics .epic-scale {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 1px;
+  float: left;
+  margin: 1px 0 0 3px;
+  padding: 2px;
+}
+
+.epic {
+  float: left;
+  height: 11px;
+  width: 0;
+}
+
+.epic-scale .unscheduled {
+  background: #ade9f8;
+}
+
+.epic-scale .unstarted {
+  background: #c0c0c0;
+}
+
+.epic-scale .started {
+  background: #f0e93e;
+}
+
+.epic-scale .finished {
+  background: #f0e93e;
+}
+
+.epic-scale .delivered {
+  background: #f0e93e;
+}
+
+.epic-scale .rejected {
+  background: #a00;
+}
+
+.epic-scale .accepted {
+  background: #01cf01;
 }

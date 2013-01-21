@@ -19,6 +19,12 @@ TT.Init = (function () {
       template: function () {
         var labels = TT.Utils.sortByProperty(TT.Model.Label.get(), 'name');
         return TT.View.render('epics', { labels: labels });
+      },
+      afterTemplateRender: function () {
+        $('.epic').each(function () {
+          var w = $(this).data('count') + $(this).data('points');
+          $(this).width(w);
+        });
       }
     });
 

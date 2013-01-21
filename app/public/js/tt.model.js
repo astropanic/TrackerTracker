@@ -196,6 +196,51 @@ TT.Model = (function () {
 
   pub.Label = pub.Model('Label');
 
+  pub.Label.onBeforeAdd = function (label) {
+    label.unscheduled = {};
+    label.unstarted = {};
+    label.started = {};
+    label.finished = {};
+    label.rejected = {};
+    label.delivered = {};
+    label.accepted = {};
+
+    return label;
+  };
+
+  pub.Label.removeStory = function (label, id) {
+    $.each(['unscheduled', 'unstarted', 'started', 'finished', 'rejected', 'delivered', 'accepted'], function (index, name) {
+      delete label[name][id];
+    });
+
+    return label;
+  };
+
+  pub.Label.recalculateTotals = function (label) {
+    label.active = false;
+
+    $.each(['unscheduled', 'unstarted', 'started', 'finished', 'rejected', 'delivered', 'accepted'], function (index, name) {
+      var stories = TT.Utils.objectLength(label[name]);
+      window.console.log(stories);
+      if (stories) {
+        label.active = true;
+      }
+      label[name + 'Count'] = stories;
+      label[name + 'Points'] = TT.Utils.objectSum(label[name]);
+    });
+
+    return label;
+  };
+
+  pub.Label.addStoryLabelsToEpics = function (story) {
+    $.each(story.labels, function (index, label) {
+      var myLabel = pub.Label.get({ name: label });
+      pub.Label.removeStory(myLabel, story.id);
+      myLabel[story.current_state][story.id] = story.estimate;
+      pub.Label.recalculateTotals(myLabel);
+    });
+  };
+
   pub.Layout = pub.Model('Layout');
 
   pub.Project = pub.Model('Project');
@@ -223,12 +268,14 @@ TT.Model = (function () {
     story.labels = story.labels ? story.labels.indexOf(',') !== -1 ? story.labels.split(',') : [story.labels] : [];
     story.notes = compileNotes(story);
 
-    var project = TT.Model.Project.get({ id: story.project_id }) || {};
-    var user = TT.Model.User.get({ name: story.owned_by }) || {};
+    var project = pub.Project.get({ id: story.project_id }) || {};
+    var user = pub.User.get({ name: story.owned_by }) || {};
 
     story.initials = user.initials;
     story.project_name = TT.Utils.generateInitials(project.name);
     story.project_classname = TT.Utils.cssify(project.name);
+
+    pub.Label.addStoryLabelsToEpics(story);
 
     return story;
   };

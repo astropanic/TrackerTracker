@@ -1,8 +1,17 @@
 <div class="epics">
   <h2>Labels</h2>
   {{#labels}}
-    <div class="row">
+    <div class="row {{^active}}inactive{{/active}} clearfix">
       <div class="tag" data-click-handler="TT.UI.filterByTag">{{name}}</div>
+      <div class="epic-scale">
+        <div class="epic accepted" data-name="accepted" data-count="{{acceptedCount}}" data-points="{{acceptedPoints}}"></div>
+        <div class="epic delivered" data-name="delivered" data-count="{{deliveredCount}}" data-points="{{deliveredPoints}}"></div>
+        <div class="epic rejected" data-name="rejected" data-count="{{rejectedCount}}" data-points="{{rejectedPoints}}"></div>
+        <div class="epic finished" data-name="finished" data-count="{{finishedCount}}" data-points="{{finishedPoints}}"></div>
+        <div class="epic started" data-name="started" data-count="{{startedCount}}" data-points="{{startedPoints}}"></div>
+        <div class="epic unstarted" data-name="unstarted" data-count="{{unstartedCount}}" data-points="{{unstartedPoints}}"></div>
+        <div class="epic unscheduled" data-name="unscheduled" data-count="{{unscheduledCount}}" data-points="{{unscheduledPoints}}"></div>
+      </div>
     </div>
   {{/labels}}
 </div>

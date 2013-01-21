@@ -149,6 +149,19 @@ TT.Utils = (function () {
     });
   };
 
+  pub.objectLength = function (obj) {
+    return $.map(obj, function (n, i) { return i; }).length;
+  };
+
+  pub.objectSum = function (obj) {
+    var sum = 0;
+    $.each(obj, function (index, name) {
+      sum += (parseInt(name, 10) || 0);
+    });
+
+    return sum;
+  };
+
   pub.updateStoryState = function (id, state) {
     var existingState = pub.getStoryState(id);
     state = pub.isObject(state) ? $.extend({}, existingState, state) : existingState;
