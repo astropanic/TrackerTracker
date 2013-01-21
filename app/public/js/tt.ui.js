@@ -510,6 +510,29 @@ TT.UI = (function () {
     return false;
   };
 
+  pub.showEpicDetails = function (e) {
+    if (!TT.Tooltip.isActive()) {
+      var data = {
+        name: $.trim($(this).siblings('.tag').text()),
+        details: []
+      };
+      $(this).find('.epic').each(function () {
+        if ($(this).data('stories')) {
+          data.details[data.details.length] = {
+            name: $(this).data('name'),
+            stories: $(this).data('stories'),
+            points: $(this).data('points')
+          };
+        }
+      });
+      TT.Tooltip.open({
+        target: this,
+        html: TT.View.render('epicDetails', data)
+      });
+    }
+    return false;
+  };
+
   pub.init = function () {
     var timeoutID;
     $('body').click(function (e) {

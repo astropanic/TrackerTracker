@@ -221,7 +221,6 @@ TT.Model = (function () {
 
     $.each(['unscheduled', 'unstarted', 'started', 'finished', 'rejected', 'delivered', 'accepted'], function (index, name) {
       var stories = TT.Utils.objectLength(label[name]);
-      window.console.log(stories);
       if (stories) {
         label.active = true;
       }

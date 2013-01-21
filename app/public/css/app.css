@@ -1039,9 +1039,14 @@ input.textfield.autocomplete {
 .epics .epic-scale {
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 1px;
+  cursor: pointer;
   float: left;
   margin: 1px 0 0 3px;
   padding: 2px;
+}
+
+.epics .epic-scale:hover {
+  border: 1px solid rgba(0, 0, 0, 0.3);
 }
 
 .epic {
@@ -1050,12 +1055,44 @@ input.textfield.autocomplete {
   width: 0;
 }
 
+/* Epic details */
+
+.epic-detail-unscheduled {
+  color: #ade9f8;
+}
+
+.epic-detail-unstarted {
+  color: #c0c0c0;
+}
+
+.epic-detail-started {
+  color: #f0e93e;
+}
+
+.epic-detail-finished {
+  color: #f0be66;
+}
+
+.epic-detail-delivered {
+  color: #c4e738;
+}
+
+.epic-detail-rejected {
+  color: #fbb;
+}
+
+.epic-detail-accepted {
+  color: #01cf01;
+}
+
+/* Epic chart */
+
 .epic-scale .unscheduled {
   background: #ade9f8;
 }
 
 .epic-scale .unstarted {
-  background: #c0c0c0;
+  background: #777;
 }
 
 .epic-scale .started {
@@ -1063,11 +1100,11 @@ input.textfield.autocomplete {
 }
 
 .epic-scale .finished {
-  background: #f0e93e;
+  background: #f0be66;
 }
 
 .epic-scale .delivered {
-  background: #f0e93e;
+  background: #94d126;
 }
 
 .epic-scale .rejected {

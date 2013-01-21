@@ -22,7 +22,7 @@ TT.Init = (function () {
       },
       afterTemplateRender: function () {
         $('.epic').each(function () {
-          var w = $(this).data('count') + $(this).data('points');
+          var w = $(this).data('stories') + $(this).data('points');
           $(this).width(w);
         });
       }
