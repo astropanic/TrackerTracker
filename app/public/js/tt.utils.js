@@ -42,6 +42,10 @@ TT.Utils = (function () {
     return obj === Object(obj);
   };
 
+  pub.isDomElement = function (obj) {
+    return !!(obj && obj.nodeType === 1);
+  };
+
   $.each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp'], function (index, type) {
     pub['is' + type] = function (obj) {
       return Object.prototype.toString.call(obj) === '[object ' + type + ']';

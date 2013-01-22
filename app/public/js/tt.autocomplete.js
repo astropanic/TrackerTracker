@@ -113,10 +113,15 @@ TT.Autocomplete = (function () {
   pub.onKeyUp = function (e) {
     if (TT.Utils.keyPressed(e, 'DOWN_ARROW')) {
       pub.setActive(getNextElement('nextAll', 'first'));
+      pub.input.val($('#autocomplete .active').data('value'));
     } else if (TT.Utils.keyPressed(e, 'UP_ARROW')) {
       pub.setActive(getNextElement('prevAll', 'last'));
+      pub.input.val($('#autocomplete .active').data('value'));
+    } else if (TT.Utils.keyPressed(e, 'RIGHT_ARROW')) {
+      pub.input.val($('#autocomplete .active').data('value'));
     } else if (TT.Utils.keyPressed(e, 'ENTER')) {
-      pub.apply($('#autocomplete .item.active'));
+      var active = $('#autocomplete .item.active');
+      pub.applyValue(active.length ? active : pub.input);
     } else if (TT.Utils.keyPressed(e, 'ESCAPE')) {
       pub.close();
     } else {
@@ -173,13 +178,18 @@ TT.Autocomplete = (function () {
     $('#autocomplete .list').scrollTop(top);
   };
 
-  pub.apply = function (element) {
-    element = element || this;
-    pub.input.val($(element).data('value')).blur();
+  pub.applyValue = function (element) {
+    element = TT.Utils.isDomElement(element) ? element : this;
+
+    var value = $(element).data('value');
+    if (value) {
+      pub.input.val(value);
+    }
+    value = pub.input.val();
     pub.close();
 
     if (pub.onApply) {
-      pub.onApply.apply(element);
+      pub.onApply.call(element, value);
     }
 
     return false;
