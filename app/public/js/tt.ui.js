@@ -341,6 +341,8 @@ TT.UI = (function () {
   pub.removeTagFromStory = function () {
     var story = getStoryFromContext(this);
     var label = $.trim($(this).closest('.tag').text());
+    TT.Model.Label.removeStory(label, story.id);
+    TT.Model.Label.recalculateTotals(label);
 
     var labels = TT.Model.Story.removeTag(story, label).labels;
     TT.Model.Story.saveLabels(story, labels);
@@ -361,9 +363,8 @@ TT.UI = (function () {
       target: $(this).closest('.labels'),
       noActive: true,
       showInput: true,
-      onApply: function () {
-        var label = $(this).data('value');
-        var labels = TT.Model.Story.addTag(story, label).labels;
+      onApply: function (label) {
+        var labels = TT.Model.Story.addTag(story, label.toLowerCase()).labels;
         TT.Model.Story.saveLabels(story, labels);
       }
     });

@@ -209,14 +209,31 @@ TT.Model = (function () {
   };
 
   pub.Label.removeStory = function (label, id) {
+    if (TT.Utils.isString(label)) {
+      label = pub.Label.get({ name: label });
+    }
+    if (!TT.Utils.isObject(label)) {
+      return {};
+    }
+
     $.each(['unscheduled', 'unstarted', 'started', 'finished', 'rejected', 'delivered', 'accepted'], function (index, name) {
-      delete label[name][id];
+      if (label[name] && TT.Utils.exists(label[name][id])) {
+        delete label[name][id];
+      }
     });
 
+    pub.Label.update({ name: label.name }, label);
     return label;
   };
 
   pub.Label.recalculateTotals = function (label) {
+    if (TT.Utils.isString(label)) {
+      label = pub.Label.get({ name: label });
+    }
+    if (!TT.Utils.isObject(label)) {
+      return {};
+    }
+
     label.active = false;
 
     $.each(['unscheduled', 'unstarted', 'started', 'finished', 'rejected', 'delivered', 'accepted'], function (index, name) {
@@ -398,6 +415,8 @@ TT.Model = (function () {
     pub.Story.update({ id: story.id }, { labels: labels });
     pub.Story.serverSave(story, { labels: labels });
     TT.View.redrawStory(story);
+    pub.Label.addStoryLabelsToEpics(story);
+    TT.View.drawColumnTemplates();
   };
 
   pub.Story.saveTitle = function (story, name, formatted_name) {
