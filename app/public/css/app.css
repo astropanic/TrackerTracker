@@ -990,7 +990,7 @@ input.textfield.autocomplete {
 
 /* Epics */
 
-.column-epics .column-bucket {
+#columns .column-labels .column-bucket {
   background: #fff;
 }
 

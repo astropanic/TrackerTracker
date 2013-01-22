@@ -13,7 +13,7 @@ TT.Init = (function () {
     // TODO: Allow creating & saving custom columns and layouts
 
     TT.Model.Column.add({
-      name: 'Epics',
+      name: 'Labels',
       active: false,
       sortable: false,
       template: function () {
