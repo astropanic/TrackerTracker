@@ -24,7 +24,7 @@ TT.Mock = (function () {
         {
           id: "12345",
           name: "Dummy Project",
-          labels: "green,red,blocked,passedqa",
+          labels: "green,red,blocked,passedqa,used_by_one_story,unused_label",
           memberships: {
             membership: [
               {
@@ -152,7 +152,7 @@ TT.Mock = (function () {
                 owned_by: 'Developer',
                 created_at: '2012/10/26 17:28:19 EDT',
                 updated_at: '2012/11/26 15:22:01 EST',
-                labels: 'green',
+                labels: 'green,used_by_one_story',
                 notes: {
                   note: [
                     {
@@ -298,6 +298,10 @@ function visibleStoriesWithoutOwner(name) {
   });
 
   return count;
+}
+
+function labelDisplayedAsActive(label) {
+  return !$('#columns .column-labels .tag:contains("' + label + '")').closest('.row').hasClass('inactive');
 }
 
 function getLabelsString(elements) {

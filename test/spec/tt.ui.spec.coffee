@@ -281,3 +281,34 @@ describe "UI interactions", ->
 
         it "should make the project stories visible in the main content area", ->
           expect(visibleStoriesWithProjectID(id)).not.toBe 0
+
+  describe "Labels Column", ->
+    tagName = "used_by_one_story"
+
+    say "I open the labels column", ->
+      beforeEach ->
+        $('#columnList .column-name:contains("Labels")').click()
+
+      it "should display the active and inactive labels", ->
+        expect(labelDisplayedAsActive('unused_label')).toBe false
+        expect(labelDisplayedAsActive(tagName)).toBe true
+
+      also "I remove a label from a story, making the label unused", ->
+        tagName = "used_by_one_story"
+        story = null
+
+        beforeEach ->
+          story = $('.story .tag:contains("' + tagName + '")').closest('.story')
+          story.find('.toggle-arrow').click()
+          story.find('.details .tag:contains("' + tagName + '") .delete').click()
+
+        it "should display the label as inactive in the labels column", ->
+          expect(labelDisplayedAsActive(tagName)).toBe false
+
+        xalso "I add the label back to the story, making the label used", ->
+          beforeEach ->
+            story.find('.details .labels.textfield').click()
+            $('#autocomplete .item:contains("' + tagName + '")').click()
+
+          it "should display the label as active in the labels column", ->
+            expect(labelDisplayedAsActive(tagName)).toBe true
