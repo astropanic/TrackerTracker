@@ -6,13 +6,13 @@ This is beta software. Use at your own risk. If you have any issues or feature r
 
 ## OS X Developer Install
 
-1. Install [Homebrew](http://mxcl.github.com/homebrew/)
-2. Install [NodeJS](http://nodejs.org/)
+1. Install **Homebrew**: [http://mxcl.github.com/homebrew/](http://mxcl.github.com/homebrew/)
+2. Install **NodeJS**: [http://nodejs.org/](http://nodejs.org/)
 3. Install **Redis**: `brew install redis`
 4. Install **Grunt**: `npm -g install grunt`
 5. Install **Testacular**: `npm -g install testacular`
 6. Install **TrackerTracker**: `git clone git@github.com:intentmedia/TrackerTracker.git`
-7. Install NPM packages (from the cloned repo directory): `npm install`
+7. Install **NPM packages**: `cd TrackerTracker && npm install`
 
 ### Running the app
 
@@ -23,7 +23,7 @@ cd app
 node app
 ```
 
-### Running tests
+### Running the Jasmine test suite manually
 
 Assumes you have Chrome, Safari, and Firefox installed:
 
@@ -48,7 +48,7 @@ cd TrackerTracker
 grunt watch
 ```
 
-## Ubuntu Install
+## Ubuntu Server Install
 
 ```sh
 aptitude update
