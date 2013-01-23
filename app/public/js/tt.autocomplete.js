@@ -3,11 +3,14 @@ TT.Autocomplete = (function () {
 
   var pub = {};
 
-  pub.MAX_HEIGHT = 240;
+  pub.defaults = {
+    closeOnApply: true,
+    maxHeight: 240
+  };
+  pub.options = {};
 
   pub.target = null;
   pub.input = null;
-  pub.onApply = null;
   pub.hasMouse = false;
   pub.closeOnLeave = false;
 
@@ -22,9 +25,10 @@ TT.Autocomplete = (function () {
   pub.open = function (options) {
     pub.close();
 
+    pub.options = $.extend({}, pub.defaults, options);
+
     pub.hasMouse = false;
     pub.closeOnLeave = false;
-    pub.onApply = options.onApply;
 
     var data = {
       className: options.className,
@@ -139,7 +143,7 @@ TT.Autocomplete = (function () {
       width: pub.target.outerWidth() - 2
     }, customCSS || {}));
 
-    $autocomplete.find('.list').css({ maxHeight: pub.MAX_HEIGHT });
+    $autocomplete.find('.list').css({ maxHeight: pub.options.maxHeight });
 
     $('#autocomplete-input').css({
       width: $('#autocomplete').outerWidth() - 22
@@ -186,10 +190,13 @@ TT.Autocomplete = (function () {
       pub.input.val(value);
     }
     value = pub.input.val();
-    pub.close();
 
-    if (pub.onApply) {
-      pub.onApply.call(element, value);
+    if (pub.options.onApply) {
+      pub.options.onApply.call(element, value);
+    }
+
+    if (pub.options.closeOnApply) {
+      pub.close();
     }
 
     return false;
