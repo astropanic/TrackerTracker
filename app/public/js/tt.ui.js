@@ -39,6 +39,7 @@ TT.UI = (function () {
     var name = $.trim($(this).closest('.column-title').text());
     $(this).closest('.column').empty().remove();
     TT.Model.Layout.update({ name: name }, { active: false });
+    TT.Model.Layout.clientSave();
     TT.View.updateColumnDimensions();
     TT.View.drawColumnListNav();
     TT.View.refreshColumnStoryCount();
