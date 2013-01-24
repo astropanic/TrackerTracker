@@ -17,7 +17,7 @@ describe "UI interactions", ->
       also "I update the token", ->
         beforeEach ->
           $('#pivotal-token-input').val(mockPivotalToken)
-          $('#account-settings .form-action input').click()
+          $('#account-settings .form-action a.action').click()
 
         it "should save the token", ->
           expect($.cookie('pivotalToken')).toBe mockPivotalToken
@@ -284,6 +284,7 @@ describe "UI interactions", ->
 
   describe "Labels Column", ->
     tagName = "used_by_one_story"
+    story = null
 
     say "I open the labels column", ->
       beforeEach ->
@@ -294,9 +295,6 @@ describe "UI interactions", ->
         expect(labelDisplayedAsActive(tagName)).toBe true
 
       also "I remove a label from a story, making the label unused", ->
-        tagName = "used_by_one_story"
-        story = null
-
         beforeEach ->
           story = $('.story .tag:contains("' + tagName + '")').closest('.story')
           story.find('.toggle-arrow').click()

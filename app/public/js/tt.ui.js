@@ -12,6 +12,22 @@ TT.UI = (function () {
     return TT.Model.Story.get({ id: id });
   }
 
+  pub.openResetDialog = function () {
+    TT.View.drawResetDialog();
+
+    return false;
+  };
+
+  pub.reset = function () {
+    TT.Dialog.close();
+    TT.Utils.clearLocalStorage();
+    $.cookie('pivotalToken', null);
+    $.cookie('pivotalUsername', null);
+    TT.Init.init();
+
+    return false;
+  };
+
   pub.selectProject = function () {
     $(this).toggleClass('inactive');
     TT.View.drawStories();

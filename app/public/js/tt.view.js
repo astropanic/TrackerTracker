@@ -237,6 +237,10 @@ TT.View = (function () {
     return pub.attach(html, 'body');
   };
 
+  pub.drawResetDialog = function () {
+    TT.Dialog.open(pub.render('resetDialog'));
+  };
+
   pub.drawAccountSettingsForm = function () {
     TT.Dialog.open(pub.render('accountSettings'));
 

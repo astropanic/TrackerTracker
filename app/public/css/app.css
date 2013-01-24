@@ -188,31 +188,39 @@ body.ajaxRunning #logo h1 {
   padding: 28px 30px;
 }
 
-#account-settings h3 {
+.modal-dialog h3 {
   font: bold 20px/20px Helvetica, sans-serif;
   margin: 0 0 16px;
 }
 
-#account-settings .form-input {
+.modal-dialog .form-input {
   margin: 12px 0;
 }
 
-#account-settings label {
+.modal-dialog .form-action {
+  margin: 18px 0 0;
+}
+
+.modal-dialog .p {
+  margin: 12px 0;
+}
+
+.modal-dialog label {
   margin: 3px 0;
 }
 
-#account-settings input.textfield {
+.modal-dialog input.textfield {
   width: 380px;
 }
 
-#account-settings .cancel {
+.modal-dialog .cancel {
   color: #999;
   display: inline-block;
   font-weight: normal;
   margin-left: 10px;
 }
 
-#account-settings .cancel:hover {
+.modal-dialog .cancel:hover {
   color: #333;
   text-decoration: underline;
 }

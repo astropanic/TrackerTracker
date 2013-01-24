@@ -63,6 +63,10 @@ TT.Utils = (function () {
     return arr;
   };
 
+  function localStorageWarning() {
+    TT.View.message('This browser does not support localStorage. You should use the latest version of Chrome, Firefox, or Safari.');
+  }
+
   pub.localStorage = function (key, value) {
     try {
       if (window.localStorage) {
@@ -82,7 +86,23 @@ TT.Utils = (function () {
         return window.localStorage[key];
       }
     } catch (e) {
-      TT.View.message('This browser does not support localStorage. You should use the latest version of Chrome, Firefox, or Safari.');
+      localStorageWarning();
+    }
+  };
+
+  pub.clearLocalStorage = function () {
+    try {
+      if (window.localStorage) {
+        // need to iterate in reverse since window.localStorage.length changes after removing an item
+        for (var i = window.localStorage.length; i > 0; i--) {
+          var key = window.localStorage.key(i);
+          if (key.indexOf('TT.') === 0) {
+            window.localStorage.removeItem(key);
+          }
+        }
+      }
+    } catch (e) {
+      localStorageWarning();
     }
   };
 
