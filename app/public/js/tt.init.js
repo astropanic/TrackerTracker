@@ -399,6 +399,14 @@ TT.Init = (function () {
     });
   };
 
+  pub.setUpdateInterval = function () {
+    setInterval(function () {
+      if ($.cookie('pivotalToken')) {
+        pub.requestProjectsAndIterations();
+      }
+    }, 1000 * 60 * 5);
+  };
+
   pub.init = function () {
     if (pub.firstRun) {
       TT.View.drawPageLayout();
@@ -424,6 +432,7 @@ TT.Init = (function () {
       TT.DragAndDrop.init();
       TT.Search.init();
       TT.UI.init();
+      pub.setUpdateInterval();
     }
 
     if ($.cookie('pivotalToken')) {
