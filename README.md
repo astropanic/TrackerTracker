@@ -1,10 +1,48 @@
 # TrackerTracker
 
-Multi-project Scrum UI for Pivotal Tracker.
+Multi-project Scrum UI for [Pivotal Tracker](http://www.pivotaltracker.com).
 
-This is beta software. Use at your own risk. If you have any issues or feature requests, please let us know by [opening an issue](http://github.com/intentmedia/TrackerTracker/issues).
+![Screenshot](http://i.imgur.com/01xTYQx.png)
 
-## OS X Developer Install
+## Features
+
+* Simultaneously view all projects current iteration and backlog
+* Scrum-like UI
+* Search across projects
+* Filter down using any combination of labels, users, and searches
+* All labels for all projects are displayed and have epic-like mini progress charts
+* Columns can be rearranged
+* Labels, column order, and selected projects survive browser restart
+* Enter your Pivotal API token and user name and off you go
+* Most actions are supported: update story descriptions, add notes, drag them to different columns to update their status
+* It's pretty easy to write custom columns and filters
+
+## Who Is This For?
+
+Companies like [a particular technology startup](http://www.intentmedia.com/) that use Pivotal Tracker and have multiple small projects going at once, but no good way to visualize and track progress across them all.
+
+## Project Status
+
+This is beta software, use at your own risk. If you have any issues or feature requests, we would love to know, please [open an issue](http://github.com/intentmedia/TrackerTracker/issues). Contributions and pull requests are also very welcome.
+
+## Installation
+
+### Ubuntu Server Install
+
+```sh
+aptitude update
+aptitude install build-essential redis-server git-core nodejs npm
+npm -g install grunt
+npm -g install forever
+git clone git@github.com:intentmedia/TrackerTracker.git
+cd TrackerTracker
+npm install
+grunt
+cd app
+forever start -l ~/forever.log -o ~/out.log -e ~/err.log app.js
+```
+
+### OS X Developer Install
 
 1. Install **Homebrew**: [http://mxcl.github.com/homebrew/](http://mxcl.github.com/homebrew/)
 2. Install **NodeJS**: [http://nodejs.org/](http://nodejs.org/)
@@ -14,7 +52,7 @@ This is beta software. Use at your own risk. If you have any issues or feature r
 6. Install **TrackerTracker**: `git clone git@github.com:intentmedia/TrackerTracker.git`
 7. Install **NPM packages**: `cd TrackerTracker && npm install`
 
-### Running the app
+#### Running the app
 
 ```sh
 cd TrackerTracker
@@ -23,7 +61,7 @@ cd app
 node app
 ```
 
-### Running the Jasmine test suite manually
+#### Running the Jasmine test suite manually
 
 Assumes you have Chrome, Safari, and Firefox installed:
 
@@ -32,7 +70,7 @@ cd TrackerTracker/test
 testacular run
 ```
 
-### Development
+#### Development
 
 1. Have Testacular auto-run on file changes
 
@@ -48,16 +86,7 @@ cd TrackerTracker
 grunt watch
 ```
 
-## Ubuntu Server Install
+## Browser Support
 
-```sh
-aptitude update
-aptitude install build-essential redis-server git-core nodejs npm
-npm -g install grunt
-npm -g install forever
-git clone git@github.com:intentmedia/TrackerTracker.git
-cd TrackerTracker
-grunt
-cd app
-forever start -l ~/forever.log -o ~/out.log -e ~/err.log app.js
-```
+TrackerTracker is tested and built for Chrome, Safari, and Firefox stable. It seems fine in IE 9, but broken in IE 10. (Progress!) Fluid's localStorage implementation doesn't survive a restart, so for now Fluid should be considered unsupported.
+
