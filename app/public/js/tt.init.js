@@ -417,6 +417,7 @@ TT.Init = (function () {
         }
       });
       $('#filters .filter').empty().remove();
+      $('#projects .projects').empty().remove();
     }
 
     pub.preloadColumns();
