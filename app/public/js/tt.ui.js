@@ -134,13 +134,13 @@ TT.UI = (function () {
   };
 
   pub.toggleFilter = function (e) {
-    if (TT.Utils.keyPressed(e, 'MIDDLE_CLICK')) {
+    var id = $(this).closest('.filter').data('filter-id');
+    var filter = TT.Model.Filter.get({ id: id });
+
+    if (TT.Utils.keyPressed(e, 'MIDDLE_CLICK') && filter.sticky !== true) {
       $(this).find('span.close').click();
       return false;
     }
-
-    var id = $(this).closest('.filter').data('filter-id');
-    var filter = TT.Model.Filter.get({ id: id });
 
     TT.Model.Filter.update({ id: id }, { active: !filter.active });
     $(this).toggleClass('inactive');
