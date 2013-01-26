@@ -74,7 +74,7 @@ TT.Init = (function () {
 
     TT.Model.Column.add({
       name: 'Finished',
-      active: false,
+      active: true,
       filter: function (story) {
         return story.current_state === 'finished';
       },
@@ -89,7 +89,7 @@ TT.Init = (function () {
 
     TT.Model.Column.add({
       name: 'In QA',
-      active: true,
+      active: false,
       filter: function (story) {
         return story.current_state === 'finished' && !TT.Model.Story.hasTag(story, 'passedqa');
       },
@@ -108,7 +108,7 @@ TT.Init = (function () {
 
     TT.Model.Column.add({
       name: 'Passed QA',
-      active: true,
+      active: false,
       filter: function (story) {
         return story.current_state === 'finished' && TT.Model.Story.hasTag(story, 'passedqa');
       },
