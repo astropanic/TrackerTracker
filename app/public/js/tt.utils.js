@@ -94,7 +94,7 @@ TT.Utils = (function () {
     try {
       if (window.localStorage) {
         // need to iterate in reverse since window.localStorage.length changes after removing an item
-        for (var i = window.localStorage.length; i > 0; i--) {
+        for (var i = window.localStorage.length - 1; i >= 0; i--) {
           var key = window.localStorage.key(i);
           if (key.indexOf('TT.') === 0) {
             window.localStorage.removeItem(key);
