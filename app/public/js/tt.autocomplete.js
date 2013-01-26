@@ -124,8 +124,8 @@ TT.Autocomplete = (function () {
     } else if (TT.Utils.keyPressed(e, 'RIGHT_ARROW')) {
       pub.input.val($('#autocomplete .active').data('value'));
     } else if (TT.Utils.keyPressed(e, 'ENTER')) {
-      var active = $('#autocomplete .item.active');
-      pub.applyValue(active.length ? active : pub.input);
+      var active = $('#autocomplete .active');
+      pub.applyValue(active.length ? active[0] : pub.input);
     } else if (TT.Utils.keyPressed(e, 'ESCAPE')) {
       pub.close();
     } else {
