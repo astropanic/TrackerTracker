@@ -175,7 +175,7 @@ TT.Init = (function () {
       name: 'Current',
       active: false,
       filter: function (story) {
-        return story.current_iteration === true;
+        return story.current_iteration === 0;
       }
     });
 
@@ -183,7 +183,7 @@ TT.Init = (function () {
       name: 'Backlog',
       active: false,
       filter: function (story) {
-        return story.current_iteration === false;
+        return story.current_iteration !== 0;
       }
     });
     */
@@ -218,7 +218,20 @@ TT.Init = (function () {
         sticky: true,
         pure: true,
         fn: function (story) {
-          return story.current_iteration === true;
+          return story.current_iteration === 0;
+        }
+      });
+    }
+
+    if (TT.Model.Filter.isEmpty({ name: 'Next Iteration' })) {
+      TT.Model.Filter.add({
+        name: 'Next Iteration',
+        type: 'iteration',
+        active: false,
+        sticky: true,
+        pure: true,
+        fn: function (story) {
+          return story.current_iteration === 1;
         }
       });
     }
@@ -386,16 +399,16 @@ TT.Init = (function () {
 
   pub.addIterations = function (iterations) {
     // This assumes first iteration is always current.
-    var current_iteration = true;
+    var normalized_iteration = 0;
     $.each(TT.Utils.normalizePivotalArray(iterations), function (index, iteration) {
       if (iteration.stories && iteration.stories.story) {
         var stories = TT.Utils.normalizePivotalArray(iteration.stories.story);
         $.each(stories, function (index, story) {
-          story.current_iteration = current_iteration;
+          story.current_iteration = normalized_iteration;
           TT.Model.Story.overwrite(story);
         });
       }
-      current_iteration = false;
+      normalized_iteration++;
     });
   };
 
