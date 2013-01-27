@@ -25,6 +25,10 @@ Companies like [a particular technology startup](http://www.intentmedia.com/) th
 
 This is beta software, use at your own risk. If you have any issues or feature requests, we would love to know, please [open an issue](http://github.com/intentmedia/TrackerTracker/issues). Contributions and pull requests are also very welcome.
 
+## Demo
+
+A demo install is up and running at [http://trackertracker.glomerate.com/](http://trackertracker.glomerate.com/). This is running a version that doesn't include a redis cache and doesn't log API tokens on the server. The only thing exposed to the server are project IDs, which are useless without proper access to them. This is for demo purposes only - I can't guarantee 100% uptime.
+
 ## Installation
 
 ### Ubuntu Server Install
