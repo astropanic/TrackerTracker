@@ -44,21 +44,19 @@ TT.UI = (function () {
 
   pub.toggleColumnSelector = function () {
     var name = $(this).data('name');
-    TT.Model.Column.update({ name: name }, { active: !$(this).hasClass('active') });
-    TT.Model.Layout.update({ name: name }, { active: !$(this).hasClass('active') });
-    TT.View.refreshLayout();
+
+    if ($(this).hasClass('active')) {
+      TT.View.removeColumn(name);
+    } else {
+      TT.View.addColumn(name);
+    }
 
     return false;
   };
 
   pub.removeColumn = function () {
-    var name = $.trim($(this).closest('.column-title').text());
-    $(this).closest('.column').empty().remove();
-    TT.Model.Layout.update({ name: name }, { active: false });
-    TT.Model.Layout.clientSave();
-    TT.View.updateColumnDimensions();
-    TT.View.drawColumnListNav();
-    TT.View.refreshColumnStoryCount();
+    var name = $(this).closest('.column').data('name');
+    TT.View.removeColumn(name);
 
     return false;
   };

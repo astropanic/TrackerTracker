@@ -58,7 +58,7 @@ TT.DragAndDrop = (function () {
   };
 
   pub.initStorySorting = function () {
-    $('.sortable-column').sortable({
+    $('.sortable-column').not('.ui-sortable').sortable({
       cancel: '.expanded-story',
       connectWith: '.sortable-column',
       containment: '#content',
@@ -107,7 +107,7 @@ TT.DragAndDrop = (function () {
     });
     */
 
-    $('#columns').sortable({
+    $('#columns').not('.ui-sortable').sortable({
       distance: 10,
       handle: '.column-title',
       tolerance: 'pointer',

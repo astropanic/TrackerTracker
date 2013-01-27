@@ -61,18 +61,61 @@ TT.View = (function () {
     $('#columns .column').remove();
     TT.Model.Layout.each(function (index, column) {
       if (column.active) {
-        var actualColumn = TT.Model.Column.get({ name: column.name });
-        pub.drawColumn(actualColumn);
+        pub.drawColumn(column.name);
       }
     });
   };
 
-  pub.drawColumn = function (column) {
+  pub.drawColumn = function (name) {
+    $('#columns .column[data-name="' + name + '"]').remove();
+    var column = TT.Model.Column.get({ name: name });
     var html = pub.render('column', column);
-    var element = pub.attach(html, '#columns');
+    var element = pub.attachColumn(column, html);
     pub.drawColumnTemplate(column);
 
     return element;
+  };
+
+  pub.attachColumn = function (column, html) {
+    var activeColumns = TT.Model.Layout.find({ active: true });
+    if (activeColumns[0].name === column.name) {
+      return pub.attach(html, '#columns', 'prependTo');
+    }
+
+    var precedingColumn;
+    $.each(activeColumns, function (index, activeColumn) {
+      if (activeColumn.name === column.name) {
+        precedingColumn = $('#columns .column[data-name="' + activeColumns[index - 1].name + '"]')[0];
+      }
+    });
+    if (precedingColumn) {
+      return pub.attach(html, precedingColumn, 'insertAfter');
+    }
+
+    return pub.attach(html, '#columns');
+  };
+
+  pub.addColumn = function (name) {
+    TT.Model.Column.update({ name: name }, { active: true });
+    TT.Model.Layout.update({ name: name }, { active: true });
+    TT.Model.Layout.clientSave();
+    pub.drawColumn(name);
+    pub.drawStoriesInColumn(TT.Model.Column.get({ name: name }));
+    pub.updateColumnDimensions();
+    pub.drawColumnListNav();
+    TT.DragAndDrop.initStorySorting();
+    pub.refreshColumnStoryCount();
+    // pub.refreshLayout();
+  };
+
+  pub.removeColumn = function (name) {
+    $('#columns .column[data-name="' + name + '"]').remove();
+    TT.Model.Column.update({ name: name }, { active: false });
+    TT.Model.Layout.update({ name: name }, { active: false });
+    TT.Model.Layout.clientSave();
+    pub.updateColumnDimensions();
+    pub.drawColumnListNav();
+    pub.refreshColumnStoryCount();
   };
 
   pub.drawColumnTemplates = function () {
@@ -140,7 +183,6 @@ TT.View = (function () {
     pub.clearStories();
 
     TT.Model.Column.each(function (index, column) {
-      column.storyCount = 0;
       pub.drawStoriesInColumn(column);
     });
 
@@ -149,6 +191,7 @@ TT.View = (function () {
   };
 
   pub.drawStoriesInColumn = function (column) {
+    column.storyCount = 0;
     TT.Model.Story.each(function (index, story) {
       if (column.filter && column.filter(story) &&
         TT.Model.Project.isActive({ id: story.project_id }) &&
