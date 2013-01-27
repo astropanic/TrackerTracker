@@ -6,13 +6,13 @@ Multi-project Scrum UI for [Pivotal Tracker](http://www.pivotaltracker.com).
 
 ## Features
 
-* Simultaneously view all projects current iteration and backlog
-* Scrum-like UI
-* Search across projects
-* Filter down using any combination of labels, users, and searches
-* All labels for all projects are displayed and have epic-like mini progress charts
+* Simultaneously view and manage stories across multiple projects
+* Scrum-like UI displays one column per story state, including "In QA" and "Passed QA"
+* Search across all projects simultaneously
+* Quickly drill down using any combination of projects, labels, users, and searches
+* All labels for all projects are visible and have epic-like mini progress charts
 * Columns can be rearranged
-* Labels, column order, and selected projects survive browser restart
+* Labels, searches, column order, selected projects all survive browser restart
 * Enter your Pivotal API token and user name and off you go
 * Most actions are supported: update story descriptions, add notes, drag them to different columns to update their status
 * It's pretty easy to write custom columns and filters
@@ -23,11 +23,11 @@ Companies like [a particular technology startup](http://www.intentmedia.com/) th
 
 ## Project Status
 
-This is beta software, use at your own risk. If you have any issues or feature requests, we would love to know, please [open an issue](http://github.com/intentmedia/TrackerTracker/issues). Contributions and pull requests are also very welcome.
+This should be considered beta software, use at your own risk. If you have any issues or feature requests, we would love to know, please [open an issue](http://github.com/intentmedia/TrackerTracker/issues). Contributions and pull requests are also very welcome.
 
 ## Demo
 
-A demo install is up and running at [http://trackertracker.glomerate.com](http://trackertracker.glomerate.com). This is running a version that doesn't include a redis cache and doesn't log API tokens on the server. The only thing exposed to the server are project IDs, which are useless without proper access to them. This is for demo purposes only - I can't guarantee 100% uptime.
+A demo install is up and running at [http://trackertracker.glomerate.com](http://trackertracker.glomerate.com). API tokens are not logged by the server. The only thing exposed in the server logs are project IDs, which are useless without proper access to them.
 
 ## Installation
 
