@@ -43,7 +43,7 @@ TT.UI = (function () {
   };
 
   pub.toggleColumnSelector = function () {
-    var name = $.trim($(this).closest('.column-selector').find('.column-name').text());
+    var name = $(this).data('name');
     TT.Model.Column.update({ name: name }, { active: !$(this).hasClass('active') });
     TT.Model.Layout.update({ name: name }, { active: !$(this).hasClass('active') });
     TT.View.refreshLayout();

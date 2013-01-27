@@ -71,7 +71,7 @@ TT.DragAndDrop = (function () {
   };
 
   pub.layoutSortUpdate = function (element) {
-    var name = element.data('column-name');
+    var name = element.data('name');
     var column = TT.Model.Layout.get({ name: name });
     var oldIndex = TT.Model.Layout.index({ name: name });
     var newIndex = oldIndex + (column.indexStop - column.indexStart);
@@ -113,11 +113,11 @@ TT.DragAndDrop = (function () {
       tolerance: 'pointer',
       start: function (event, ui) {
         ui.placeholder.width(ui.helper.width() - 4);
-        var name = ui.item.data('column-name');
+        var name = ui.item.data('name');
         TT.Model.Layout.update({ name: name }, { indexStart: ui.item.index() });
       },
       stop: function (event, ui) {
-        var name = ui.item.data('column-name');
+        var name = ui.item.data('name');
         TT.Model.Layout.update({ name: name }, { indexStop: ui.item.index() });
         pub.layoutSortUpdate(ui.item);
         TT.View.refreshLayout();

@@ -288,7 +288,7 @@ describe "UI interactions", ->
 
     say "I open the labels column", ->
       beforeEach ->
-        $('#columnList .column-name:contains("Labels")').click()
+        $('#columnList .column-selector[data-name="Labels"]').click()
 
       it "should display the active and inactive labels", ->
         expect(labelDisplayedAsActive('unused_label')).toBe false
