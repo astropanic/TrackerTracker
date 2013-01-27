@@ -3,10 +3,8 @@ html
   head
     meta(charset='utf-8')
     title TrackerTracker
-
-    link(href='/css/bundle/tt.css', rel='stylesheet', type='text/css')
-    script(src='/js/bundle/lib.js')
-    script(src='/js/bundle/hoganTemplates.js')
-    script(src='/js/bundle/tt.js')
-
+    link(href='/css/bundle/tt.css?' + timestamp, rel='stylesheet', type='text/css')
+    script(src='/js/bundle/lib.js?' + timestamp)
+    script(src='/js/bundle/hoganTemplates.js?' + timestamp)
+    script(src='/js/bundle/tt.js?' + timestamp)
   body
