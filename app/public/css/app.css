@@ -325,10 +325,11 @@ body.ajaxRunning #logo h1 {
 
 #search {
   float: right;
-  padding: 11px 12px 0 12px;
+  padding: 10px 12px 3px 12px;
 }
 
 #searchInput {
+  display: inline-block;
   font: normal 18px/18px Helvetica, sans-serif;
   width: 200px;
 }
@@ -435,7 +436,7 @@ body.ajaxRunning #logo h1 {
   display: inline-block;
   font: bold 11px/31px Helvetica, sans-serif;
   height: 30px;
-  margin: 0 1px 0 0;
+  margin: 0 1px 1px 0;
   padding: 0 12px;
   text-transform: uppercase;
 }
