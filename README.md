@@ -27,7 +27,7 @@ This is beta software, use at your own risk. If you have any issues or feature r
 
 ## Demo
 
-A demo install is up and running at [http://trackertracker.glomerate.com/](http://trackertracker.glomerate.com/). This is running a version that doesn't include a redis cache and doesn't log API tokens on the server. The only thing exposed to the server are project IDs, which are useless without proper access to them. This is for demo purposes only - I can't guarantee 100% uptime.
+A demo install is up and running at [http://trackertracker.glomerate.com](http://trackertracker.glomerate.com). This is running a version that doesn't include a redis cache and doesn't log API tokens on the server. The only thing exposed to the server are project IDs, which are useless without proper access to them. This is for demo purposes only - I can't guarantee 100% uptime.
 
 ## Installation
 
