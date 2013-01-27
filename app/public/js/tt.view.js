@@ -51,7 +51,7 @@ TT.View = (function () {
   };
 
   pub.drawColumnListNav = function () {
-    $('#columnList .column-list-nav').empty().remove();
+    $('#columnList .column-list-nav').remove();
     var html = pub.render('columnListNav', { columns: TT.Model.Layout.get() });
 
     return pub.attach(html, '#columnList');
@@ -95,27 +95,30 @@ TT.View = (function () {
     return pub.attach(html, '#columns');
   };
 
-  pub.addColumn = function (name) {
-    TT.Model.Column.update({ name: name }, { active: true });
-    TT.Model.Layout.update({ name: name }, { active: true });
+  pub.setColumnState = function (name, state) {
+    TT.Model.Column.update({ name: name }, { active: state });
+    TT.Model.Layout.update({ name: name }, { active: state });
     TT.Model.Layout.clientSave();
+  };
+
+  pub.addColumn = function (name) {
+    pub.setColumnState(name, true);
     pub.drawColumn(name);
     pub.drawStoriesInColumn(TT.Model.Column.get({ name: name }));
-    pub.updateColumnDimensions();
-    pub.drawColumnListNav();
-    TT.DragAndDrop.initStorySorting();
-    pub.refreshColumnStoryCount();
-    // pub.refreshLayout();
+    pub.afterColumnUpdate();
   };
 
   pub.removeColumn = function (name) {
     $('#columns .column[data-name="' + name + '"]').remove();
-    TT.Model.Column.update({ name: name }, { active: false });
-    TT.Model.Layout.update({ name: name }, { active: false });
-    TT.Model.Layout.clientSave();
+    pub.setColumnState(name, false);
+    pub.afterColumnUpdate();
+  };
+
+  pub.afterColumnUpdate = function () {
     pub.updateColumnDimensions();
     pub.drawColumnListNav();
     pub.refreshColumnStoryCount();
+    TT.DragAndDrop.initStorySorting();
   };
 
   pub.drawColumnTemplates = function () {
@@ -141,17 +144,9 @@ TT.View = (function () {
     }
   };
 
-  pub.refreshColumns = function () {
-    $('#columns .column').empty().remove();
-    pub.drawColumns();
-    pub.updateColumnDimensions();
-    pub.drawStories();
-    TT.DragAndDrop.initStorySorting();
-  };
-
   pub.refreshColumnStoryCount = function () {
     TT.Model.Column.each(function (index, column) {
-      var $counter = $('#columnList .column-selector:contains("' + column.name + '") span.column-story-count');
+      var $counter = $('#columnList .column-selector[data-name="' + column.name + '"] span.column-story-count');
       if (column.storyCount === 0) {
         $counter.hide();
       } else {
@@ -161,21 +156,19 @@ TT.View = (function () {
   };
 
   pub.refreshLayout = function () {
-    $('.column-list-nav').empty().remove();
-    pub.drawColumnListNav();
-    TT.Model.Layout.clientSave();
-    pub.refreshColumns();
+    pub.drawColumns();
+    pub.drawStories();
   };
 
   pub.drawProjectList = function (projects) {
-    $('#projects .projects').empty().remove();
+    $('#projects .projects').remove();
     var html = pub.render('projectList', { projects: projects });
 
     return pub.attach(html, '#projects');
   };
 
   pub.clearStories = function () {
-    $('.story').empty().remove();
+    $('.story').remove();
   };
 
   pub.drawStories = function () {
@@ -186,7 +179,7 @@ TT.View = (function () {
       pub.drawStoriesInColumn(column);
     });
 
-    pub.refreshColumnStoryCount();
+    pub.afterColumnUpdate();
     pub.drawColumnTemplates();
   };
 

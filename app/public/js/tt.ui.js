@@ -79,7 +79,7 @@ TT.UI = (function () {
       TT.Model.Story.update({ id: story.data('id') }, { expanded: true });
     } else {
       TT.Model.Story.update({ id: story.data('id') }, { expanded: false });
-      story.find('.details').empty().remove();
+      story.find('.details').remove();
       // TODO: Clean this up
       TT.Utils.updateStoryState(id, {
         name: null,
@@ -152,7 +152,7 @@ TT.UI = (function () {
     var $filter = $(this).closest('.filter');
     var id = $filter.data('filter-id');
     TT.Model.Filter.remove({ id: id });
-    $filter.empty().remove();
+    $filter.remove();
     TT.View.drawStories();
     TT.Model.Filter.clientSave();
 

@@ -429,8 +429,8 @@ TT.Init = (function () {
           model.flush();
         }
       });
-      $('#filters .filter').empty().remove();
-      $('#projects .projects').empty().remove();
+      $('#filters .filter').remove();
+      $('#projects .projects').remove();
     }
 
     pub.preloadColumns();

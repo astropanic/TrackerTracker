@@ -120,6 +120,7 @@ TT.DragAndDrop = (function () {
         var name = ui.item.data('name');
         TT.Model.Layout.update({ name: name }, { indexStop: ui.item.index() });
         pub.layoutSortUpdate(ui.item);
+        TT.Model.Layout.clientSave();
         TT.View.refreshLayout();
       }
     });
