@@ -19,7 +19,7 @@ TT.Mock = (function () {
   var pub = {};
 
   pub.projects = function () {
-    return JSON.stringify({
+    return {
       project: [
         {
           id: "12345",
@@ -76,11 +76,11 @@ TT.Mock = (function () {
           }
         }
       ]
-    });
+    };
   };
 
   pub.iterations_12345 = function () {
-    return JSON.stringify({
+    return {
       iteration: [
         {
           id: '1',
@@ -192,13 +192,12 @@ TT.Mock = (function () {
             ]
           }
         }
-      ],
-      timestamp: 1356746505004
-    });
+      ]
+    };
   };
 
   pub.iterations_123456 = function () {
-    return JSON.stringify({
+    return {
       iteration: [
         {
           id: '1',
@@ -236,9 +235,8 @@ TT.Mock = (function () {
             ]
           }
         }
-      ],
-      timestamp: 1356746505004
-    });
+      ]
+    };
   };
 
   pub.serverResponse = function (url, data) {

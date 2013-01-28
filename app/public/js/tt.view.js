@@ -293,11 +293,10 @@ TT.View = (function () {
             url: '/projects',
             success: function (projects) {
               $(me).removeClass('updating');
-              var parsedProjects = JSON.parse(projects);
-              if (parsedProjects) {
+              if (projects && projects.project) {
                 $(me).addClass('valid').removeClass('invalid');
                 TT.Utils.localStorage('projects', projects);
-                TT.Init.addProjects(parsedProjects.project);
+                TT.Init.addProjects(projects.project);
               } else {
                 $(me).addClass('invalid').removeClass('valid');
               }

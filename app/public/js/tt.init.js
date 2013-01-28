@@ -334,7 +334,6 @@ TT.Init = (function () {
 
   pub.requestProjectsAndIterations = function () {
     function useProjectData(projects) {
-      projects = JSON.parse(projects).project;
       TT.Ajax.end();
       pub.addProjects(projects);
       TT.View.drawProjectList(projects);
@@ -346,13 +345,13 @@ TT.Init = (function () {
     var projects = TT.Utils.localStorage('projects');
 
     if (projects) {
-      useProjectData(projects);
+      useProjectData(JSON.parse(projects).project);
     } else {
       $.ajax({
         url: '/projects',
         success: function (projects) {
           TT.Utils.localStorage('projects', projects);
-          useProjectData(projects);
+          useProjectData(projects.project);
         }
       });
     }
@@ -365,9 +364,8 @@ TT.Init = (function () {
         url: '/iterations',
         data: { projectID: project.id },
         success: function (iterations) {
-          iterations = JSON.parse(iterations).iteration;
-          if (iterations) {
-            pub.addIterations(iterations);
+          if (iterations && iterations.iteration) {
+            pub.addIterations(iterations.iteration);
             TT.View.drawStories();
           } else {
             var note = 'Invalid response from the server. Did you enter the right token?';
