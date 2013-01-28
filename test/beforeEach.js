@@ -74,6 +74,33 @@ TT.Mock = (function () {
               }
             ]
           }
+        },
+        {
+          id: "1234567",
+          name: "Project Without Labels",
+          labels: {},
+          memberships: {
+            membership: [
+              {
+                id: "100",
+                person: {
+                  email: "nobody@example.com",
+                  name: "Product Manager",
+                  initials: "PM"
+                },
+                role: "Owner"
+              },
+              {
+                id: "101",
+                person: {
+                  email: "nobody@example.com",
+                  name: "Developer",
+                  initials: "DVL"
+                },
+                role: "Owner"
+              }
+            ]
+          }
         }
       ]
     };
