@@ -93,3 +93,13 @@ grunt watch
 
 TrackerTracker is tested and built for Chrome, Safari, and Firefox stable. It seems fine in IE 9, but broken in IE 10. (Progress!) Fluid's localStorage implementation doesn't survive a restart, so for now Fluid should be considered unsupported.
 
+## Authors
+
+* Andrew Childs ([@andrewchilds](http://twitter.com/andrewchilds))
+* Adrian Cretu-Barbul ([@adriancb](http://twitter.com/adriancb))
+
+## License
+
+Copyright 2013 Andrew Childs
+
+Licensed under the MIT License.
