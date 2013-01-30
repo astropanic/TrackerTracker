@@ -117,23 +117,79 @@ a.action:hover {
 
 #logo {
   background: #3b9ac7;
-  height: 38px;
+  height: 35px;
 }
 
 #logo h1 {
   color: #fff;
   font: normal 18px/18px Helvetica, sans-serif;
-  left: 12px;
+  left: 14px;
   letter-spacing: 6px;
   padding-right: 20px;
   position: absolute;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
   text-transform: uppercase;
-  top: 11px;
+  top: 8px;
 }
 
 body.ajaxRunning #logo h1 {
   background: url(/images/loading.gif) no-repeat center right transparent;
+}
+
+#project-update {
+  background: url(/images/refresh.png) no-repeat scroll top left transparent;
+  cursor: pointer;
+  display: inline-block;
+  height: 16px;
+  left: -4px;
+  opacity: 0.7;
+  position: relative;
+  top: 2px;
+  width: 16px;
+}
+
+#project-update:hover {
+  opacity: 1;
+}
+
+/* Project List */
+
+#projects {
+  background: #3b9ac7;
+}
+
+.projects {
+  height: 26px;
+  overflow-y: hidden;
+  padding: 0 14px;
+}
+
+.project {
+  background: #eee;
+  border: none;
+  border-radius: 3px 3px 0 0;
+  color: #111;
+  cursor: pointer;
+  display: inline-block;
+  float: left;
+  font-weight: bold;
+  margin: 0 3px 0 0;
+  overflow-x: hidden;
+  padding: 7px 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-transition: max-width 100ms;
+  -moz-transition: max-width 100ms;
+}
+
+.project.inactive {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.project.inactive:hover {
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
 }
 
 /* Account Nav */
@@ -141,7 +197,7 @@ body.ajaxRunning #logo h1 {
 #account {
   position: absolute;
   right: 22px;
-  top: 13px;
+  top: 11px;
 }
 
 #account a {
@@ -268,57 +324,6 @@ body.ajaxRunning #logo h1 {
 
 #messages .message:hover span.close {
   background: url(/images/close_hover.png) no-repeat scroll center right transparent;
-}
-
-/* Project List */
-
-#projects {
-  left: 300px;
-  position: absolute;
-  top: 11px;
-}
-
-.projects {
-  height: 30px;
-  overflow-y: hidden;
-  padding-right: 40px;
-}
-
-.project {
-  background: #eee;
-  border: none;
-  color: #111;
-  cursor: pointer;
-  display: inline-block;
-  font-weight: bold;
-  margin: 0 1px 0 0;
-  padding: 7px 14px;
-  border-radius: 3px 3px 0 0;
-}
-
-.project.inactive {
-  background: transparent;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.project.inactive:hover {
-  color: #fff;
-}
-
-#project-update {
-  background: url(/images/refresh.png) no-repeat scroll top left transparent;
-  cursor: pointer;
-  display: inline-block;
-  height: 16px;
-  left: 6px;
-  opacity: 0.7;
-  position: relative;
-  top: 0;
-  width: 16px;
-}
-
-#project-update:hover {
-  opacity: 1;
 }
 
 /* Search */
