@@ -65,6 +65,23 @@ TT.Search = (function () {
     });
   };
 
+  pub.getJiraProjects = function () {
+    TT.View.message('Searching for jira projects');
+    TT.Ajax.start();
+    $.ajax({
+      url: '/jiraProjects',
+      // data: { projectID: project.id, filter: term },
+      success: function (results) {
+        if (results) {
+          TT.View.message('Found results ' + results);
+        } else {
+          TT.View.message('No results found');
+        }
+        TT.Ajax.end();
+      }
+    });
+  };
+
   pub.submitSearch = function () {
     var search = $('#search input');
     var term = $.trim(search.val().toLowerCase());

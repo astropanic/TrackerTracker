@@ -18,6 +18,12 @@ TT.UI = (function () {
     return false;
   };
 
+  pub.openImportDialog = function () {
+    TT.View.drawImportDialog();
+
+    return false;
+  };
+
   pub.reset = function () {
     TT.Dialog.close();
     TT.Utils.clearLocalStorage();

@@ -33,6 +33,9 @@ app.get('/projects', routes.hasToken, routes.getProjects);
 app.get('/iterations', routes.hasToken, routes.getIterations);
 app.get('/stories', routes.hasToken, routes.getStories);
 
+app.get('/jiraProjects', routes.getJiraProjects);
+
+app.post('/addStory', routes.hasToken, routes.addStory);
 app.post('/updateStory', routes.hasToken, routes.updateStory);
 app.post('/addStoryComment', routes.hasToken, routes.addStoryComment);
 
