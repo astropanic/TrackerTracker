@@ -13,6 +13,13 @@ var JIRA_TO_PIVOTAL_STATE = {
   Rejected: 'rejected'
 }
 
+var JIRA_TO_PIVOTAL_TYPES = {
+  Story: 'feature',
+  Bug: 'bug',
+  Chore: 'chore',
+  Epic: 'chore'
+}
+
 exports.getJiraProjects = function (req, res) {
   var jira = new JiraApi('https', req.body.jiraHost, req.body.jiraPort, req.body.jiraUser, req.body.jiraPassword, '2');
   console.log(JSON.stringify(req.body));
@@ -25,22 +32,26 @@ exports.getJiraProjects = function (req, res) {
 exports.importJiraProject = function (req, res) {
   var jira = new JiraApi('https', req.body.jiraHost, req.body.jiraPort, req.body.jiraUser, req.body.jiraPassword, '2');
   console.log(JSON.stringify(req.body));
-  jira.searchJira('project=' + req.body.jiraProject, null, function (error, result) {
+  jira.searchJira('project=' + req.body.jiraProject, ['*all'], function (error, result) {
 
     if (result) {
       for (i = 0; i < result.issues.length; i++) { 
-        console.log(JSON.stringify(result.issues[i].fields, null, '  ')); 
-        console.log('Setting status to ' + JIRA_TO_PIVOTAL_STATE[result.issues[i].fields.status.name]);       
+        var jiraFields = result.issues[i].fields;  
+
+        // console.log(JSON.stringify(jiraFields, null, '  ')); 
+
         var storyData = {
-          name: result.issues[i].fields.summary,
-          estimate: "1",
-          description: result.issues[i].fields.description,
-          // story_type: "feature",
-          // requested_by: "John Whitfield",
+          name: jiraFields.summary,
+          estimate: jiraFields.customfield_10004 || "0",
+          description: jiraFields.description,
+          story_type: JIRA_TO_PIVOTAL_TYPES[jiraFields.issuetype.name],
+          // requested_by: jiraFields.reporter.name,
           // created_at: "2013/02/01 11:49:51 UTC",
           // updated_at: "2013/02/01 11:49:51 UTC"         
-          current_state: JIRA_TO_PIVOTAL_STATE[result.issues[i].fields.status.name]
-        };
+          current_state: JIRA_TO_PIVOTAL_STATE[jiraFields.status.name]
+        }
+        console.log(storyData);
+
         pivotal.addStory(req.body.pivotalProject, storyData, function (err, results) {
           console.log(JSON.stringify(err || results, null, '  '));
         });
