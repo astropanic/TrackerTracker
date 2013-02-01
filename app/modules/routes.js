@@ -4,6 +4,15 @@ var JiraApi = require('jira').JiraApi;
 var TWO_YEARS = 2 * 365 * 24 * 60 * 60 * 1000;
 var PIVOTAL_TOKEN_COOKIE = 'pivotalToken';
 
+var JIRA_TO_PIVOTAL_STATE = {
+  IceBox: 'unscheduled',
+  Started: 'started',
+  Finished: 'finished',
+  Delivered: 'delivered',
+  Accepted: 'accepted',
+  Rejected: 'rejected'
+}
+
 exports.getJiraProjects = function (req, res) {
   var jira = new JiraApi('https', req.body.jiraHost, req.body.jiraPort, req.body.jiraUser, req.body.jiraPassword, '2');
   console.log(JSON.stringify(req.body));
@@ -17,10 +26,21 @@ exports.importJiraProject = function (req, res) {
   var jira = new JiraApi('https', req.body.jiraHost, req.body.jiraPort, req.body.jiraUser, req.body.jiraPassword, '2');
   console.log(JSON.stringify(req.body));
   jira.searchJira('project=' + req.body.jiraProject, null, function (error, result) {
+
     if (result) {
       for (i = 0; i < result.issues.length; i++) { 
-        console.log(result.issues[i].fields.summary);
-        var storyData = {name: result.issues[i].fields.summary};
+        console.log(JSON.stringify(result.issues[i].fields, null, '  ')); 
+        console.log('Setting status to ' + JIRA_TO_PIVOTAL_STATE[result.issues[i].fields.status.name]);       
+        var storyData = {
+          name: result.issues[i].fields.summary,
+          estimate: "1",
+          description: result.issues[i].fields.description,
+          // story_type: "feature",
+          // requested_by: "John Whitfield",
+          // created_at: "2013/02/01 11:49:51 UTC",
+          // updated_at: "2013/02/01 11:49:51 UTC"         
+          current_state: JIRA_TO_PIVOTAL_STATE[result.issues[i].fields.status.name]
+        };
         pivotal.addStory(req.body.pivotalProject, storyData, function (err, results) {
           console.log(JSON.stringify(err || results, null, '  '));
         });
