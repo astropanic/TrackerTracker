@@ -15,6 +15,7 @@ exports.getJiraProjects = function (req, res) {
 
 exports.importJiraProject = function (req, res) {
   var jira = new JiraApi('https', req.body.jiraHost, req.body.jiraPort, req.body.jiraUser, req.body.jiraPassword, '2');
+  console.log(JSON.stringify(req.body));
   // req.body = {
   //   "jiraHost": "hostname.atlassian.net",
   //   "jiraPort": "443",
