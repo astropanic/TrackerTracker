@@ -39,6 +39,7 @@ TT.UI = (function () {
           TT.Model.JiraProject = TT.Model.Model('JiraProject', projects);
           TT.View.showImportPageTwo();
         } else {
+          $('.form-action').removeClass('updating');
           TT.View.message('<strong>No projects found!</strong> Did you enter the wrong credentials?', 'error');
         }
       }
