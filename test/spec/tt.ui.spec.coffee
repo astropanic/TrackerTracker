@@ -174,6 +174,7 @@ describe "UI interactions", ->
                   description: edited_description
                 }
               },
+              success: jasmine.any(Function),
               complete: jasmine.any(Function)
             }
 
@@ -200,6 +201,7 @@ describe "UI interactions", ->
                 labels: getLabelsString($('.story-' + id).find('.details .tag'))
               }
             },
+            success: jasmine.any(Function),
             complete: jasmine.any(Function)
           }
 
@@ -241,6 +243,7 @@ describe "UI interactions", ->
                 storyID: id,
                 comment: my_note
               },
+              success: jasmine.any(Function),
               complete: jasmine.any(Function)
             }
 

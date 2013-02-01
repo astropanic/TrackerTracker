@@ -79,8 +79,21 @@ input.updating {
   background: url(/images/loading-white.gif) no-repeat scroll 98.6% 50% transparent;
 }
 
+.form-action.updating {
+  background: url(/images/loading-white.gif) no-repeat scroll 0% 50% transparent;
+  min-height: 26px;
+}
+
+.form-action.updating a {
+  display: none;
+}
+
 span.ghost {
   color: rgba(0, 0, 0, 0.4);
+}
+
+.hidden {
+  display: none;
 }
 
 /* Action buttons */
@@ -250,7 +263,7 @@ body.ajaxRunning #logo h1 {
 }
 
 .modal-dialog .form-input {
-  margin: 12px 0;
+  margin: 0 0 12px;
 }
 
 .modal-dialog .form-action {
@@ -258,11 +271,11 @@ body.ajaxRunning #logo h1 {
 }
 
 .modal-dialog .p {
-  margin: 12px 0;
+  margin: 0 0 12px;
 }
 
 .modal-dialog label {
-  margin: 3px 0;
+  margin: 0 0 3px;
 }
 
 .modal-dialog input.textfield {
@@ -293,6 +306,7 @@ body.ajaxRunning #logo h1 {
   position: fixed;
   bottom: 20px;
   right: 20px;
+  z-index: 99999;
 }
 
 #messages .message {

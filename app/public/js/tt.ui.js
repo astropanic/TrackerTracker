@@ -24,6 +24,51 @@ TT.UI = (function () {
     return false;
   };
 
+  pub.getJiraProjects = function () {
+    $(this).blur();
+    $('.form-action').addClass('updating');
+    TT.Ajax.post('/getJiraProjects', {
+      data: {
+        jiraHost: $('#jira-host').val(),
+        jiraPort: $('#jira-port').val(),
+        jiraUser: $('#jira-user').val(),
+        jiraPassword: $('#jira-password').val()
+      },
+      callback: function (projects) {
+        if (TT.Utils.isArray(projects) && projects.length > 0) {
+          TT.Model.JiraProject = TT.Model.Model('JiraProject', projects);
+          TT.View.showImportPageTwo();
+        } else {
+          TT.View.message('<strong>No projects found!</strong> Did you enter the wrong credentials?', 'error');
+        }
+      }
+    });
+
+    return false;
+  };
+
+  pub.importJiraProject = function () {
+    var jiraProject = $('#jira-project').val();
+    var pivotalProject = $('#pivotal-project').val();
+
+    if (jiraProject && pivotalProject) {
+      TT.Ajax.post('/importJiraProject', {
+        data: {
+          jiraHost: $('#jira-host').val(),
+          jiraPort: $('#jira-port').val(),
+          jiraUser: $('#jira-user').val(),
+          jiraPassword: $('#jira-password').val(),
+          jiraProject: TT.Model.JiraProject.get({ name: jiraProject }).key,
+          pivotalProject: TT.Model.Project.get({ name: pivotalProject }).id
+        }
+      });
+      TT.View.message('Importing started! We will keep you updated on the progress of the import.', 'success');
+      TT.Dialog.close();
+    }
+
+    return false;
+  };
+
   pub.reset = function () {
     TT.Dialog.close();
     TT.Utils.clearLocalStorage();
@@ -196,6 +241,36 @@ TT.UI = (function () {
       items[items.length] = {
         name: '<strong>' + user.name + '</strong> (' + user.initials + ')',
         value: user.name
+      };
+    });
+
+    TT.Autocomplete.open({ items: items, target: this });
+
+    return false;
+  };
+
+  pub.openPivotalProjectAutocomplete = function () {
+    var items = [];
+
+    TT.Model.Project.each(function (index, project) {
+      items[items.length] = {
+        name: '<strong>' + project.name + '</strong> (' + project.id + ')',
+        value: project.name
+      };
+    });
+
+    TT.Autocomplete.open({ items: items, target: this });
+
+    return false;
+  };
+
+  pub.openJiraProjectAutocomplete = function () {
+    var items = [];
+
+    TT.Model.JiraProject.each(function (index, project) {
+      items[items.length] = {
+        name: '<strong>' + project.name + '</strong> (' + project.key + ')',
+        value: project.name
       };
     });
 

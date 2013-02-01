@@ -4,23 +4,26 @@ var JiraApi = require('jira').JiraApi;
 var TWO_YEARS = 2 * 365 * 24 * 60 * 60 * 1000;
 var PIVOTAL_TOKEN_COOKIE = 'pivotalToken';
 
-var config = {
-  host: 'somewhere.atlassian.net',
-  port: 443,
-  user: 'someuser',
-  password: 'somepwd'
+exports.getJiraProjects = function (req, res) {
+  var jira = new JiraApi('https', req.body.jiraHost, req.body.jiraPort, req.body.jiraUser, req.body.jiraPassword, '2');
+  console.log(JSON.stringify(req.body));
+  jira.listProjects(function (err, projects) {
+    console.log(JSON.stringify(err || projects, null, '  '));
+    res.json(err || projects);
+  });
 };
 
-exports.getJiraProjects = function (req, res) {
-  var jira = new JiraApi('https', config.host, config.port, config.user, config.password, '2');
-  jira.getProject('AH', function (error, project) {
-    console.log(error, JSON.stringify(project, null, ' '));
-    if (project) {
-      res.json(project);
-    } else {
-      res.json(error);
-    }
-  });
+exports.importJiraProject = function (req, res) {
+  var jira = new JiraApi('https', req.body.jiraHost, req.body.jiraPort, req.body.jiraUser, req.body.jiraPassword, '2');
+  // req.body = {
+  //   "jiraHost": "hostname.atlassian.net",
+  //   "jiraPort": "443",
+  //   "jiraUser": "user",
+  //   "jiraPassword": "password",
+  //   "jiraProject": "AB", // JIRA project key
+  //   "pivotalProject": "12345" // tracker project ID
+  // };
+  res.json(true);
 };
 
 exports.index = function (req, res) {

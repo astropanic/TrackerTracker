@@ -33,12 +33,12 @@ TT.Ajax = (function () {
       url: url,
       type: type,
       data: options.data,
-      complete: function () {
-        pub.end();
+      success: function (response) {
         if (options.callback) {
-          options.callback();
+          options.callback(response);
         }
-      }
+      },
+      complete: pub.end
     });
   };
 

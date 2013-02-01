@@ -64,10 +64,10 @@ TT.Model = (function () {
     return collection;
   }
 
-  pub.Model = function (name) {
+  pub.Model = function (name, db) {
     var self = {};
 
-    self.DB = [];
+    self.DB = db || [];
     self.name = name;
 
     self.clientSave = function () {
@@ -287,7 +287,7 @@ TT.Model = (function () {
     story.description = TT.Utils.isString(story.description) ? story.description : '';
     story.formatted_description = story.description ? TT.Utils.showdownLite(story.description) : '<span class="ghost">Click to add a description</span>';
     story.estimate = story.estimate >= 0 ? story.estimate : '';
-    story.labels = story.labels ? story.labels.indexOf(',') !== -1 ? story.labels.split(',') : [story.labels] : [];
+    story.labels = TT.Utils.isString(story.labels) ? story.labels.indexOf(',') !== -1 ? story.labels.split(',') : [story.labels] : [];
     story.notes = compileNotes(story);
 
     var project = pub.Project.get({ id: story.project_id }) || {};

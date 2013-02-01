@@ -33,11 +33,12 @@ app.get('/projects', routes.hasToken, routes.getProjects);
 app.get('/iterations', routes.hasToken, routes.getIterations);
 app.get('/stories', routes.hasToken, routes.getStories);
 
-app.get('/jiraProjects', routes.getJiraProjects);
-
 app.post('/addStory', routes.hasToken, routes.addStory);
 app.post('/updateStory', routes.hasToken, routes.updateStory);
 app.post('/addStoryComment', routes.hasToken, routes.addStoryComment);
+
+app.post('/getJiraProjects', routes.getJiraProjects);
+app.post('/importJiraProject', routes.importJiraProject);
 
 http.createServer(app).listen(app.get('port'), function () {
   console.log("Express server listening on port " + app.get('port'));

@@ -281,6 +281,18 @@ TT.View = (function () {
     TT.Dialog.open(pub.render('importDialog'));
   };
 
+  pub.showImportPageTwo = function () {
+    $('#pivotal-project').focus(TT.UI.openPivotalProjectAutocomplete);
+    $('#jira-project').focus(TT.UI.openJiraProjectAutocomplete);
+    $('.wizard-page-1').animate({ opacity: 0 }, 200, function () {
+      $(this).slideUp(300);
+      $('.form-action').removeClass('updating');
+      $('.wizard-page-2').css({ opacity: 0 }).slideDown(300, function () {
+        $(this).animate({ opacity: 1.0 }, 200);
+      });
+    });
+  };
+
   pub.drawAccountSettingsForm = function () {
     TT.Dialog.open(pub.render('accountSettings'));
 
