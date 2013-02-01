@@ -5,7 +5,7 @@ var TWO_YEARS = 2 * 365 * 24 * 60 * 60 * 1000;
 var PIVOTAL_TOKEN_COOKIE = 'pivotalToken';
 
 var JIRA_TO_PIVOTAL_STATE = {
-  IceBox: 'unscheduled',
+  IceBox: 'unstarted',
   Started: 'started',
   Finished: 'finished',
   Delivered: 'delivered',
@@ -33,34 +33,46 @@ exports.importJiraProject = function (req, res) {
   var jira = new JiraApi('https', req.body.jiraHost, req.body.jiraPort, req.body.jiraUser, req.body.jiraPassword, '2');
   console.log(JSON.stringify(req.body));
   jira.searchJira('project=' + req.body.jiraProject, ['*all'], function (error, result) {
-
     if (result) {
-      for (i = 0; i < result.issues.length; i++) { 
-        var jiraFields = result.issues[i].fields;  
-
-        // console.log(JSON.stringify(jiraFields, null, '  ')); 
-
-        var storyData = {
-          name: jiraFields.summary,
-          estimate: jiraFields.customfield_10004 || "0",
-          description: jiraFields.description,
-          story_type: JIRA_TO_PIVOTAL_TYPES[jiraFields.issuetype.name],
-          // requested_by: jiraFields.reporter.name,
-          // created_at: "2013/02/01 11:49:51 UTC",
-          // updated_at: "2013/02/01 11:49:51 UTC"         
-          current_state: JIRA_TO_PIVOTAL_STATE[jiraFields.status.name]
-        }
-        console.log(storyData);
-
-        pivotal.addStory(req.body.pivotalProject, storyData, function (err, results) {
-          console.log(JSON.stringify(err || results, null, '  '));
-        });
-      }
+      importJiraIssues(res, req.body.pivotalProject, result.issues, 0);
     }
   });
-
-  res.json(true);
 };
+
+importJiraIssues = function (res, pivotalProject, issues, issueCount) {
+  if (issues.length === 0) {
+    res.json(issueCount);
+    return;
+  }
+
+  var jiraFields = issues[0].fields;
+  console.log(JSON.stringify(jiraFields, null, '  '));
+
+  var storyData = {
+    name: jiraFields.summary,
+    estimate: jiraFields.customfield_10004 || '0',
+    description: jiraFields.description,
+    story_type: jiraFields.issuetype ? JIRA_TO_PIVOTAL_TYPES[jiraFields.issuetype.name] : '',
+    requested_by: jiraFields.reporter ? jiraFields.reporter.displayName : '',
+    owned_by: jiraFields.assignee ? jiraFields.assignee.displayName : '',
+    // created_at: "2013/02/01 11:49:51 UTC",
+    // updated_at: "2013/02/01 11:49:51 UTC"
+    current_state: JIRA_TO_PIVOTAL_STATE[jiraFields.status.name]
+  }
+
+  console.log(storyData);
+
+  pivotal.addStory(pivotalProject, storyData, function (err, results) {
+    if (results) {
+      issueCount++
+    }
+    console.log(JSON.stringify(err || results, null, '  '));
+    issues.shift();
+    setTimeout(function () {
+      importJiraIssues(res, pivotalProject, issues, issueCount);
+    }, 100);
+  });
+}
 
 exports.index = function (req, res) {
   res.render('index', { timestamp: new Date().getTime() });
