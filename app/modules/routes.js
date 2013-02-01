@@ -16,14 +16,18 @@ exports.getJiraProjects = function (req, res) {
 exports.importJiraProject = function (req, res) {
   var jira = new JiraApi('https', req.body.jiraHost, req.body.jiraPort, req.body.jiraUser, req.body.jiraPassword, '2');
   console.log(JSON.stringify(req.body));
-  // req.body = {
-  //   "jiraHost": "hostname.atlassian.net",
-  //   "jiraPort": "443",
-  //   "jiraUser": "user",
-  //   "jiraPassword": "password",
-  //   "jiraProject": "AB", // JIRA project key
-  //   "pivotalProject": "12345" // tracker project ID
-  // };
+  jira.searchJira('project=' + req.body.jiraProject, null, function (error, result) {
+    if (result) {
+      for (i = 0; i < result.issues.length; i++) { 
+        console.log(result.issues[i].fields.summary);
+        var storyData = {name: result.issues[i].fields.summary};
+        pivotal.addStory(req.body.pivotalProject, storyData, function (err, results) {
+          console.log(JSON.stringify(err || results, null, '  '));
+        });
+      }
+    }
+  });
+
   res.json(true);
 };
 
