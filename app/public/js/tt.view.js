@@ -310,16 +310,25 @@ TT.View = (function () {
     $('#pivotal-username').focus(TT.UI.openPivotalUsernameAutocomplete);
   };
 
-  pub.message = function (str, type) {
-    var html = pub.render('message', { str: str, type: type || 'info' });
+  pub.message = function (str, options) {
+    options = $.extend({
+      type: 'info',
+      timeout: 3000
+    }, options || {});
+
+    var html = pub.render('message', { str: str, type: options.type });
     var element = pub.attach(html, '#messages').click(function () {
       $(this).fadeOut(250, function () { $(this).remove(); });
       return false;
     });
 
-    setTimeout(function () {
-      element.fadeOut(1000, function () { element.remove(); });
-    }, 3000);
+    if (options.timeout) {
+      setTimeout(function () {
+        element.fadeOut(1000, function () { element.remove(); });
+      }, options.timeout);
+    }
+
+    return element;
   };
 
   return pub;

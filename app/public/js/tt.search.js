@@ -38,7 +38,7 @@ TT.Search = (function () {
   };
 
   pub.requestMatchingStories = function (term) {
-    TT.View.message('Searching for <strong>' + term + '</strong>...');
+    TT.View.message('Searching for <strong>' + term + '</strong>...', { type: 'search' });
     if (pub.includeDone()) {
       term += ' includedone:true';
     }
@@ -50,14 +50,14 @@ TT.Search = (function () {
         success: function (stories) {
           stories = TT.Utils.normalizePivotalArray(stories.story);
           if (stories) {
-            TT.View.message('Found <strong>' + stories.length + '</strong> stories in <strong>' + project.name + '</strong>');
+            TT.View.message('Found <strong>' + stories.length + '</strong> stories in <strong>' + project.name + '</strong>', { type: 'search' });
             $.each(stories, function (index, story) {
               story.id = parseInt(story.id, 10);
               TT.Model.Story.overwrite(story);
             });
             TT.View.drawStories();
           } else {
-            TT.View.message('No results found in <strong>' + project.name + '</strong>');
+            TT.View.message('No results found in <strong>' + project.name + '</strong>', { type: 'search' });
           }
           TT.Ajax.end();
         }

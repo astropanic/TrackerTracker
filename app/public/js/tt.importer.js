@@ -65,7 +65,7 @@ TT.Importer = (function () {
           pub.showImportPageTwo();
         } else {
           $('.form-action').removeClass('updating');
-          TT.View.message('<strong>No projects found!</strong> Did you enter the wrong credentials?', 'error');
+          TT.View.message('<strong>No projects found!</strong> Did you enter the wrong credentials?', { type: 'error' });
         }
       }
     });

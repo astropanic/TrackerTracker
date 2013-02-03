@@ -170,7 +170,7 @@ TT.UI = (function () {
     var pivotalUsername = $('#pivotal-username').val();
 
     if (!pivotalToken) {
-      TT.View.message('Token is required.', 'error');
+      TT.View.message('Token is required.', { type: 'error' });
       return false;
     }
 
@@ -439,7 +439,7 @@ TT.UI = (function () {
     var formatted_name = name ? TT.Utils.showdownLite(name) : '';
 
     if (!name) {
-      TT.View.message('Title is required.', 'error');
+      TT.View.message('Title is required.', { type: 'error' });
       return false;
     }
 
@@ -469,7 +469,7 @@ TT.UI = (function () {
     var comment = $(this).closest('.textarea').find('textarea').val();
 
     if (!comment) {
-      TT.View.message('Your note is empty.', 'error');
+      TT.View.message('Your note is empty.', { type: 'error' });
       return false;
     }
 
