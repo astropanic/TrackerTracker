@@ -86,7 +86,7 @@ var importIssues = function (importID, pivotalProject, issue) {
       var comments = normalizePivotalCollection(fields.comment.comments);
       importer.increment(importID, 'commentsFound', comments.length);
       for (var i = 0; i < comments.length; i++) {
-        queue.push(importComments, importID, pivotalProject, results.id, comments[i], i + 1);
+        queue.unshift(importComments, importID, pivotalProject, results.id, comments[i], i + 1);
       }
     }
     setTimeout(queue.next, 250);

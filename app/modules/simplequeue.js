@@ -5,6 +5,10 @@ exports.push = function () {
   queue.push(Array.prototype.slice.call(arguments, 0));
 };
 
+exports.unshift = function () {
+  queue.unshift(Array.prototype.slice.call(arguments, 0));
+};
+
 exports.start = function () {
   if (!isRunning) {
     exports.run();
