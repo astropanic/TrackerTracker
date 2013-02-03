@@ -11,14 +11,15 @@ var JIRA_TO_PIVOTAL_STATE = {
   Delivered: 'delivered',
   Accepted: 'accepted',
   Rejected: 'rejected'
-}
+};
 
 var JIRA_TO_PIVOTAL_TYPES = {
   Story: 'feature',
   Bug: 'bug',
   Chore: 'chore',
-  Epic: 'chore'
-}
+  Epic: 'chore',
+  'Technical task': 'chore'
+};
 
 exports.getJiraProjects = function (req, res) {
   var jira = new JiraApi('https', req.body.jiraHost, req.body.jiraPort, req.body.jiraUser, req.body.jiraPassword, '2');
@@ -32,14 +33,14 @@ exports.getJiraProjects = function (req, res) {
 exports.importJiraProject = function (req, res) {
   var jira = new JiraApi('https', req.body.jiraHost, req.body.jiraPort, req.body.jiraUser, req.body.jiraPassword, '2');
   console.log(JSON.stringify(req.body));
-  jira.searchJira('project=' + req.body.jiraProject, ['*all'], function (error, result) {
-    if (result) {
-      importJiraIssues(res, req.body.pivotalProject, result.issues, 0);
+  jira.searchJira('project=' + req.body.jiraProject, ['*all'], function (err, response) {
+    if (response && response.issues) {
+      importJiraIssues(res, req.body.pivotalProject, response.issues, 0);
     }
   });
 };
 
-importJiraIssues = function (res, pivotalProject, issues, issueCount) {
+var importJiraIssues = function (res, pivotalProject, issues, issueCount) {
   if (issues.length === 0) {
     res.json(issueCount);
     return;
@@ -52,13 +53,13 @@ importJiraIssues = function (res, pivotalProject, issues, issueCount) {
     name: jiraFields.summary,
     estimate: jiraFields.customfield_10004 || '0',
     description: jiraFields.description,
-    story_type: jiraFields.issuetype ? JIRA_TO_PIVOTAL_TYPES[jiraFields.issuetype.name] : '',
-    requested_by: jiraFields.reporter ? jiraFields.reporter.displayName : '',
-    owned_by: jiraFields.assignee ? jiraFields.assignee.displayName : '',
+    story_type: jiraFields.issuetype && JIRA_TO_PIVOTAL_TYPES[jiraFields.issuetype.name] ? JIRA_TO_PIVOTAL_TYPES[jiraFields.issuetype.name] : 'feature',
+    // requested_by: jiraFields.reporter ? jiraFields.reporter.displayName : '',
+    // owned_by: jiraFields.assignee ? jiraFields.assignee.displayName : '',
     // created_at: "2013/02/01 11:49:51 UTC",
     // updated_at: "2013/02/01 11:49:51 UTC"
-    current_state: JIRA_TO_PIVOTAL_STATE[jiraFields.status.name]
-  }
+    current_state: jiraFields.status && JIRA_TO_PIVOTAL_STATE[jiraFields.status.name] ? JIRA_TO_PIVOTAL_STATE[jiraFields.status.name] : 'unstarted'
+  };
 
   console.log(storyData);
 
@@ -72,7 +73,7 @@ importJiraIssues = function (res, pivotalProject, issues, issueCount) {
       importJiraIssues(res, pivotalProject, issues, issueCount);
     }, 100);
   });
-}
+};
 
 exports.index = function (req, res) {
   res.render('index', { timestamp: new Date().getTime() });
