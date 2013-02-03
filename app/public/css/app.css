@@ -340,6 +340,38 @@ body.ajaxRunning #logo h1 {
   background: url(/images/close_hover.png) no-repeat scroll center right transparent;
 }
 
+/* Import progress bar */
+
+.progressbar {
+  background: #111;
+  background: -webkit-linear-gradient(#111, #222);
+  background: -moz-linear-gradient(#111, #222);
+  background: linear-gradient(#111, #222);
+  border: 1px solid #111;
+  border-radius: 1px;
+  display: inline-block;
+  height: 11px;
+  line-height: 11px;
+  margin: 5px 0;
+  width: 100%;
+}
+
+.progressbar .bar {
+  background: #3c0;
+  background: -webkit-linear-gradient(#3c0, #070);
+  background: -moz-linear-gradient(#3c0, #070);
+  background: linear-gradient(#3c0, #070);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  display: inline-block;
+  height: 11px;
+  line-height: 11px;
+}
+
+.time-elapsed {
+  color: #bbb;
+  font-size: 11px;
+}
+
 /* Search */
 
 #search {

@@ -1,5 +1,6 @@
 var TT = TT || {};
 TT.Importer = (function () {
+  var pub = {};
 
   pub.openDialog = function () {
     TT.Dialog.open(TT.View.render('importDialog'));
@@ -86,13 +87,43 @@ TT.Importer = (function () {
           jiraPassword: $('#jira-password').val(),
           jiraProject: TT.Model.JiraProject.get({ name: jiraProject }).key,
           pivotalProject: TT.Model.Project.get({ name: pivotalProject }).id
+        },
+        callback: function (data) {
+          window.console.log('/importProject response', data);
+          pub.pollForResults(data.id);
         }
       });
-      TT.View.message('Importing started! We will keep you updated on the progress of the import.', 'success');
       TT.Dialog.close();
     }
 
     return false;
+  };
+
+  pub.pollForResults = function (id) {
+    var note = 'Importing started!';
+    var message = TT.View.message(note, { timeout: false, type: 'import' });
+
+    var interval = setInterval(function () {
+      TT.Ajax.get('/getImportLog', {
+        data: { id: id },
+        callback: function (data) {
+          var seconds = Math.round((new Date().getTime() - data.startedAt) / 1000);
+          var html = TT.View.render('importProgress', {
+            storyImportSuccesses: data.storyImportSuccesses || 0,
+            progress: data.finishedAt ? 'Finished in ' + seconds + ' seconds.' : seconds + ' seconds elapsed.',
+            totalIssues: data.totalIssues || 0,
+            width: Math.ceil(100 * (data.storyImportSuccesses / data.totalIssues))
+          });
+          message.find('.text').html(html);
+          if (data.finishedAt) {
+            clearInterval(interval);
+            setTimeout(function () {
+              message.fadeOut(1000, function () { message.remove(); });
+            }, 5000);
+          }
+        }
+      });
+    }, 1000);
   };
 
   return pub;
