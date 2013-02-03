@@ -1,6 +1,7 @@
 var importer = require('./importer.js');
 var JiraApi = require('jira').JiraApi;
 var pivotal = require('pivotal');
+var queue = require('./simplequeue.js');
 
 var JIRA_TO_PIVOTAL_STATE = {
   IceBox: 'unstarted',
@@ -15,7 +16,7 @@ var JIRA_TO_PIVOTAL_TYPES = {
   Story: 'feature',
   Bug: 'bug',
   Chore: 'chore',
-  Epic: 'release',
+  Epic: 'chore', // 'release' throws a 422 error
   'Technical task': 'chore'
 };
 
@@ -27,7 +28,11 @@ exports.getImportableProjects = function (req, res) {
 };
 
 exports.importProject = function (importID, body) {
-  importer.importLog(importID, '[Fetching Pivotal Project] ' + body.pivotalProject);
+  importer.set(importID, 'startedAt', new Date().getTime());
+  queue.finished = function () {
+    importer.set(importID, 'finishedAt', new Date().getTime());
+  };
+
   pivotal.getProject(body.pivotalProject, function (err, pivotalProject) {
     if (pivotalProject) {
       importProject(importID, pivotalProject, body);
@@ -35,24 +40,28 @@ exports.importProject = function (importID, body) {
   });
 };
 
-var importProject = function (importID, pivotalProject, body) {
-  var options = { startAt: 0, maxResults: 25, fields: ['*all'] };
+var importProject = function (importID, pivotalProject, body, startAt) {
+  startAt = startAt || 0;
+  var batchSize = 10;
+  var options = { startAt: startAt, maxResults: batchSize, fields: ['*all'] };
   var jira = new JiraApi('https', body.jiraHost, body.jiraPort, body.jiraUser, body.jiraPassword, '2');
   jira.searchJira('project=' + body.jiraProject, options, function (err, response) {
     if (response && response.issues) {
-      var state = { counter: response.startAt, errorCount: 0, successCount: 0, total: response.total };
-      importer.importLog(importID, '[Importing] ' + response.startAt + '-' + Math.min(response.startAt + response.maxResults, response.total) + ' of ' + response.total + ' total issues from the "' + body.jiraProject + '" project');
-      importIssues(importID, pivotalProject, response.issues, state);
+      importer.set(importID, 'totalIssues', response.total);
+      importer.increment(importID, 'issuesFound', response.issues.length);
+      for (var i = 0; i < response.issues.length; i++) {
+        queue.push(importIssues, importID, pivotalProject, response.issues[i]);
+      }
+      queue.start();
+      if (startAt + batchSize < response.total) {
+        // queue.push(importProject, importID, pivotalProject, body, startAt + batchSize);
+      }
     }
   });
 };
 
-var importIssues = function (importID, pivotalProject, issues, state) {
-  if (issues.length === 0) {
-    return;
-  }
-
-  var fields = issues[0].fields;
+var importIssues = function (importID, pivotalProject, issue) {
+  var fields = issue.fields;
   var storyData = {
     name: fields.summary,
     estimate: convertEstimate(pivotalProject, fields.customfield_10004),
@@ -69,23 +78,42 @@ var importIssues = function (importID, pivotalProject, issues, state) {
     storyData.labels = fields.labels.join(',');
   }
 
-  importer.importLog(importID, '[' + state.counter + '][Adding story] ' + storyData.name);
-
   pivotal.addStory(pivotalProject.id, storyData, function (err, results) {
     if (err) {
-      state.errorCount++;
-      importer.importLog(importID, '[' + state.counter + '][Error] ' + err);
+      importer.increment(importID, 'storyImportErrors', 1);
     } else {
-      state.successCount++;
-      importer.importLog(importID, '[' + state.counter + '][Success] assigned ID ' + results.id);
-      console.log(JSON.stringify(err || results, null, 2));
+      importer.increment(importID, 'storyImportSuccesses', 1);
+      var comments = normalizePivotalCollection(fields.comment.comments);
+      importer.increment(importID, 'commentsFound', comments.length);
+      for (var i = 0; i < comments.length; i++) {
+        queue.push(importComments, importID, pivotalProject, results.id, comments[i], i + 1);
+      }
     }
-    state.counter++;
-    issues.shift();
-    setTimeout(function () {
-      importIssues(importID, pivotalProject, issues, state);
-    }, 100);
+    setTimeout(queue.next, 250);
   });
+};
+
+var importComments = function (importID, pivotalProject, storyID, comment) {
+  var comment = convertJiraComment(comment);
+  pivotal.addStoryComment(pivotalProject.id, storyID, comment, function (err, results) {
+    if (err) {
+      importer.increment(importID, 'commentImportErrors', 1);
+    } else {
+      importer.increment(importID, 'commentImportSuccesses', 1);
+    }
+    setTimeout(queue.next, 250);
+  });
+};
+
+var convertJiraComment = function (comment) {
+  var note = [
+    comment.body,
+    '',
+    ' - ' + comment.author.displayName,
+    pivotalDateFormat(comment.created)
+  ];
+
+  return note.join("\n");
 };
 
 var getIssueType = function (type) {
@@ -98,10 +126,13 @@ var getIssueState = function (status) {
     JIRA_TO_PIVOTAL_STATE[status.name] : 'unstarted';
 };
 
+var normalizePivotalCollection = function (collection) {
+  return Array.isArray(collection) ? collection : [collection];
+};
+
 var getPivotalNames = function (pivotalProject) {
   var names = [];
-  var memberships = Array.isArray(pivotalProject.memberships.membership) ?
-    pivotalProject.memberships.membership : [project.memberships.membership]
+  var memberships = normalizePivotalCollection(pivotalProject.memberships.membership);
 
   for (var i = 0; i < memberships.length; i++) {
     names[names.length] = memberships[i].person.name;
@@ -122,23 +153,23 @@ var convertMember = function (pivotalProject, member) {
 
 var convertEstimate = function (pivotalProject, estimate) {
   var valid_estimates = pivotalProject.point_scale.split(',');
-
-  if (estimate && valid_estimates.indexOf(estimate) !== -1) {
+  if (estimate && valid_estimates.indexOf(estimate + '') !== -1) {
     return estimate;
   }
 
   return '0';
 };
 
+var pad = function (n) {
+  return n < 10 ? '0' + n : n;
+};
+
 var pivotalDateFormat = function (d) {
-  function pad(n) {
-    return n < 10 ? '0' + n : n
-  }
   d = new Date(d);
   return d.getFullYear() + '/'
-      + pad(d.getMonth() + 1) + '/'
-      + pad(d.getDate()) + ' '
-      + pad(d.getHours()) + ':'
-      + pad(d.getMinutes()) + ':'
-      + pad(d.getSeconds());
+    + pad(d.getMonth() + 1) + '/'
+    + pad(d.getDate()) + ' '
+    + pad(d.getHours()) + ':'
+    + pad(d.getMinutes()) + ':'
+    + pad(d.getSeconds());
 };

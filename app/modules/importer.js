@@ -1,6 +1,10 @@
 var jira = require('./jira.js');
-var redis = require("redis")
-var redisClient = redis.createClient();
+var redis = require('redis');
+var client = redis.createClient();
+
+var logKey = function (id) {
+  return 'TrackerTrackerImportLog' + id;
+};
 
 exports.getImportableProjects = function (req, res) {
   jira.getImportableProjects(req, res);
@@ -13,16 +17,17 @@ exports.importProject = function (req, res) {
 };
 
 exports.getImportLog = function (req, res) {
-  redisClient.get(logKey(req.query.id), function (err, importLog) {
-    res.json(importLog);
+  client.hgetall(logKey(req.query.id), function (err, json) {
+    res.json(json || { error: true });
   });
 };
 
-exports.importLog = function (id, str) {
-  console.log(str);
-  redisClient.append(logKey(id), "\n[" + new Date().getTime() + ']' + str);
+exports.increment = function (id, key, val) {
+  console.log('redis.hincrby', id, key, val);
+  client.hincrby(logKey(id), key, val);
 };
 
-var logKey = function (id) {
-  return 'TrackerTrackerImportLog' + id;
+exports.set = function (id, key, val) {
+  console.log('redis.hset', id, key, val);
+  client.hset(logKey(id), key, val);
 };
