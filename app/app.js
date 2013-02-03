@@ -2,6 +2,7 @@ var express = require('express');
 var http = require('http');
 
 var routes = require('./modules/routes.js');
+var importer = require('./modules/importer.js');
 
 var app = express();
 
@@ -37,8 +38,9 @@ app.post('/addStory', routes.hasToken, routes.addStory);
 app.post('/updateStory', routes.hasToken, routes.updateStory);
 app.post('/addStoryComment', routes.hasToken, routes.addStoryComment);
 
-app.post('/getJiraProjects', routes.getJiraProjects);
-app.post('/importJiraProject', routes.importJiraProject);
+app.get('/getImportLog', importer.getImportLog);
+app.post('/getImportableProjects', importer.getImportableProjects);
+app.post('/importProject', importer.importProject);
 
 http.createServer(app).listen(app.get('port'), function () {
   console.log("Express server listening on port " + app.get('port'));

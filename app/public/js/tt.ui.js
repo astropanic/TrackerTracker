@@ -27,7 +27,7 @@ TT.UI = (function () {
   pub.getJiraProjects = function () {
     $(this).blur();
     $('.form-action').addClass('updating');
-    TT.Ajax.post('/getJiraProjects', {
+    TT.Ajax.post('/getImportableProjects', {
       data: {
         jiraHost: $('#jira-host').val(),
         jiraPort: $('#jira-port').val(),
@@ -53,7 +53,7 @@ TT.UI = (function () {
     var pivotalProject = $('#pivotal-project').val();
 
     if (jiraProject && pivotalProject) {
-      TT.Ajax.post('/importJiraProject', {
+      TT.Ajax.post('/importProject', {
         data: {
           jiraHost: $('#jira-host').val(),
           jiraPort: $('#jira-port').val(),
