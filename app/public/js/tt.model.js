@@ -252,6 +252,9 @@ TT.Model = (function () {
     $.each(story.labels, function (index, label) {
       var myLabel = pub.Label.get({ name: label });
       pub.Label.removeStory(myLabel, story.id);
+      if (myLabel && !myLabel[story.current_state]) {
+        myLabel[story.current_state] = {};
+      }
       myLabel[story.current_state][story.id] = story.estimate;
       pub.Label.recalculateTotals(myLabel);
     });
