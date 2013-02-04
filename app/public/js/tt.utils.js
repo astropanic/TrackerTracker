@@ -174,7 +174,7 @@ TT.Utils = (function () {
   };
 
   pub.objectLength = function (obj) {
-    return $.map(obj, function (n, i) { return i; }).length;
+    return obj ? $.map(obj, function (n, i) { return i; }).length : 0;
   };
 
   pub.objectSum = function (obj) {
