@@ -50,8 +50,10 @@ var importProject = function (importID, pivotalProject, body, startAt) {
   var options = { startAt: startAt, maxResults: batchSize, fields: ['*all'] };
   var jira = new JiraApi('https', body.jiraHost, body.jiraPort, body.jiraUser, body.jiraPassword, '2');
   var creds = { username: body.jiraUser, password: body.jiraPassword };
+  var query = 'project=' + body.jiraProject +
+    (body.updatedSince ? ' AND updated >= ' + body.updatedSince : '');
 
-  jira.searchJira('project=' + body.jiraProject + ' AND updated >= 2012-10-25', options, function (err, response) {
+  jira.searchJira(query, options, function (err, response) {
     if (response && response.issues) {
       importer.set(importID, 'totalIssues', response.total);
       importer.increment(importID, 'issuesFound', response.issues.length);
