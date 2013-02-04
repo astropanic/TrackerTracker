@@ -183,6 +183,15 @@ TT.UI = (function () {
     return false;
   };
 
+  pub.enableDesktopNotifications = function () {
+    if (window.webkitNotifications.checkPermission() === 0) {
+      window.webkitNotifications.createNotification('#', 'TrackerTracker', 'Notifications enabled.').show();
+    } else {
+      window.webkitNotifications.requestPermission();
+    }
+    return false;
+  };
+
   pub.openPivotalUsernameAutocomplete = function () {
     var items = [];
 

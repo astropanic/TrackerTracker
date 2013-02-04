@@ -331,6 +331,15 @@ TT.View = (function () {
     return element;
   };
 
+  pub.notification = function (str) {
+    if (window.webkitNotifications.checkPermission() === 0) {
+      var text = pub.render('notification', {str: str});
+      window.webkitNotifications.createNotification('#', 'TrackerTracker', text).show();
+    } else {
+      return false;
+    }
+  };
+
   return pub;
 
 }());
