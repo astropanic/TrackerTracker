@@ -9,12 +9,6 @@ exports.unshift = function () {
   queue.unshift(Array.prototype.slice.call(arguments, 0));
 };
 
-exports.start = function () {
-  if (!isRunning) {
-    exports.run();
-  }
-};
-
 exports.run = function () {
   if (queue.length > 0) {
     isRunning = true;

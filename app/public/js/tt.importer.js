@@ -91,6 +91,7 @@ TT.Importer = (function () {
         callback: function (data) {
           window.console.log('/importProject response', data);
           pub.pollForResults(data.id);
+          TT.Utils.localStorage('importerID', data.id);
         }
       });
       TT.Dialog.close();
@@ -100,7 +101,7 @@ TT.Importer = (function () {
   };
 
   pub.pollForResults = function (id) {
-    var note = 'Importing started!';
+    var note = '';
     var message = TT.View.message(note, { timeout: false, type: 'import' });
 
     var interval = setInterval(function () {
@@ -108,15 +109,27 @@ TT.Importer = (function () {
         data: { id: id },
         callback: function (data) {
           var seconds = Math.round((new Date().getTime() - data.startedAt) / 1000);
-          var html = TT.View.render('importProgress', {
-            storyImportSuccesses: data.storyImportSuccesses || 0,
+          data = $.extend({
+            storyImportSuccesses: 0,
+            commentImportSuccesses: 0,
+            attachmentImportSuccesses: 0,
+            totalIssues: 0,
+            commentsFound: 0,
+            attachmentsFound: 0
+          }, data);
+          data = $.extend(data, {
             progress: data.finishedAt ? 'Finished in ' + seconds + ' seconds.' : seconds + ' seconds elapsed.',
-            totalIssues: data.totalIssues || 0,
-            width: Math.ceil(100 * (data.storyImportSuccesses / data.totalIssues))
+            storiesPercent: Math.ceil(100 * (data.storyImportSuccesses / data.totalIssues)),
+            commentsPercent: Math.ceil(100 * (data.commentImportSuccesses / data.commentsFound)),
+            attachmentsPercent: Math.ceil(100 * (data.attachmentImportSuccesses / data.attachmentsFound))
           });
+
+          var html = TT.View.render('importProgress', data);
           message.find('.text').html(html);
+
           if (data.finishedAt) {
             clearInterval(interval);
+            TT.Utils.localStorage('importerID', null);
             setTimeout(function () {
               message.fadeOut(1000, function () { message.remove(); });
             }, 5000);
@@ -124,6 +137,13 @@ TT.Importer = (function () {
         }
       });
     }, 1000);
+  };
+
+  pub.init = function () {
+    var id = TT.Utils.localStorage('importerID');
+    if (id) {
+      pub.pollForResults(id);
+    }
   };
 
   return pub;

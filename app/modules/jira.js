@@ -1,6 +1,10 @@
+var url = require('url');
+var fs = require('fs');
+
 var importer = require('./importer.js');
 var JiraApi = require('jira').JiraApi;
 var pivotal = require('pivotal');
+var request = require('request');
 var queue = require('./simplequeue.js');
 
 var JIRA_TO_PIVOTAL_STATE = {
@@ -42,25 +46,27 @@ exports.importProject = function (importID, body) {
 
 var importProject = function (importID, pivotalProject, body, startAt) {
   startAt = startAt || 0;
-  var batchSize = 10;
+  var batchSize = 50;
   var options = { startAt: startAt, maxResults: batchSize, fields: ['*all'] };
   var jira = new JiraApi('https', body.jiraHost, body.jiraPort, body.jiraUser, body.jiraPassword, '2');
-  jira.searchJira('project=' + body.jiraProject, options, function (err, response) {
+  var creds = { username: body.jiraUser, password: body.jiraPassword };
+
+  jira.searchJira('project=' + body.jiraProject + ' AND updated >= 2012-10-25', options, function (err, response) {
     if (response && response.issues) {
       importer.set(importID, 'totalIssues', response.total);
       importer.increment(importID, 'issuesFound', response.issues.length);
       for (var i = 0; i < response.issues.length; i++) {
-        queue.push(importIssues, importID, pivotalProject, response.issues[i]);
+        queue.push(importIssue, importID, pivotalProject, response.issues[i], creds);
       }
-      queue.start();
       if (startAt + batchSize < response.total) {
-        // queue.push(importProject, importID, pivotalProject, body, startAt + batchSize);
+        queue.push(importProject, importID, pivotalProject, body, startAt + batchSize);
       }
     }
+    queue.next();
   });
 };
 
-var importIssues = function (importID, pivotalProject, issue) {
+var importIssue = function (importID, pivotalProject, issue, creds) {
   var fields = issue.fields;
   var storyData = {
     name: fields.summary,
@@ -74,6 +80,8 @@ var importIssues = function (importID, pivotalProject, issue) {
     updated_at: fields.updated ? pivotalDateFormat(fields.updated) : ''
   };
 
+  importer.set(importID, 'currentState', 'Importing story ' + fields.summary);
+
   if (fields.labels.length > 0) {
     storyData.labels = fields.labels.join(',');
   }
@@ -83,24 +91,78 @@ var importIssues = function (importID, pivotalProject, issue) {
       importer.increment(importID, 'storyImportErrors', 1);
     } else {
       importer.increment(importID, 'storyImportSuccesses', 1);
-      var comments = normalizePivotalCollection(fields.comment.comments);
-      importer.increment(importID, 'commentsFound', comments.length);
-      for (var i = 0; i < comments.length; i++) {
-        queue.unshift(importComments, importID, pivotalProject, results.id, comments[i], i + 1);
-      }
+      importCommentsAndAttachments(importID, pivotalProject.id, results.id, fields, creds);
     }
     setTimeout(queue.next, 250);
   });
 };
 
-var importComments = function (importID, pivotalProject, storyID, comment) {
+var importCommentsAndAttachments = function (importID, projectID, storyID, fields, creds) {
+  var comments = fields.comment.comments;
+  var attachments = fields.attachment;
+  var activity = consolidateCommentsAndAttachments(comments, attachments);
+
+  importer.increment(importID, 'commentsFound', comments.length);
+  importer.increment(importID, 'attachmentsFound', attachments.length);
+
+  for (var i = 0; i < activity.length; i++) {
+    var item = activity[i];
+    var importFn = item.filename ? importAttachment : importComment;
+    // unshift lets us skip ahead of previously queued story import jobs
+    queue.unshift(importFn, importID, projectID, storyID, item, creds);
+  }
+};
+
+var consolidateCommentsAndAttachments = function (comments, attachments) {
+  var activity = [];
+
+  for (var i = 0; i < comments.length; i++) {
+    comments[i].timestamp = new Date(comments[i].created).getTime();
+    activity.push(comments[i]);
+  }
+
+  for (var i = 0; i < attachments.length; i++) {
+    attachments[i].timestamp = new Date(attachments[i].created).getTime();
+    activity.push(attachments[i]);
+  }
+
+  return sortByProperty(activity, 'timestamp').reverse();
+};
+
+var importAttachment = function (importID, projectID, storyID, attachment, creds) {
+  var fileName = attachment.content.split('/').pop();
+  var tmpFile = '/tmp/lastTrackerTrackerImportFile';
+  var stream = fs.createWriteStream(tmpFile);
+
+  importer.set(importID, 'currentState', 'Downloading attachment ' + fileName);
+
+  request(attachment.content, {
+    auth: { user: creds.username, pass: creds.password }
+  }).pipe(stream);
+
+  stream.on('close', function () {
+    console.log('close', arguments);
+    importer.set(importID, 'currentState', 'Uploading attachment ' + fileName);
+    var fileData = { name: fileName, path: tmpFile };
+    pivotal.addStoryAttachment(projectID, storyID, fileData, function (err, results) {
+      console.log(JSON.stringify(err || results, null, 2));
+      importer.increment(importID, err ? 'attachmentImportErrors' : 'attachmentImportSuccesses', 1);
+      setTimeout(queue.next, 250);
+    });
+  });
+
+  stream.on('error', function () {
+    importer.increment(importID, 'attachmentImportErrors', 1);
+    console.log('error', arguments);
+    setTimeout(queue.next, 250);
+  });
+};
+
+var importComment = function (importID, projectID, storyID, comment) {
+  importer.set(importID, 'currentState', 'Importing comment.');
   var comment = convertJiraComment(comment);
-  pivotal.addStoryComment(pivotalProject.id, storyID, comment, function (err, results) {
-    if (err) {
-      importer.increment(importID, 'commentImportErrors', 1);
-    } else {
-      importer.increment(importID, 'commentImportSuccesses', 1);
-    }
+  pivotal.addStoryComment(projectID, storyID, comment, function (err, results) {
+    importer.increment(importID, err ? 'commentImportErrors' : 'commentImportSuccesses', 1);
     setTimeout(queue.next, 250);
   });
 };
@@ -160,10 +222,6 @@ var convertEstimate = function (pivotalProject, estimate) {
   return '0';
 };
 
-var pad = function (n) {
-  return n < 10 ? '0' + n : n;
-};
-
 var pivotalDateFormat = function (d) {
   d = new Date(d);
   return d.getFullYear() + '/'
@@ -172,4 +230,14 @@ var pivotalDateFormat = function (d) {
     + pad(d.getHours()) + ':'
     + pad(d.getMinutes()) + ':'
     + pad(d.getSeconds());
+};
+
+var pad = function (n) {
+  return n < 10 ? '0' + n : n;
+};
+
+var sortByProperty = function (arr, prop) {
+  return arr.sort(function (a, b) {
+    return a[prop] > b[prop] ? 1 : a[prop] === b[prop] ? 0 : -1;
+  });
 };

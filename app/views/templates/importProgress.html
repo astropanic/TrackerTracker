@@ -1,5 +1,14 @@
-<div class="batch-progress"><strong>{{storyImportSuccesses}}</strong> of <strong>{{totalIssues}}</strong> imported.</div>
+<div class="current-state">{{currentState}}</div>
+<div class="batch-progress"><strong>Stories:</strong> {{storyImportSuccesses}} of {{totalIssues}} imported.</div>
 <div class="progressbar">
-  <div class="bar" style="width: {{width}}%;"></div>
+  <div class="bar" style="width: {{storiesPercent}}%;"></div>
+</div>
+<div class="batch-progress"><strong>Comments:</strong> {{commentImportSuccesses}} of {{commentsFound}} imported.</div>
+<div class="progressbar">
+  <div class="bar" style="width: {{commentsPercent}}%;"></div>
+</div>
+<div class="batch-progress"><strong>Attachments:</strong> {{attachmentImportSuccesses}} of {{attachmentsFound}} imported.</div>
+<div class="progressbar">
+  <div class="bar" style="width: {{attachmentsPercent}}%;"></div>
 </div>
 <div class="time-elapsed">{{progress}}</div>

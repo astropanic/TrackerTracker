@@ -9,8 +9,9 @@
     "express": "3.0.4",
     "hogan.js": "*",
     "jade": "*",
-    "jira": "*",
+    "jira": "git://github.com/intentmedia/node-jira.git#master",
     "pivotal": "git://github.com/Wizcorp/node-pivotal.git#master",
-    "redis": "*"
+    "redis": "*",
+    "request": "*"
   }
 }

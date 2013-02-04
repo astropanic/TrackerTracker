@@ -444,6 +444,7 @@ TT.Init = (function () {
       TT.DragAndDrop.init();
       TT.Search.init();
       TT.UI.init();
+      TT.Importer.init();
       pub.setUpdateInterval();
     }
 
