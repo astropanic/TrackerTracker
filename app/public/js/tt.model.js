@@ -252,7 +252,9 @@ TT.Model = (function () {
     $.each(story.labels, function (index, label) {
       var myLabel = pub.Label.get({ name: label });
       pub.Label.removeStory(myLabel, story.id);
-      myLabel = myLabel || {};
+      if (!myLabel) {
+        return;
+      }
       if (myLabel && !myLabel[story.current_state]) {
         myLabel[story.current_state] = {};
       }
