@@ -90,8 +90,8 @@ TT.Importer = (function () {
         },
         callback: function (data) {
           window.console.log('/importProject response', data);
+          startTrackingImport(data.id);
           pub.pollForResults(data.id);
-          TT.Utils.localStorage('importerID', data.id);
         }
       });
       TT.Dialog.close();
@@ -129,21 +129,42 @@ TT.Importer = (function () {
 
           if (data.finishedAt) {
             clearInterval(interval);
-            TT.Utils.localStorage('importerID', null);
-            setTimeout(function () {
-              message.fadeOut(1000, function () { message.remove(); });
-            }, 5000);
+            stopTrackingImport(id);
           }
         }
       });
     }, 1000);
+
+    message.click(function () {
+      clearInterval(interval);
+      stopTrackingImport(id);
+    });
+  };
+
+  var startTrackingImport = function (id) {
+    var activeImports = TT.Utils.localStorage('activeImports');
+    activeImports = activeImports ? JSON.parse(activeImports) : {};
+    activeImports[id] = true;
+    TT.Utils.localStorage('activeImports', activeImports);
+  };
+
+  var stopTrackingImport = function (id) {
+    var activeImports = TT.Utils.localStorage('activeImports');
+    activeImports = activeImports ? JSON.parse(activeImports) : {};
+    if (activeImports[id]) {
+      delete activeImports[id];
+    }
+    TT.Utils.localStorage('activeImports', activeImports);
   };
 
   pub.init = function () {
-    var id = TT.Utils.localStorage('importerID');
-    if (id) {
-      pub.pollForResults(id);
-    }
+    var activeImports = TT.Utils.localStorage('activeImports');
+    $.each(activeImports ? JSON.parse(activeImports) : {}, function (id, val) {
+      window.console.log(id, val);
+      if (id) {
+        pub.pollForResults(id);
+      }
+    });
   };
 
   return pub;

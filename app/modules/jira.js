@@ -1,11 +1,13 @@
 var url = require('url');
 var fs = require('fs');
 
-var importer = require('./importer.js');
-var JiraApi = require('jira').JiraApi;
 var pivotal = require('pivotal');
 var request = require('request');
+var JiraApi = require('jira').JiraApi;
+var importer = require('./importer.js');
 var queue = require('./simplequeue.js');
+
+var delayBetweenSteps = 250;
 
 var JIRA_TO_PIVOTAL_STATE = {
   IceBox: 'unstarted',
@@ -32,10 +34,13 @@ exports.getImportableProjects = function (req, res) {
 };
 
 exports.importProject = function (importID, body) {
-  importer.set(importID, 'startedAt', new Date().getTime());
-  queue.finished = function () {
-    importer.set(importID, 'finishedAt', new Date().getTime());
-  };
+  queue.onFinish(importID, function () {
+    importer.log(importID, 'currentState', 'Finished!');
+    importer.log(importID, 'finishedAt', new Date().getTime());
+  });
+
+  importer.log(importID, 'currentState', 'Waiting to start...');
+  importer.log(importID, 'startedAt', new Date().getTime());
 
   pivotal.getProject(body.pivotalProject, function (err, pivotalProject) {
     if (pivotalProject) {
@@ -51,20 +56,20 @@ var importProject = function (importID, pivotalProject, body, startAt) {
   var jira = new JiraApi('https', body.jiraHost, body.jiraPort, body.jiraUser, body.jiraPassword, '2');
   var creds = { username: body.jiraUser, password: body.jiraPassword };
   var query = 'project=' + body.jiraProject +
-    (body.updatedSince ? ' AND updated >= ' + body.updatedSince : '');
+    (body.extraQuery ? ' AND ' + body.extraQuery : '');
 
   jira.searchJira(query, options, function (err, response) {
     if (response && response.issues) {
-      importer.set(importID, 'totalIssues', response.total);
+      importer.log(importID, 'totalIssues', response.total);
       importer.increment(importID, 'issuesFound', response.issues.length);
       for (var i = 0; i < response.issues.length; i++) {
-        queue.push(importIssue, importID, pivotalProject, response.issues[i], creds);
+        queue.push(importID, importIssue, importID, pivotalProject, response.issues[i], creds);
       }
       if (startAt + batchSize < response.total) {
-        queue.push(importProject, importID, pivotalProject, body, startAt + batchSize);
+        queue.push(importID, importProject, importID, pivotalProject, body, startAt + batchSize);
       }
     }
-    queue.next();
+    queue.next(importID);
   });
 };
 
@@ -82,7 +87,7 @@ var importIssue = function (importID, pivotalProject, issue, creds) {
     updated_at: fields.updated ? pivotalDateFormat(fields.updated) : ''
   };
 
-  importer.set(importID, 'currentState', 'Importing story ' + fields.summary);
+  importer.log(importID, 'currentState', 'Importing story ' + fields.summary);
 
   if (fields.labels.length > 0) {
     storyData.labels = fields.labels.join(',');
@@ -90,12 +95,15 @@ var importIssue = function (importID, pivotalProject, issue, creds) {
 
   pivotal.addStory(pivotalProject.id, storyData, function (err, results) {
     if (err) {
+      importer.logError(importID, 'Error importing Story "' + storyData.name + '" (' + JSON.stringify(err) + ')');
       importer.increment(importID, 'storyImportErrors', 1);
     } else {
       importer.increment(importID, 'storyImportSuccesses', 1);
       importCommentsAndAttachments(importID, pivotalProject.id, results.id, fields, creds);
     }
-    setTimeout(queue.next, 250);
+    setTimeout(function () {
+      queue.next(importID);
+    }, delayBetweenSteps);
   });
 };
 
@@ -111,7 +119,7 @@ var importCommentsAndAttachments = function (importID, projectID, storyID, field
     var item = activity[i];
     var importFn = item.filename ? importAttachment : importComment;
     // unshift lets us skip ahead of previously queued story import jobs
-    queue.unshift(importFn, importID, projectID, storyID, item, creds);
+    queue.unshift(importID, importFn, importID, projectID, storyID, item, creds);
   }
 };
 
@@ -136,7 +144,7 @@ var importAttachment = function (importID, projectID, storyID, attachment, creds
   var tmpFile = '/tmp/lastTrackerTrackerImportFile';
   var stream = fs.createWriteStream(tmpFile);
 
-  importer.set(importID, 'currentState', 'Downloading attachment ' + fileName);
+  importer.log(importID, 'currentState', 'Downloading attachment ' + fileName);
 
   request(attachment.content, {
     auth: { user: creds.username, pass: creds.password }
@@ -144,28 +152,41 @@ var importAttachment = function (importID, projectID, storyID, attachment, creds
 
   stream.on('close', function () {
     console.log('close', arguments);
-    importer.set(importID, 'currentState', 'Uploading attachment ' + fileName);
+    importer.log(importID, 'currentState', 'Uploading attachment ' + fileName);
     var fileData = { name: fileName, path: tmpFile };
     pivotal.addStoryAttachment(projectID, storyID, fileData, function (err, results) {
+      if (err) {
+        importer.logError(importID, 'Error uploading attachment "' + fileName + '" for story #' + storyID);
+      }
       console.log(JSON.stringify(err || results, null, 2));
       importer.increment(importID, err ? 'attachmentImportErrors' : 'attachmentImportSuccesses', 1);
-      setTimeout(queue.next, 250);
+      setTimeout(function () {
+        queue.next(importID);
+      }, delayBetweenSteps);
     });
   });
 
   stream.on('error', function () {
+    importer.logError(importID, 'Error downloading attachment "' + fileName + '" for story #' + storyID);
     importer.increment(importID, 'attachmentImportErrors', 1);
     console.log('error', arguments);
-    setTimeout(queue.next, 250);
+    setTimeout(function () {
+      queue.next(importID);
+    }, delayBetweenSteps);
   });
 };
 
 var importComment = function (importID, projectID, storyID, comment) {
-  importer.set(importID, 'currentState', 'Importing comment.');
+  importer.log(importID, 'currentState', 'Importing comment.');
   var comment = convertJiraComment(comment);
   pivotal.addStoryComment(projectID, storyID, comment, function (err, results) {
+    if (err) {
+      importer.logError(importID, 'Error importing comment for story #' + storyID);
+    }
     importer.increment(importID, err ? 'commentImportErrors' : 'commentImportSuccesses', 1);
-    setTimeout(queue.next, 250);
+    setTimeout(function () {
+      queue.next(importID);
+    }, delayBetweenSteps);
   });
 };
 

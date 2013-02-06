@@ -1,30 +1,31 @@
-var queue = [];
-var isRunning = false;
+var queue = {};
+var finishFunction = {};
 
-exports.push = function () {
-  queue.push(Array.prototype.slice.call(arguments, 0));
-};
+function add(type) {
+  return function () {
+    var args = Array.prototype.slice.call(arguments, 0);
+    var id = args.shift();
+    queue[id] = queue[id] || [];
+    queue[id][type](args);
+  };
+}
 
-exports.unshift = function () {
-  queue.unshift(Array.prototype.slice.call(arguments, 0));
-};
+exports.push = add('push');
+exports.unshift = add('unshift');
 
-exports.run = function () {
-  if (queue.length > 0) {
-    isRunning = true;
-    var current_args = queue.shift();
+exports.next = function (id) {
+  queue[id] = queue[id] || [];
+  if (queue[id].length > 0) {
+    var current_args = queue[id].shift();
     var current_fn = current_args.shift();
     current_fn.apply(this, current_args);
-  }
-};
-
-exports.next = function () {
-  if (queue.length > 0) {
-    exports.run();
   } else {
-    isRunning = false;
-    exports.finished();
+    if (finishFunction[id]) {
+      finishFunction[id]();
+    }
   }
 };
 
-exports.finished = function () {};
+exports.onFinish = function (id, callback) {
+  finishFunction[id] = callback;
+};

@@ -18,8 +18,17 @@ exports.importProject = function (req, res) {
 
 exports.getImportLog = function (req, res) {
   client.hgetall(logKey(req.query.id), function (err, json) {
-    res.json(json || { error: true });
+    client.get(logKey(req.query.id) + 'errors', function (err, results) {
+      if (json && results) {
+        json.errors = results;
+      }
+      res.json(json || { error: true });
+    });
   });
+};
+
+exports.logError = function (id, val) {
+  client.append(logKey(id) + 'errors', val + "\n");
 };
 
 exports.increment = function (id, key, val) {
@@ -27,7 +36,7 @@ exports.increment = function (id, key, val) {
   client.hincrby(logKey(id), key, val);
 };
 
-exports.set = function (id, key, val) {
+exports.log = function (id, key, val) {
   console.log('redis.hset', id, key, val);
   client.hset(logKey(id), key, val);
 };
