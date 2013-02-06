@@ -251,11 +251,11 @@ TT.View = (function () {
     });
   };
 
-  pub.drawStoryDetails = function (story) {
-    var data = TT.Model.Story.get({ id: story.data('id') });
+  pub.drawStoryDetails = function (storyElement) {
+    var data = TT.Model.Story.get({ id: storyElement.data('id') });
     var html = TT.View.render('storyDetails', data);
 
-    return pub.attach(html, story);
+    return pub.attach(html, storyElement);
   };
 
   pub.drawFilter = function (filter) {
