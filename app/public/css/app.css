@@ -79,8 +79,21 @@ input.updating {
   background: url(/images/loading-white.gif) no-repeat scroll 98.6% 50% transparent;
 }
 
+.form-action.updating {
+  background: url(/images/loading-white.gif) no-repeat scroll 0% 50% transparent;
+  min-height: 26px;
+}
+
+.form-action.updating a {
+  display: none;
+}
+
 span.ghost {
   color: rgba(0, 0, 0, 0.4);
+}
+
+.hidden {
+  display: none;
 }
 
 /* Action buttons */
@@ -95,8 +108,8 @@ a.action {
   box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2);
   color: #fff;
   display: inline-block;
-  font: bold 11px/23px Helvetica, sans-serif;
-  padding: 1px 12px 0;
+  font: bold 12px/30px Helvetica, sans-serif;
+  padding: 0 20px;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
   text-transform: uppercase;
 }
@@ -250,7 +263,12 @@ body.ajaxRunning #logo h1 {
 }
 
 .modal-dialog .form-input {
-  margin: 12px 0;
+  margin: 0 0 12px;
+}
+
+.form-input .note {
+  color: #888;
+  font-size: 11px;
 }
 
 .modal-dialog .form-action {
@@ -258,11 +276,11 @@ body.ajaxRunning #logo h1 {
 }
 
 .modal-dialog .p {
-  margin: 12px 0;
+  margin: 0 0 12px;
 }
 
 .modal-dialog label {
-  margin: 3px 0;
+  margin: 0 0 3px;
 }
 
 .modal-dialog input.textfield {
@@ -293,6 +311,7 @@ body.ajaxRunning #logo h1 {
   position: fixed;
   bottom: 20px;
   right: 20px;
+  z-index: 99999;
 }
 
 #messages .message {
@@ -324,6 +343,44 @@ body.ajaxRunning #logo h1 {
 
 #messages .message:hover span.close {
   background: url(/images/close_hover.png) no-repeat scroll center right transparent;
+}
+
+/* Import progress bar */
+
+.progressbar {
+  background: #111;
+  background: -webkit-linear-gradient(#111, #222);
+  background: -moz-linear-gradient(#111, #222);
+  background: linear-gradient(#111, #222);
+  border: 1px solid #111;
+  border-radius: 1px;
+  display: inline-block;
+  height: 11px;
+  line-height: 11px;
+  margin: 5px 0;
+  width: 100%;
+}
+
+.progressbar .bar {
+  background: #3c0;
+  background: -webkit-linear-gradient(#3c0, #070);
+  background: -moz-linear-gradient(#3c0, #070);
+  background: linear-gradient(#3c0, #070);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  display: inline-block;
+  height: 11px;
+  line-height: 11px;
+}
+
+.current-state {
+  color: #bbb;
+  font-size: 11px;
+  margin: 0 0 6px;
+}
+
+.time-elapsed {
+  color: #bbb;
+  font-size: 11px;
 }
 
 /* Search */

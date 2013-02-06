@@ -369,7 +369,7 @@ TT.Init = (function () {
             TT.View.drawStories();
           } else {
             var note = 'Invalid response from the server. Did you enter the right token?';
-            TT.View.message(note, 'error');
+            TT.View.message(note, { type: 'error' });
           }
           TT.Ajax.end();
         }
@@ -444,6 +444,7 @@ TT.Init = (function () {
       TT.DragAndDrop.init();
       TT.Search.init();
       TT.UI.init();
+      TT.Importer.init();
       pub.setUpdateInterval();
     }
 

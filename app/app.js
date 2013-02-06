@@ -2,6 +2,7 @@ var express = require('express');
 var http = require('http');
 
 var routes = require('./modules/routes.js');
+var importer = require('./modules/importer.js');
 
 var app = express();
 
@@ -33,8 +34,13 @@ app.get('/projects', routes.hasToken, routes.getProjects);
 app.get('/iterations', routes.hasToken, routes.getIterations);
 app.get('/stories', routes.hasToken, routes.getStories);
 
+app.post('/addStory', routes.hasToken, routes.addStory);
 app.post('/updateStory', routes.hasToken, routes.updateStory);
 app.post('/addStoryComment', routes.hasToken, routes.addStoryComment);
+
+app.get('/getImportLog', importer.getImportLog);
+app.post('/getImportableProjects', importer.getImportableProjects);
+app.post('/importProject', importer.importProject);
 
 http.createServer(app).listen(app.get('port'), function () {
   console.log("Express server listening on port " + app.get('port'));

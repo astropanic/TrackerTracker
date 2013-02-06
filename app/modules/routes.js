@@ -33,6 +33,12 @@ exports.getStories = function (req, res) {
   });
 };
 
+exports.addStory = function (req, res) {
+  pivotal.addStory(req.body.projectID, req.body.data, function (err, results) {
+    res.json(true);
+  });
+};
+
 exports.updateStory = function (req, res) {
   pivotal.updateStory(req.body.projectID, req.body.storyID, req.body.data, function (err, results) {
     res.json(true);

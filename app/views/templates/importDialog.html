@@ -1,0 +1,46 @@
+<div id="import">
+  <h3>JIRA to Tracker Importer</h3>
+
+  <div class="form wizard wizard-page-1">
+    <div class="form-input">
+      <label>JIRA Hostname</label>
+      <input id="jira-host" type="input" value="example.atlassian.net" class="textfield" tabindex="1" />
+    </div>
+    <div class="form-input">
+      <label>JIRA Port</label>
+      <input id="jira-port" type="input" value="443" class="textfield" tabindex="2" />
+    </div>
+    <div class="form-input">
+      <label>JIRA Username</label>
+      <input id="jira-user" type="input" value="" class="textfield" tabindex="3" />
+    </div>
+    <div class="form-input">
+      <label>JIRA Password</label>
+      <input id="jira-password" type="password" value="" class="textfield" tabindex="4" />
+    </div>
+    <div class="form-action">
+      <a class="action" href="#" data-click-handler="TT.Importer.getJiraProjects" tabindex="5">Select Project</a>
+      <a class="cancel" href="#" data-click-handler="TT.Dialog.close" tabindex="6">Cancel</a>
+    </div>
+  </div>
+
+  <div class="hidden form wizard wizard-page-2">
+    <div class="form-input">
+      <label>JIRA Project</label>
+      <input id="jira-project" type="input" value="" class="autocomplete textfield" tabindex="7" />
+    </div>
+    <div class="form-input">
+      <label>Pivotal Tracker Project</label>
+      <input id="pivotal-project" type="input" value="" class="autocomplete textfield" tabindex="8" />
+    </div>
+    <div class="form-input">
+      <label>Extra Query</label>
+      <input id="extra-query" type="input" value="" class="textfield" tabindex="9" />
+      <div class="note">Optional. For example, "updated >= 2012-11-25"</div>
+    </div>
+    <div class="form-action">
+      <a class="action" href="#" data-click-handler="TT.Importer.importJiraProject" tabindex="10">Import Issues</a>
+      <a class="cancel" href="#" data-click-handler="TT.Dialog.close" tabindex="11">Cancel</a>
+    </div>
+  </div>
+</div>
