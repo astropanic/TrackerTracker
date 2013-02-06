@@ -3,7 +3,7 @@
 
   <div class="form wizard wizard-page-1">
     <div class="form-input">
-      <label>JIRA Host</label>
+      <label>JIRA Hostname</label>
       <input id="jira-host" type="input" value="example.atlassian.net" class="textfield" tabindex="1" />
     </div>
     <div class="form-input">
@@ -33,9 +33,14 @@
       <label>Pivotal Tracker Project</label>
       <input id="pivotal-project" type="input" value="" class="autocomplete textfield" tabindex="8" />
     </div>
+    <div class="form-input">
+      <label>Extra Query</label>
+      <input id="extra-query" type="input" value="" class="textfield" tabindex="9" />
+      <div class="note">Optional. For example, "updated >= 2012-11-25"</div>
+    </div>
     <div class="form-action">
-      <a class="action" href="#" data-click-handler="TT.Importer.importJiraProject" tabindex="9">Import Issues</a>
-      <a class="cancel" href="#" data-click-handler="TT.Dialog.close" tabindex="10">Cancel</a>
+      <a class="action" href="#" data-click-handler="TT.Importer.importJiraProject" tabindex="10">Import Issues</a>
+      <a class="cancel" href="#" data-click-handler="TT.Dialog.close" tabindex="11">Cancel</a>
     </div>
   </div>
 </div>

@@ -85,6 +85,7 @@ TT.Importer = (function () {
           jiraPort: $('#jira-port').val(),
           jiraUser: $('#jira-user').val(),
           jiraPassword: $('#jira-password').val(),
+          extraQuery: $('#extra-query').val(),
           jiraProject: TT.Model.JiraProject.get({ name: jiraProject }).key,
           pivotalProject: TT.Model.Project.get({ name: pivotalProject }).id
         },
