@@ -51,6 +51,10 @@ TT.Importer = (function () {
   };
 
   pub.getJiraProjects = function () {
+    if (!$('#jira-user').val() || !$('#jira-password').val()) {
+      return false;
+    }
+
     $(this).blur();
     $('.form-action').addClass('updating');
     TT.Ajax.post('/getImportableProjects', {
