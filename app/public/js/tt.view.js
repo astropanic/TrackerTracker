@@ -268,11 +268,6 @@ TT.View = (function () {
     return element;
   };
 
-  pub.drawModalDialog = function (content) {
-    var html = pub.render('modalDialog', { content: content });
-    return pub.attach(html, 'body');
-  };
-
   pub.drawResetDialog = function () {
     TT.Dialog.open(pub.render('resetDialog'));
   };

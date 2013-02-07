@@ -23,7 +23,7 @@ TT.Tooltip = (function () {
       left: (self.tooltip.outerWidth() / 2) - 9
     });
 
-    self.tooltip.hide().fadeIn(100);
+    self.tooltip.hide().fadeIn(60);
   }
 
   function setClosingBoundaries() {
