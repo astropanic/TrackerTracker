@@ -8,6 +8,20 @@ TT.Utils = (function () {
     return !items ? [] : $.isPlainObject(items) ? [items] : items;
   };
 
+  var pad = function (n) {
+    return n < 10 ? '0' + n : n;
+  };
+
+  pub.pivotalDateFormat = function (d) {
+    d = new Date(d);
+    return d.getFullYear() + '/' +
+      pad(d.getMonth() + 1) + '/' +
+      pad(d.getDate()) + ' ' +
+      pad(d.getHours()) + ':' +
+      pad(d.getMinutes()) + ':' +
+      pad(d.getSeconds());
+  };
+
   pub.getUsername = function () {
     return $.cookie('pivotalUsername') || '';
   };

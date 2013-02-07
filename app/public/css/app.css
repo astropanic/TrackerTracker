@@ -1202,6 +1202,7 @@ input.textfield.autocomplete {
   min-width: 150px;
   padding: 12px 14px;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+  max-width: 300px;
 }
 
 .tooltip-contents h2 {
@@ -1218,4 +1219,123 @@ input.textfield.autocomplete {
   left: 20px;
   position: absolute;
   width: 0;
+}
+
+/* Charts */
+
+.projection-chart {
+  overflow-y: auto;
+}
+
+.projection-chart .data-container {
+  overflow-x: auto;
+  margin-left: 200px;
+}
+
+.projection-chart h2 {
+  background: url(/images/arrow.open.png) no-repeat scroll 96% center transparent;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  display: inline-block;
+  font: bold 26px/26px Helvetica, sans-serif;
+  margin: 0 0 16px;
+  padding: 7px 27px 7px 10px;
+}
+
+.projection-chart h2:hover {
+  border-color: #999;
+}
+
+.projection-chart table.labels {
+  position: absolute;
+  width: 188px;
+}
+
+.projection-chart table.labels td {
+  text-align: right;
+}
+
+.projection-chart table {
+  margin-top: 30px;
+}
+
+.projection-chart tr.even td {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.projection-chart td.cell {
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  height: 19px;
+}
+
+.projection-chart tr.row-0 td.iteration {
+  position: relative;
+}
+
+.projection-chart td.iteration {
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.projection-chart td.row-label {
+  font: bold 13px/19px Helvetica, sans-serif;
+}
+
+.projection-chart .story-cell {
+  background: #359ad3;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  font: bold 10px/19px Helvetica, sans-serif;
+  height: 100%;
+  min-width: 10px;
+  text-align: center;
+}
+
+.projection-chart .story-cell-bug {
+  background: #a00;
+}
+
+.projection-chart .story-cell-chore {
+  background: #c9c9c9;
+}
+
+.projection-chart .story-cell:hover {
+  background: #222;
+}
+
+.projection-chart .iteration-marker {
+  position: absolute;
+  right: -20px;
+  top: -28px;
+}
+
+.projection-chart .iteration-marker-date {
+  background: #e0a307;
+  border-radius: 2px;
+  color: #fff;
+  font: bold 12px/12px Helvetica, sans-serif;
+  padding: 5px 0;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  width: 40px;
+}
+
+.projection-chart .iteration-marker-pointer {
+  border: 5px solid transparent;
+  border-top-color: #e0a307;
+  bottom: -9px;
+  height: 0;
+  left: 15px;
+  position: absolute;
+  width: 0;
+}
+
+.projection-chart-story-detail .tag {
+  text-shadow: none;
+  margin: 0;
+}
+
+.projection-chart-story-detail .story-project {
+  margin-top: 5px;
 }
