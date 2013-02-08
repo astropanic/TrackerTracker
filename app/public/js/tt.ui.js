@@ -571,7 +571,7 @@ TT.UI = (function () {
             return handler.call(target[0], e);
           }
         }
-      }, 100);
+      }, 50);
     });
   };
 

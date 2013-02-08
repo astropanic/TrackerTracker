@@ -10,13 +10,11 @@ TT.Dialog = (function () {
       var html = TT.View.render('modalDialog', { content: content });
       var element = TT.View.attach(html, 'body');
 
-      if (options) {
-        if (options.width) {
-          element.find('.container').css({ width: options.width, marginLeft: (options.width / 2) * -1 });
-        }
-        if (options.minHeight) {
-          element.find('.container').css({ minHeight: options.minHeight });
-        }
+      if (options && options.fullscreen) {
+        $('.modal-dialog').addClass('modal-dialog-fullscreen').find('.container').css({
+          width: $(window).width() - 100,
+          height: $(window).height() - 100
+        });
       }
     });
   };

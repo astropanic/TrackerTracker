@@ -46,10 +46,33 @@ TT.Charts = (function () {
   };
 
   pub.drawProjectionChart = function (data) {
-    TT.Dialog.open(TT.View.render('projectionChartLayout', { velocity: data.velocity, projectName: data.projectName }), {
-      width: $(window).width() - 100,
-      minHeight: 500
+    var chartLayout = TT.View.render('projectionChartLayout', {
+      velocity: data.velocity,
+      projectName: data.projectName
     });
+    TT.Dialog.open(chartLayout, { fullscreen: true });
+
+    var id;
+    $('.velocity-input').keyup(function () {
+      clearTimeout(id);
+      data.velocity = $(this).val();
+      id = setTimeout(function () {
+        pub.redrawProjectionChart(data);
+      }, 200);
+      return false;
+    });
+
+    pub.redrawProjectionChart(data);
+  };
+
+  pub.redrawProjectionChart = function (data) {
+    $('.projection-chart .labels-container, .projection-chart .data-container').remove();
+    pub.drawTableCanvas(data);
+    pub.addStoriesToChart(data);
+  };
+
+  pub.drawTableCanvas = function (data) {
+    var row, col, odd, lastCell;
 
     var html = '<div class="labels-container"><table class="labels" border="0" cellspacing="0" cellpadding="0">';
     $.each(data.labels, function (index, label) {
@@ -57,18 +80,21 @@ TT.Charts = (function () {
     });
     html += '</table></div>';
     html += '<div class="data-container"><table class="data" border="0" cellspacing="0" cellpadding="0">';
-    for (var row = 0; row < data.rows; row++) {
-      var odd = row % 2 ? 'even' : 'odd';
+    for (row = 0; row < data.rows; row++) {
+      odd = row % 2 ? 'even' : 'odd';
       html += '<tr class="row row-' + row + ' ' + odd + '">';
-      for (var col = 0; col <= data.columns; col++) {
-        html += '<td class="cell cell-' + col + ' "></td>';
+      for (col = 1; col <= data.columns; col++) {
+        lastCell = col === data.columns ? ' last-cell' : '';
+        html += '<td class="cell cell-' + col + lastCell + '"></td>';
       }
       html += '</tr>';
     }
     html += '</table></div>';
 
     $(html).appendTo('.projection-chart');
+  };
 
+  pub.addStoriesToChart = function (data) {
     var $chart = $('.projection-chart table.data');
     var points = 0;
     var last_column = 0;
@@ -87,6 +113,10 @@ TT.Charts = (function () {
           $(marker).appendTo(markerTarget);
           $chart.find('td.cell-' + story.column).addClass('iteration');
         }
+      }
+
+      if (story.story_type === 'release') {
+        $chart.find('td.cell-' + story.column).addClass('release-column');
       }
       var target = $chart.find('tr.row-' + story.row + ' td.cell-' + story.column);
       TT.View.attach(TT.View.render('projectionChartCell', story), target).css({ width: (story.estimate * 12) + 12 });

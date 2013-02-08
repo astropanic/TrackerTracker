@@ -230,6 +230,7 @@ body.ajaxRunning #logo h1 {
 
 .modal-dialog-overlay {
   background: rgba(0, 0, 0, 0.7);
+  cursor: pointer;
   height: 100%;
   left: 0;
   position: fixed;
@@ -245,12 +246,24 @@ body.ajaxRunning #logo h1 {
   z-index: 1001;
 }
 
+.modal-dialog-fullscreen {
+  position: absolute;
+  left: 50px;
+  top: 50px;
+}
+
 .modal-dialog .container {
   box-shadow: 0 18px 30px rgba(0, 0, 0, 0.3);
   border-radius: 6px;
   background: #fff;
   margin: 0 0 0 -230px;
   width: 460px;
+}
+
+.modal-dialog-fullscreen .container {
+  height: 500px;
+  margin: 0;
+  width: 500px;
 }
 
 .modal-dialog .content {
@@ -1229,31 +1242,58 @@ input.textfield.autocomplete {
 
 .projection-chart .data-container {
   overflow-x: auto;
-  margin-left: 200px;
+  margin-left: 210px;
+}
+
+.projection-chart .data-container table {
+  border: 1px solid #666;
+  margin: 30px 0 20px 0;
 }
 
 .projection-chart h2 {
-  background: url(/images/arrow.open.png) no-repeat scroll 96% center transparent;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-  cursor: pointer;
   display: inline-block;
   font: bold 26px/26px Helvetica, sans-serif;
-  margin: 0 0 16px;
+  margin: 0 30px 16px 0;
+}
+
+.projection-chart h2 span {
+  background: url(/images/arrow.open.png) no-repeat scroll 96% center transparent;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  display: inline-block;
   padding: 7px 27px 7px 10px;
 }
 
-.projection-chart h2:hover {
+.projection-chart h2 span:hover {
   border-color: #999;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.projection-chart h3.velocity-selector {
+  display: inline-block;
+  font: bold 17px/17px Helvetica, sans-serif;
+  margin: 0;
+  position: relative;
+  top: -3px;
+}
+
+.projection-chart h3.velocity-selector input {
+  border-radius: 4px;
+  width: 25px;
 }
 
 .projection-chart table.labels {
   position: absolute;
-  width: 188px;
 }
 
 .projection-chart table.labels td {
+  display: block;
+  overflow: hidden;
   text-align: right;
+  text-overflow: ellipsis;
+  width: 200px;
+  white-space: nowrap;
 }
 
 .projection-chart table {
@@ -1261,12 +1301,17 @@ input.textfield.autocomplete {
 }
 
 .projection-chart tr.even td {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.projection-chart .data-container tr:hover td {
+  background: rgba(220, 220, 0, 0.45);
 }
 
 .projection-chart td.cell {
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  border-right: 1px dashed rgba(0, 0, 0, 0.07);
   height: 19px;
+  padding: 0 1px 1px 0;
 }
 
 .projection-chart tr.row-0 td.iteration {
@@ -1274,16 +1319,29 @@ input.textfield.autocomplete {
 }
 
 .projection-chart td.iteration {
-  border-right: 1px solid rgba(0, 0, 0, 0.3);
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.projection-chart tr.odd td.release-column {
+  background: #d1eafc;
+}
+
+.projection-chart tr.even td.release-column {
+  background: #b5daf5;
+}
+
+.projection-chart td.last-cell {
+  border-right: none;
 }
 
 .projection-chart td.row-label {
-  font: bold 13px/19px Helvetica, sans-serif;
+  font: bold 13px/20px Helvetica, sans-serif;
 }
 
 .projection-chart .story-cell {
-  background: #359ad3;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+  background: #66bb18;
+  border-radius: 2px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15), -1px -1px 0 rgba(0, 0, 0, 0.2) inset;
   color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   font: bold 10px/19px Helvetica, sans-serif;
@@ -1293,11 +1351,15 @@ input.textfield.autocomplete {
 }
 
 .projection-chart .story-cell-bug {
-  background: #a00;
+  background: #ce0029;
 }
 
 .projection-chart .story-cell-chore {
-  background: #c9c9c9;
+  background: #bbb;
+}
+
+.projection-chart .story-cell-release {
+  background: #407aa5;
 }
 
 .projection-chart .story-cell:hover {
@@ -1307,26 +1369,26 @@ input.textfield.autocomplete {
 .projection-chart .iteration-marker {
   position: absolute;
   right: -20px;
-  top: -28px;
+  top: -31px;
 }
 
 .projection-chart .iteration-marker-date {
-  background: #e0a307;
-  border-radius: 2px;
+  background: #444;
+  border-radius: 3px;
   color: #fff;
   font: bold 12px/12px Helvetica, sans-serif;
   padding: 5px 0;
   text-align: center;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
   width: 40px;
 }
 
 .projection-chart .iteration-marker-pointer {
-  border: 5px solid transparent;
-  border-top-color: #e0a307;
-  bottom: -9px;
+  border: 4px solid transparent;
+  border-top-color: #444;
+  bottom: -8px;
   height: 0;
-  left: 15px;
+  left: 16px;
   position: absolute;
   width: 0;
 }
@@ -1336,6 +1398,30 @@ input.textfield.autocomplete {
   margin: 0;
 }
 
+.projection-chart-story-detail {
+  font: normal 12px/16px Helvetica, sans-serif;
+}
+
+.projection-chart-story-detail h2 {
+  padding-left: 18px;
+}
+
 .projection-chart-story-detail .story-project {
   margin-top: 5px;
+}
+
+.projection-chart-story-detail-feature h2 {
+  background: url(/images/story.feature.png) no-repeat scroll 0 0;
+}
+
+.projection-chart-story-detail-bug h2 {
+  background: url(/images/story.bug.png) no-repeat scroll 0 0;
+}
+
+.projection-chart-story-detail-chore h2 {
+  background: url(/images/story.chore.png) no-repeat scroll 0 0;
+}
+
+.projection-chart-story-detail-release h2 {
+  background: url(/images/story.release.png) no-repeat scroll 0 0;
 }
