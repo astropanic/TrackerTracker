@@ -26,6 +26,7 @@ TT.Charts = (function () {
         output.stories[output.stories.length] = {
           index: output.stories.length,
           id: story.id,
+          url: story.url,
           iteration: story.current_iteration,
           column: index + 1,
           row: output.labels.indexOf(label),
@@ -170,8 +171,8 @@ TT.Charts = (function () {
   };
 
   pub.showStoryCellDetails = function () {
-    var index = $(this).data('index');
-    var html = TT.View.render('projectionChartStoryDetail', currentData.stories[index]);
+    var story = currentData.stories[$(this).data('index')];
+    var html = TT.View.render('projectionChartStoryDetail', story);
     TT.Tooltip.open({ target: this, html: html });
   };
 

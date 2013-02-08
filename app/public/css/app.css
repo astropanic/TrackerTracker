@@ -1344,10 +1344,12 @@ input.textfield.autocomplete {
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15), -1px -1px 0 rgba(0, 0, 0, 0.2) inset;
   color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
+  display: block;
   font: bold 10px/19px Helvetica, sans-serif;
   height: 100%;
   min-width: 10px;
   text-align: center;
+  text-decoration: none;
 }
 
 .projection-chart .story-cell-bug {
