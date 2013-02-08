@@ -10,6 +10,7 @@ TT.Charts = (function () {
 
     var output = {
       projectName: project.name,
+      iteration_length: parseInt(project.iteration_length, 10),
       weeks: parseInt(project.iteration_length, 10),
       velocity: Math.max(velocity || project.current_velocity, 5),
       columns: stories.length,
@@ -96,6 +97,8 @@ TT.Charts = (function () {
   };
 
   pub.addStoriesToChart = function (data) {
+    var iteration = TT.Model.Iteration.get({ project_name: data.projectName });
+
     var $chart = $('.projection-chart table.data');
     var points = 0;
     var last_column = 0;
@@ -107,9 +110,9 @@ TT.Charts = (function () {
         if (points >= data.velocity) {
           points -= data.velocity;
           var marker = TT.View.render('iterationMarker', {
-            date: pub.getIterationDate(data.weeks + iteration_counter)
+            date: pub.getIterationDate(iteration, data.weeks + iteration_counter)
           });
-          iteration_counter += 1;
+          iteration_counter += data.iteration_length;
           var markerTarget = $chart.find('tr.row-0 td.cell-' + story.column);
           $(marker).appendTo(markerTarget);
           $chart.find('td.cell-' + story.column).addClass('iteration');
@@ -124,9 +127,10 @@ TT.Charts = (function () {
     });
   };
 
-  pub.getIterationDate = function (weeks) {
+  pub.getIterationDate = function (iteration, weeks) {
     var d = new Date();
-    d.setDate(d.getDate() + (7 * weeks));
+    var offset = TT.Utils.daysBetweenDates(iteration.start, d);
+    d.setDate(d.getDate() + (7 * weeks) - offset);
 
     return (d.getMonth() + 1) + '/' + d.getDate();
   };

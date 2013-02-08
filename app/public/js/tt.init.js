@@ -365,7 +365,7 @@ TT.Init = (function () {
         data: { projectID: project.id },
         success: function (iterations) {
           if (iterations && iterations.iteration) {
-            pub.addIterations(iterations.iteration);
+            pub.addIterations(project, iterations.iteration);
             TT.View.drawStories();
           } else {
             var note = 'Invalid response from the server. Did you enter the right token?';
@@ -395,10 +395,18 @@ TT.Init = (function () {
     });
   };
 
-  pub.addIterations = function (iterations) {
+  pub.addIterations = function (project, iterations) {
     // This assumes first iteration is always current.
     var normalized_iteration = 0;
     $.each(TT.Utils.normalizePivotalArray(iterations), function (index, iteration) {
+      TT.Model.Iteration.overwrite({
+        project_name: project.name,
+        id: project.id + '.' + iteration.id,
+        number: iteration.number,
+        team_strength: iteration.team_strength,
+        start: iteration.start,
+        finish: iteration.finish
+      });
       if (iteration.stories && iteration.stories.story) {
         var stories = TT.Utils.normalizePivotalArray(iteration.stories.story);
         $.each(stories, function (index, story) {

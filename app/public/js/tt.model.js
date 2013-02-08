@@ -194,6 +194,8 @@ TT.Model = (function () {
     pub.Filter.clientSave();
   };
 
+  pub.Iteration = pub.Model('Iteration');
+
   pub.Label = pub.Model('Label');
 
   pub.Label.onBeforeAdd = function (label) {

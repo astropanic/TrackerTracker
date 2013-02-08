@@ -22,6 +22,10 @@ TT.Utils = (function () {
       pad(d.getSeconds());
   };
 
+  pub.daysBetweenDates = function (str1, str2) {
+    return Math.floor((Date.parse(str2) - Date.parse(str1)) / 86400000);
+  };
+
   pub.getUsername = function () {
     return $.cookie('pivotalUsername') || '';
   };
